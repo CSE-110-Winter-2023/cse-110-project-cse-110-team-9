@@ -13,6 +13,11 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        def properties = new Properties()
+        file("../local.properties").withInputStream { properties.load(it) }
+
+        // Share the key with your `AndroidManifest.xml`
+        manifestPlaceholders = [MAPS_API_KEY:"${properties.getProperty('MAPS_API_KEY')}"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
