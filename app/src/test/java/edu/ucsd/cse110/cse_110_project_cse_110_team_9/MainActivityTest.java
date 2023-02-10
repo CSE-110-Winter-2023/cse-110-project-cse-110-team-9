@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class MainActivityTest {
     @Test
     public void test1(){
-        assertEquals(10,10);
+        assertEquals(10,11);
     }
 
 }
