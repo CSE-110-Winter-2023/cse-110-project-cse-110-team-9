@@ -12,4 +12,11 @@ public class MainActivityTest {
         assertEquals(10,10);
     }
 
+
+    @Test
+    public void testApiConnection()
+    {
+
+    }
+
 }
