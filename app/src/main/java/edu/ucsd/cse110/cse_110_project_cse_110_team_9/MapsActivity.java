@@ -62,6 +62,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng ucsd = new LatLng(32.8801, -117.2340);
         mMap.addMarker(new MarkerOptions().position(ucsd).title("UCSD Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ucsd));
+
+        //GeoJsonLayer layer = new GeoJsonLayer(mMap, )
 //        JSONObject geoJsonData = new JSONObject();
 //        GeoJsonLayer layer = new GeoJsonLayer(mMap,geoJsonData);
 //        GeoJsonPoint point = new GeoJsonPoint(new LatLng(32.6, -117.4));
