@@ -24,7 +24,7 @@ public class InputLocations extends AppCompatActivity {
         setContentView(R.layout.activity_input_locations);
     }
 
-    public void onSaveLocationClicked(View view) {
+    public void onSaveLocationClicked(View view) throws JSONException {
         Double latitude = Double.parseDouble(((EditText)findViewById(R.id.editLatitude))
                 .getText().toString());
         Double longitude = Double.parseDouble(((EditText)findViewById(R.id.editLongitude))
@@ -36,8 +36,12 @@ public class InputLocations extends AppCompatActivity {
         Feature feature = new Feature(point);
         //Set optional feature identifier
         feature.setIdentifier(locationName);
+        JSONObject test = new JSONObject();
+        test.put("label", "W");
+        test.put("title", locationName);
+
         //Set optiona feature properties
-        feature.setProperties(new JSONObject());
+        feature.setProperties(test);
         //Convert to formatted JsonObject
         try {
             JSONObject geoJson = feature.toJSON();

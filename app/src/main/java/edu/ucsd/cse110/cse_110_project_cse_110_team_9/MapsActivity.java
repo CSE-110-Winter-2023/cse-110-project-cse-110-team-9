@@ -3,18 +3,24 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.cocoahero.android.geojson.GeoJSON;
+import com.cocoahero.android.geojson.GeoJSONObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.data.Feature;
+import com.google.maps.android.data.Layer;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonParser;
 import com.google.maps.android.data.geojson.GeoJsonPoint;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -63,35 +69,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(ucsd).title("UCSD Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(ucsd));
 
-        //GeoJsonLayer layer = new GeoJsonLayer(mMap, )
-//        JSONObject geoJsonData = new JSONObject();
-//        GeoJsonLayer layer = new GeoJsonLayer(mMap,geoJsonData);
-//        GeoJsonPoint point = new GeoJsonPoint(new LatLng(32.6, -117.4));
-//        HashMap<String, String> properties = new HashMap<>();
-//        properties.put("Ocean", "South Atlantic");
-//        GeoJsonFeature pointFeature = new GeoJsonFeature(point, "Origin", properties, null);
-//        layer.addFeature(pointFeature);
-//        layer.addLayerToMap();
-//
-//        File file = new File(this.getFilesDir(), FILE_NAME);
-//        FileReader fileReader = null;
-//        FileWriter fileWriter = null;
-//        BufferedReader bufferedReader = null;
-//        BufferedWriter bufferedWriter = null;
-//        String response = null;
-//        System.out.println(layer.toString());
-//        if (!file.exists()){
-//                try {
-//                    file.createNewFile();
-//                    fileWriter = new FileWriter(file.getAbsoluteFile());
-//                    bufferedWriter = new BufferedWriter(fileWriter);
-//                    bufferedWriter.write("{}");
-//                    bufferedWriter.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
+        String data = null;
+        try {
+             data = Utilities.readJsonFile("mapdata.json", this);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(data);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        GeoJsonLayer layer = new GeoJsonLayer(mMap, jsonObject);
+
+        GeoJsonPoint point = new GeoJsonPoint(new LatLng(32.88, -116.23));
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("Ocean", "South Atlantic");
+        GeoJsonFeature pointFeature = new GeoJsonFeature(point, "Origin", properties, null);
+
+        layer.addFeature(pointFeature);
+
+        for (GeoJsonFeature feature : layer.getFeatures())
+        {
+            feature.setPointStyle(layer.getDefaultPointStyle());
+            // Do something to the feature
+        }
+
+        layer.setOnFeatureClickListener(new Layer.OnFeatureClickListener() {
+            @Override
+            public void onFeatureClick(Feature feature) {
+                Log.i("GeoJsonClick", "Feature clicked: " + feature.getProperty("title"));
+
+            }
+        });
+        layer.addLayerToMap();
 
 
         }
