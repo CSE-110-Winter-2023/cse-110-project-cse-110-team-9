@@ -8,14 +8,12 @@ import android.view.View;
 import android.widget.EditText;
 
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map.MapUIState;
-import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map.MapViewModel;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map.MapsFragment;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map.SharedViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private MapViewModel viewModel;
     private SharedViewModel model;
     private MapsFragment mapsFrag;
     @Override
@@ -24,17 +22,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        viewModel = new ViewModelProvider(this).get(MapViewModel.class);
 
         model =  new ViewModelProvider(this).get(SharedViewModel.class);
 
     }
 
-    public void OnLaunchMap(View view) {
+    public void OnSavePointBtn(View view) {
         Double lat =  Double.parseDouble(((EditText) findViewById(R.id.enterLatitudeBox)).getText().toString());
         Double longy =  Double.parseDouble(((EditText) findViewById(R.id.enterLongitudeBox)).getText().toString());
-
-        model.setItem(new MapUIState(lat, longy));
+        String label = ((EditText)findViewById(R.id.enterPointLabel)).getText().toString();
+        model.setItem(new MapUIState(lat, longy, label));
 
     }
 

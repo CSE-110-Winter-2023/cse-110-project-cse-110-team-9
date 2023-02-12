@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +19,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import edu.ucsd.cse110.cse_110_project_cse_110_team_9.MainActivity;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
 
-public class MapsFragment extends Fragment implements PassValueToFragment {
+public class MapsFragment extends Fragment   {
 
-    private MapViewModel viewModel;
     private SharedViewModel model;
     private GoogleMap map;
 
@@ -63,16 +60,16 @@ public class MapsFragment extends Fragment implements PassValueToFragment {
         super.onCreate(savedInstanceState);
         model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        model.item.observe(getActivity(), new Observer<MapUIState>() {
+        model.uiState.observe(getActivity(), new Observer<MapUIState>() {
             @Override
             public void onChanged(@Nullable MapUIState mapUIState) {
                 Log.d("update rec", "yay");
-                LatLng ucsd = new LatLng(mapUIState.getLatitude(), mapUIState.getLongitiude());
+                LatLng newPoint = new LatLng(mapUIState.getLatitude(), mapUIState.getLongitude());
 
                 map.addMarker(new MarkerOptions()
-                        .position(ucsd)
-                        .title("Marker in ucsd"));
-                map.moveCamera(CameraUpdateFactory.newLatLng(ucsd));
+                        .position(newPoint)
+                        .title(mapUIState.getPointLabel()));
+                map.moveCamera(CameraUpdateFactory.newLatLng(newPoint));
             }
         });
     }
@@ -87,20 +84,5 @@ public class MapsFragment extends Fragment implements PassValueToFragment {
         }
 
 
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            ((MainActivity) getActivity()).setOnDataListener(this);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onSelectedValue(String value) {
-        Log.d("Data:","value");
     }
 }

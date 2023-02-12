@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class SharedViewModel extends ViewModel {
 
-    public MutableLiveData<MapUIState> item = new MutableLiveData<>();
+    public MutableLiveData<MapUIState> uiState = new MutableLiveData<>();
 
     public LiveData<MapUIState> getUiState(){
-        return  item;
+        return  uiState;
     }
 
     public void setItem(MapUIState item){
-        this.item.setValue(item);
+        this.uiState.setValue(item);
     }
 
 

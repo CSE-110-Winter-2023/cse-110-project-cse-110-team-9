@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="LAT" />
+                android:hint="Latitude" />
         </TableRow>
 
         <TableRow
@@ -44,7 +44,20 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="LONG" />
+                android:hint="Longitude" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/enterPointLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Your mom's house" />
         </TableRow>
 
         <TableRow
@@ -55,7 +68,7 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="OnLaunchMap"
+                android:onClick="OnSavePointBtn"
                 android:text="Button" />
         </TableRow>
     </TableLayout>
