@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
+package edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -11,6 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.databinding.ActivityMapsBinding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -29,6 +30,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
     }
 
     /**
