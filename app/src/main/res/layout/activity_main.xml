@@ -26,12 +26,12 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/enterLatitudeBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Latitude" />
         </TableRow>
 
         <TableRow
@@ -39,12 +39,25 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/enterLongitudeBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Longitude" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/enterPointLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Your mom's house" />
         </TableRow>
 
         <TableRow
@@ -55,6 +68,7 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="OnSavePointBtn"
                 android:text="Button" />
         </TableRow>
     </TableLayout>
@@ -64,5 +78,5 @@
         android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="edu.ucsd.cse110.cse_110_project_cse_110_team_9.MapsFragment"/>
+        android:name="edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map.MapsFragment"/>
 </LinearLayout>

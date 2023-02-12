@@ -1,10 +1,13 @@
-package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
+package edu.ucsd.cse110.cse_110_project_cse_110_team_9.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsFragment extends Fragment {
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
+
+public class MapsFragment extends Fragment   {
+
+    private SharedViewModel model;
+    private GoogleMap map;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -34,6 +42,7 @@ public class MapsFragment extends Fragment {
             LatLng sydney = new LatLng(-34, 151);
             googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            map = googleMap;
         }
     };
 
@@ -45,6 +54,26 @@ public class MapsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+        model.uiState.observe(getActivity(), new Observer<MapUIState>() {
+            @Override
+            public void onChanged(@Nullable MapUIState mapUIState) {
+                Log.d("update rec", "yay");
+                LatLng newPoint = new LatLng(mapUIState.getLatitude(), mapUIState.getLongitude());
+
+                map.addMarker(new MarkerOptions()
+                        .position(newPoint)
+                        .title(mapUIState.getPointLabel()));
+                map.moveCamera(CameraUpdateFactory.newLatLng(newPoint));
+            }
+        });
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -53,5 +82,7 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
+
     }
 }
