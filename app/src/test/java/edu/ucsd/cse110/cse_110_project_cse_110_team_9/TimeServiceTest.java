@@ -27,8 +27,9 @@ public class TimeServiceTest
 //        senario.onActivity(activity -> {
 //            long expected = 10L;
 //            mockDataSource.setValue(expected);
-//            TextView textView = activity.findViewById(R.id.textViewMain);
+//            TextView textView = activity.findViewById(R.id.orientationView);
 //            Long observed = Long.parseLong(textView.getText().toString());
+//            System.out.println(observed);
 //
 //            assert observed == expected;
 //        });

@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private TimeService timeService;
     private OrientationService orientationService;
     private float currentOrientation = 0f;
-    private float orientation = 0f;
+    public float orientation = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
-        timeService.getTime().observe(this, time -> {
 
+        timeService.getTime().observe(this, time -> {
 
 
             float deg = (float) Math.toDegrees(orientation);
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
             rotateAnimation.setFillAfter(true);
             ImageView img = findViewById(R.id.imageView);
             img.startAnimation(rotateAnimation);
-
             currentOrientation = -deg;
 
         });
@@ -52,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         orientationService = OrientationService.singleton(this);
 
         orientationService.getOrientation().observe(this, orientation -> {
+            // TextView view = findViewById(R.id.orientationView);
+           // view.setText(Float.toString(orientation));
             this.orientation = orientation;
 
 
