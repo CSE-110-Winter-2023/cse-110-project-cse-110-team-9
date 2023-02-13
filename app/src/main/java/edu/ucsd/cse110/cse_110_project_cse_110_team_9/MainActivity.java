@@ -8,6 +8,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -15,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
+    private float currentOrientation = 0f;
+    private float orientation = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +29,31 @@ public class MainActivity extends AppCompatActivity {
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
         timeService.getTime().observe(this, time -> {
-            textView.setText(Long.toString(time));
+
+
+
+            float deg = (float) Math.toDegrees(orientation);
+            textView.setText(Float.toString(deg));
+
+            RotateAnimation rotateAnimation = new RotateAnimation(currentOrientation,
+                    deg, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(250);
+            rotateAnimation.setFillAfter(true);
+            ImageView img = findViewById(R.id.imageView);
+            img.startAnimation(rotateAnimation);
+
+            currentOrientation = deg;
+
         });
 
 
         orientationService = OrientationService.singleton(this);
 
         orientationService.getOrientation().observe(this, orientation -> {
-            textView.setText(Float.toString(orientation));
+            this.orientation = orientation;
+
+
+
         });
 //        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 //        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);

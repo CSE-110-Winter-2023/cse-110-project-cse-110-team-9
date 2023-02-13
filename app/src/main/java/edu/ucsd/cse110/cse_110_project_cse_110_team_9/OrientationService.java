@@ -78,7 +78,6 @@ public class OrientationService implements SensorEventListener {
             float[] orientation = new float[3];
             SensorManager.getOrientation(r, orientation);
 
-
             this.azimuth.postValue(orientation[0]);
         }
     }
