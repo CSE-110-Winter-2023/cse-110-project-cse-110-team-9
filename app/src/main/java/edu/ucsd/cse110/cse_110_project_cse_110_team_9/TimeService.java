@@ -38,7 +38,7 @@ public class TimeService {
         ScheduledExecutorService executer = Executors.newSingleThreadScheduledExecutor();
         this.clockFuture = executer.scheduleAtFixedRate(() -> {
             this.timeValue.postValue(System.currentTimeMillis());
-        }, 0, 1000, TimeUnit.MILLISECONDS);
+        }, 0, 100, TimeUnit.MILLISECONDS);
 
     }
 

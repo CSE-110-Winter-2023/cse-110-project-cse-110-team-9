@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
         timeService.getTime().observe(this, time -> {
@@ -33,16 +34,17 @@ public class MainActivity extends AppCompatActivity {
 
 
             float deg = (float) Math.toDegrees(orientation);
-            textView.setText(Float.toString(deg));
+
+            textView.setText(Float.toString(-deg));
 
             RotateAnimation rotateAnimation = new RotateAnimation(currentOrientation,
-                    deg, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(250);
+                    -deg, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(50);
             rotateAnimation.setFillAfter(true);
             ImageView img = findViewById(R.id.imageView);
             img.startAnimation(rotateAnimation);
 
-            currentOrientation = deg;
+            currentOrientation = -deg;
 
         });
 
