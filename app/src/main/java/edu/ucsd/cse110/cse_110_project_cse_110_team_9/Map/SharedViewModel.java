@@ -4,9 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.maps.model.MarkerOptions;
+
 public class SharedViewModel extends ViewModel {
 
     public MutableLiveData<MapUIState> uiState = new MutableLiveData<>();
+
+    private MutableLiveData<MarkerOptions> newMarker = new MutableLiveData<>();
+
+    //private MutableLiveData<Point>
 
     public LiveData<MapUIState> getUiState(){
         return  uiState;
@@ -16,5 +22,12 @@ public class SharedViewModel extends ViewModel {
         this.uiState.setValue(item);
     }
 
+    public  LiveData<MarkerOptions> getNewMarker(){
+        return newMarker;
+    }
 
+    public void addNewMarker(MarkerOptions marker)
+    {
+        this.newMarker.setValue(marker);
+    }
 }
