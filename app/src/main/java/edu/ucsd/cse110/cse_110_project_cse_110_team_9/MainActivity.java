@@ -1,17 +1,22 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,11 +26,24 @@ public class MainActivity extends AppCompatActivity {
     private float currentOrientation = 0f;
     private float orientation = 0f;
 
+    private LocationService locationService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        }
+
+        locationService = LocationService.singleton(this);
+
+        TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
+        locationService.getLocation().observe(this, loc ->{
+            textViewLoc.setText(Double.toString(loc.first) + " "+Double.toString(loc.second));
+        });
 
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
@@ -62,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
 //    }
     }
 
-        @Override
-        protected void onPause ()
-        {
-            super.onPause();
-            orientationService.unregisterSensorListeners();
-        }
+    @Override
+    protected void onPause ()
+    {
+        super.onPause();
+        orientationService.unregisterSensorListeners();
     }
+}
