@@ -18,19 +18,19 @@ public class LocationService implements LocationListener {
     public static LocationService instance;
     private Activity activity;
 
-    private MutableLiveData<Pair<Double,Double>> locationValue;
+    private MutableLiveData<Pair<Double, Double>> locationValue;
 
     private final LocationManager locationManager;
 
-    public static LocationService singleton(Activity activity){
-        if(instance == null){
+    public static LocationService singleton(Activity activity) {
+        if (instance == null) {
             instance = new LocationService(activity);
         }
         return instance;
     }
 
 
-    protected LocationService(Activity activity){
+    protected LocationService(Activity activity) {
         this.locationValue = new MutableLiveData<>();
         this.activity = activity;
         this.locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
@@ -38,28 +38,36 @@ public class LocationService implements LocationListener {
         this.registerLocationListener();
     }
 
-    private void registerLocationListener() {
-        if(ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+    public void registerLocationListener() {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //throw new IllegalStateException("App needs location permission to get latest location");
         }
 
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, this);
+        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
         Location last = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        this.locationValue.postValue((new Pair<>(last.getLatitude(), last.getLongitude())));
+        if (last != null) {
+
+
+            this.locationValue.postValue((new Pair<>(last.getLatitude(), last.getLongitude())));
+        }
     }
 
     @Override
-    public void onLocationChanged(@NonNull Location location){
+    public void onLocationChanged(@NonNull Location location) {
         this.locationValue.postValue(new Pair<>(location.getLatitude(), location.getLongitude()));
     }
 
-    private void unregisterLocationListener() { locationManager.removeUpdates(this);}
+    public void unregisterLocationListener() {
+        locationManager.removeUpdates(this);
+    }
 
-    public LiveData<Pair<Double, Double>> getLocation(){ return  this.locationValue;}
+    public LiveData<Pair<Double, Double>> getLocation() {
+        return this.locationValue;
+    }
 
-    public void setMockOrientationSource(MutableLiveData<Pair<Double, Double>> mockDataSource){
+    public void setMockOrientationSource(MutableLiveData<Pair<Double, Double>> mockDataSource) {
         unregisterLocationListener();
         this.locationValue = mockDataSource;
     }

@@ -33,22 +33,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
         }
 
         locationService = LocationService.singleton(this);
 
         TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
-        locationService.getLocation().observe(this, loc ->{
-            textViewLoc.setText(Double.toString(loc.first) + " "+Double.toString(loc.second));
+        locationService.getLocation().observe(this, loc -> {
+            textViewLoc.setText(Double.toString(loc.first) + " " + Double.toString(loc.second));
         });
 
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
         timeService.getTime().observe(this, time -> {
-
 
 
             float deg = (float) Math.toDegrees(orientation);
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             this.orientation = orientation;
 
 
-
         });
 //        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 //        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
@@ -81,9 +79,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause ()
-    {
+    protected void onPause() {
         super.onPause();
         orientationService.unregisterSensorListeners();
+        locationService.unregisterLocationListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        orientationService.registerSensorListeners();
+        locationService.registerLocationListener();
     }
 }

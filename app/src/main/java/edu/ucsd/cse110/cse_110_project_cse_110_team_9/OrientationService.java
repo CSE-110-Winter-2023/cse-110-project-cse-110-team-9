@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -30,11 +31,12 @@ public class OrientationService implements SensorEventListener {
 
     }
 
-    private void registerSensorListeners() {
+    public void registerSensorListeners() {
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     public static OrientationService singleton(Activity activity){
@@ -60,8 +62,12 @@ public class OrientationService implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+        Log.d("Accuracy Change", Integer.toString(i));
 
-
+        if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+        {
+            Log.d("Accuracy Change", Integer.toString(i));
+        }
     }
 
 
