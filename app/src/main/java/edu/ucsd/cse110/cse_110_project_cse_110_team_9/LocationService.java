@@ -45,6 +45,9 @@ public class LocationService implements LocationListener {
         }
 
         this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, this);
+
+        Location last = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        this.locationValue.postValue((new Pair<>(last.getLatitude(), last.getLongitude())));
     }
 
     @Override
