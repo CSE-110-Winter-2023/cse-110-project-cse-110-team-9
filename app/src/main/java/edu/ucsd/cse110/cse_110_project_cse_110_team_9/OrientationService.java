@@ -66,7 +66,12 @@ public class OrientationService implements SensorEventListener {
 
         if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
         {
-            Log.d("Accuracy Change", Integer.toString(i));
+            Log.d("Accuracy Magnetic Field", Integer.toString(i));
+        }
+
+        if (sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+        {
+            Log.d("Accuracy Accelerometer Field", Integer.toString(i));
         }
     }
 
