@@ -42,6 +42,7 @@ public class CompassView extends View {
 
     public CompassView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         init(context,  attrs);
     }
 
@@ -64,7 +65,9 @@ public class CompassView extends View {
 
     private void init(Context context, AttributeSet attrs) {
 
-        mActivity = (Activity) context;
+        if (!isInEditMode()) {
+            mActivity = (Activity) context;
+        }
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CompassView, 0, 0);
 
         mBackgroundColor = a.getColor(R.styleable.CompassView_backgroundColor, Color.BLACK);
