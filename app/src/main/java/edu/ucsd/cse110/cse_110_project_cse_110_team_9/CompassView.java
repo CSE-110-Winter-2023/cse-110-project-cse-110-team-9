@@ -42,6 +42,28 @@ public class CompassView extends View {
 
     public CompassView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context,  attrs);
+    }
+
+
+
+    public CompassView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context,  attrs);
+    }
+
+    private void checkValues() {
+        if ((mDegrees < 0) || (mDegrees > 359))
+            throw new IndexOutOfBoundsException(getResources()
+                    .getString(R.string.out_index_degrees));
+
+        if ((mRangeDegrees < 10) || (mRangeDegrees > 360))
+            throw new IndexOutOfBoundsException(getResources().getString(
+                    R.string.out_index_range_degrees));
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+
         mActivity = (Activity) context;
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CompassView, 0, 0);
 
@@ -57,20 +79,7 @@ public class CompassView extends View {
         a.recycle();
 
         checkValues();
-        init();
-    }
 
-    private void checkValues() {
-        if ((mDegrees < 0) || (mDegrees > 359))
-            throw new IndexOutOfBoundsException(getResources()
-                    .getString(R.string.out_index_degrees));
-
-        if ((mRangeDegrees < 10) || (mRangeDegrees > 360))
-            throw new IndexOutOfBoundsException(getResources().getString(
-                    R.string.out_index_range_degrees));
-    }
-
-    private void init() {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
