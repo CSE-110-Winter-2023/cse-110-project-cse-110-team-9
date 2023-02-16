@@ -28,6 +28,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.221" />
 
+    <edu.ucsd.cse110.cse_110_project_cse_110_team_9.CompassView
+        android:id="@+id/compass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundColor="#000000"
+        app:degrees="0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lineColor="#FFFFFF"
+        app:markerColor="#FF0000"
+        app:rangeDegrees="180.0"
+        app:showMarker="true"
+        app:textColor="#FFFFFF"
+        app:textSize="15sp" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"

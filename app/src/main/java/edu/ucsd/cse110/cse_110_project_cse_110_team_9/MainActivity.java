@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
+
+        CompassView compass = findViewById(R.id.compass);
         timeService.getTime().observe(this, time -> {
 
 
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             img.startAnimation(rotateAnimation);
 
             currentOrientation = -deg;
+            compass.setDegrees(-deg, true);
 
         });
 
