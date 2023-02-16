@@ -2,6 +2,7 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.util.Pair;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
-    private float currentOrientation = 0f;
     private float orientation = 0f;
 
     private LocationService locationService;
@@ -40,60 +40,74 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
         }
 
-        locationService = LocationService.singleton(this);
 
-        TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
-        locationService.getLocation().observe(this, loc -> {
-            textViewLoc.setText(Double.toString(loc.first) + " " + Double.toString(loc.second));
-        });
+        locationService = LocationService.singleton(this);
+        this.reobserveLocation();
+
+//        TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
+//        locationService.getLocation().observe(this, loc -> {
+//            textViewLoc.setText(Double.toString(loc.first) + " " + Double.toString(loc.second));
+//        });
 
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
 
         CompassView compass = findViewById(R.id.compass);
-        timeService.getTime().observe(this, time -> {
-
-
-            float deg = (float) Math.toDegrees(orientation);
-
-            textView.setText(Float.toString(-deg));
-
-//            RotateAnimation rotateAnimation = new RotateAnimation(currentOrientation,
-//                    -deg, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//            rotateAnimation.setDuration(50);
-//            rotateAnimation.setFillAfter(true);
-//            ImageView img = findViewById(R.id.imageView);
-//            img.startAnimation(rotateAnimation);
+        compass.setRangeDegrees(360);
+//        timeService.getTime().observe(this, time -> {
 //
-//            currentOrientation = -deg;
-            compass.setDegrees(-deg, true);
-
-        });
+//
+//            float deg = (float) Math.toDegrees(orientation);
+//
+//            textView.setText(Float.toString(-deg));
+//
+//
+////            currentOrientation = -deg;
+//            compass.setDegrees(-deg, true);
+//
+//        });
 
 
         orientationService = OrientationService.singleton(this);
+        var azimuthData = orientationService.getAzimuthData();
+        azimuthData.observe(this, this::OnOrientationChanged);
 
-        orientationService.getOrientation().observe(this, orientation -> {
-            this.orientation = orientation;
+    }
+
+    private void OnOrientationChanged(Float azimuth)
+    {
+        CompassView compass = findViewById(R.id.compass);
+
+        //float deg = (float) Math.toDegrees(azimuth);
+        compass.setDegrees(azimuth , true);
+    }
 
 
-        });
-//        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-//        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
-//    }
+    private void onLocationChanged(Pair<Double, Double> latLong) {
+        TextView locationText = findViewById(R.id.locationText);
+        locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
+    }
+
+    private void reobserveLocation() {
+        var locationData = locationService.getLocation();
+        locationData.observe(this, this::onLocationChanged);
+    }
+
+    private void onTimeChanged(Long time) {
+        //TextView timeText = findViewById(R.id.timeText);
+        //timeText.setText(Utilities.formatTime(time));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         orientationService.unregisterSensorListeners();
-        locationService.unregisterLocationListener();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         orientationService.registerSensorListeners();
-        locationService.registerLocationListener();
     }
 }
