@@ -1,44 +1,67 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-import android.util.Pair;
+import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
 import androidx.test.core.app.ActivityScenario;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+
 @RunWith(RobolectricTestRunner.class)
 public class OrientationTest {
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     @Test
-    public void testShowNorth() {
+    public void test_orientation_service() {
+        float testValue = 180;
 
-
-
-        MutableLiveData<Float> mockDataSource = new MutableLiveData<Float>();
-        Float expected = (float) Math.PI / 2;
-        mockDataSource.setValue(expected);
-       // LocationService locationService;
-        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        var scenario = ActivityScenario.launch(MainActivity.class);
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.onActivity(activity -> {
+            var orientationService = OrientationService.singleton(activity);
+
+            var mockOrientation = new MutableLiveData<Float>();
+            orientationService.setMockOrientationSource(mockOrientation);
+
+            var latch = new CountDownLatch(1);
+
+            mockOrientation.observe(activity, val ->{
+                assertEquals(val, testValue, 0);
+                latch.countDown();
+            });
+
+            mockOrientation.setValue(testValue);
+
+            try {
+                var hitZeroWithoutTimingOut = latch.await(100, TimeUnit.MILLISECONDS);
+                if (!hitZeroWithoutTimingOut) {
+                    fail("Did not get update from LiveData.");
+                }
+            } catch (InterruptedException e) {
+                fail("Test interrupted.");
+            }
 
 
-           LocationService locationService = LocationService.singleton(activity);
-           locationService.setMockOrientationSource(new MutableLiveData<>(new Pair<>(1d,1d)));
+            //TextView textView = activity.findViewById(R.id.orientationText);
 
-            OrientationService orientationService = OrientationService.singleton(activity);
-            orientationService.setMockOrientationSource(mockDataSource);
-            //System.out.println(expected.floatValue());
-            MutableLiveData<Float> orientationLiveData = (MutableLiveData<Float>) orientationService.getOrientation();
-            //System.out.println(orientationLiveData.getValue());
-            assertEquals(expected, orientationLiveData.getValue());
+            //var expected = Utilities.formatOrientation(testValue);
+           // var observed = textView.getText().toString();
+
+//            var observed = compassView.getDegrees();
+//            assertEquals(testValue, observed, 0);
         });
-
     }
 }

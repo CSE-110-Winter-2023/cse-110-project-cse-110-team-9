@@ -1,60 +1,86 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.sql.Time;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class TimeService {
+    // LiveData variable which contains the latest real time value.
+    private final MutableLiveData<Long> realTimeData;
 
+    // LiveData variable which contains the mocked time value (if there is one).
+    private LiveData<Long> mockTimeData = null;
 
-    private MutableLiveData<Long> timeValue;
-
+    // MediatorLiveData which we return to clients of this service.
+    private final MediatorLiveData<Long> timeData;
+    // ScheduledFuture result of scheduling a task with a ScheduledExecutorService
     private ScheduledFuture<?> clockFuture;
-
-
-    //Singeton instance of TimeService
-
+    // Singleton instance of TimeService
     private static TimeService instance;
 
-    public static TimeService singleton(){
-        if (instance == null)
-        {
+    /**
+     * @return a singleton instance of the TimeService class
+     */
+    public static TimeService singleton() {
+        if (instance == null) {
             instance = new TimeService();
         }
         return instance;
     }
 
+    /**
+     * Constructor for TimeService
+     */
     protected TimeService() {
-        this.timeValue = new MutableLiveData<>();
-        this.registerTimeListener();
+        // Set up the real time value.
+        realTimeData = new MutableLiveData<>();
+        registerTimeListener();
 
+        // Wrap it in a MediatorLiveData, which forwards the updates (for now).
+        timeData = new MediatorLiveData<>();
+        timeData.addSource(realTimeData, timeData::postValue);
     }
 
+    /**
+     * Registers a time listener using ScheduledExecutorService
+     * which runs at an interval and updates the time value.
+     */
     public void registerTimeListener() {
-        ScheduledExecutorService executer = Executors.newSingleThreadScheduledExecutor();
-        this.clockFuture = executer.scheduleAtFixedRate(() -> {
-            this.timeValue.postValue(System.currentTimeMillis());
-        }, 0, 100, TimeUnit.MILLISECONDS);
-
+        var executor = Executors.newSingleThreadScheduledExecutor();
+        clockFuture = executor.scheduleAtFixedRate(() -> {
+            timeData.postValue(System.currentTimeMillis());
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
-    public void unregisterTimeListener(){
-        this.clockFuture.cancel(true);
+    /**
+     * Unregisters the time listener
+     */
+    public void unregisterTimeListener() {
+        clockFuture.cancel(true);
     }
 
-
-    public void setMockTimeSource(MutableLiveData<Long> mockTimeSource){
+    /**
+     * Mocks the time source instead of using the time listener
+     */
+    public void setMockTimeSource(MutableLiveData<Long> mockTimeData) {
+        this.mockTimeData = mockTimeData;
         unregisterTimeListener();
-        this.timeValue = mockTimeSource;
+        timeData.removeSource(realTimeData);
+        timeData.addSource(mockTimeData, timeData::postValue);
     }
 
-    public MutableLiveData<Long> getTime()
-    {
-        return this.timeValue;
+    /** Undoes the mock, restoring the original behavior. */
+    public void clearMockTimeSource() {
+        registerTimeListener();
+        timeData.removeSource(mockTimeData);
+        timeData.addSource(realTimeData, timeData::postValue);
     }
 
+    public LiveData<Long> getTimeData() {
+        return this.timeData;
+    }
 }
