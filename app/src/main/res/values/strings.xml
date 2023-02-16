@@ -1,4 +1,14 @@
 <resources>
-    <string name="app_name">cse-110-project-cse-110-team-9</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="app_name" translatable="false">cse-110-project-cse-110-team-9</string>
+    <string name="library_name" translatable="false">CompassView</string>
+    <string name="compass_north">N</string>
+    <string name="compass_east">E</string>
+    <string name="compass_south">S</string>
+    <string name="compass_west">W</string>
+    <string name="compass_northeast">NE</string>
+    <string name="compass_northwest">NW</string>
+    <string name="compass_southeast">SE</string>
+    <string name="compass_southwest">SW</string>
+    <string name="out_index_degrees" translatable="false">Degrees must be between 0 and 359, both inclusive. Actual value: </string>
+    <string name="out_index_range_degrees" translatable="false">Range degrees must be between 10 and 360, both inclusive. Actual value: </string>
 </resources>

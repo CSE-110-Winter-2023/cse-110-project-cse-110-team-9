@@ -28,16 +28,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.221" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+    <edu.ucsd.cse110.cse_110_project_cse_110_team_9.CompassView
+        android:id="@+id/compass"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="169dp"
-        android:layout_marginEnd="170dp"
-        android:layout_marginBottom="120dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:backgroundColor="#000000"
+        app:degrees="0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lineColor="#FFFFFF"
+        app:markerColor="#FF0000"
+        app:rangeDegrees="180.0"
+        app:showMarker="true"
+        app:textColor="#FFFFFF"
+        app:textSize="15sp" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

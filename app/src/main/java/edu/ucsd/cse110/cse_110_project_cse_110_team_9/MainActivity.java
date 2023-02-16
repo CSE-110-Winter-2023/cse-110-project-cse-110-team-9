@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         timeService = TimeService.singleton();
         TextView textView = findViewById(R.id.textViewMain);
+
+        CompassView compass = findViewById(R.id.compass);
         timeService.getTime().observe(this, time -> {
 
 
@@ -56,14 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
             textView.setText(Float.toString(-deg));
 
-            RotateAnimation rotateAnimation = new RotateAnimation(currentOrientation,
-                    -deg, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(50);
-            rotateAnimation.setFillAfter(true);
-            ImageView img = findViewById(R.id.imageView);
-            img.startAnimation(rotateAnimation);
-
-            currentOrientation = -deg;
+//            RotateAnimation rotateAnimation = new RotateAnimation(currentOrientation,
+//                    -deg, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//            rotateAnimation.setDuration(50);
+//            rotateAnimation.setFillAfter(true);
+//            ImageView img = findViewById(R.id.imageView);
+//            img.startAnimation(rotateAnimation);
+//
+//            currentOrientation = -deg;
+            compass.setDegrees(-deg, true);
 
         });
 
