@@ -93,7 +93,7 @@ public class LocationService implements LocationListener {
                 // At least one of the values in the Map<String, Boolean> grants needs to be true.
                 if (grants.values().stream().noneMatch(isGranted -> isGranted)) {
                     // If you've landed here by denying it, you should grant it manually in settings or wipe data.
-                    throw new IllegalStateException("App needs you to grant at least one location permission!");
+                  //  throw new IllegalStateException("App needs you to grant at least one location permission!");
                 }
                 // We have permission now, carry on!
                 action.run();
