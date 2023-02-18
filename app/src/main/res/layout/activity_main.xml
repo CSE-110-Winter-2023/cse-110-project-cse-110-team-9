@@ -30,10 +30,12 @@
 
     <edu.ucsd.cse110.cse_110_project_cse_110_team_9.CompassView
         android:id="@+id/compass"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:backgroundColor="#000000"
         app:degrees="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lineColor="#FFFFFF"
         app:markerColor="#FF0000"
@@ -42,6 +44,15 @@
         app:textColor="#FFFFFF"
         app:textSize="15sp" />
 
+    <ImageView
+        android:id="@+id/compassImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@mipmap/ic_launcher" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

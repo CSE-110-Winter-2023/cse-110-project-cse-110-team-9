@@ -53,7 +53,7 @@ public class TimeService {
         var executor = Executors.newSingleThreadScheduledExecutor();
         clockFuture = executor.scheduleAtFixedRate(() -> {
             timeData.postValue(System.currentTimeMillis());
-        }, 0, 1000, TimeUnit.MILLISECONDS);
+        }, 0, 200, TimeUnit.MILLISECONDS);
     }
 
     /**

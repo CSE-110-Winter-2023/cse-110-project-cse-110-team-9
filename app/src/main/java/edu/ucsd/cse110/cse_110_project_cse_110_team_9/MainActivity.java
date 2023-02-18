@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private TimeService timeService;
     private OrientationService orientationService;
     private float orientation = 0f;
+    private float previous_orientation = 0f;
+
 
     private LocationService locationService;
 
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         timeService = TimeService.singleton();
+        var timeData = timeService.getTimeData();
+        timeData.observe(this, this::onTimeChanged);
         TextView textView = findViewById(R.id.textViewMain);
 
         CompassView compass = findViewById(R.id.compass);
@@ -80,12 +84,17 @@ public class MainActivity extends AppCompatActivity {
 
         //float deg = (float) Math.toDegrees(azimuth);
         compass.setDegrees(azimuth , true);
+
+        orientation = azimuth;
+
     }
 
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
+
+
     }
 
     private void reobserveLocation() {
@@ -96,6 +105,16 @@ public class MainActivity extends AppCompatActivity {
     private void onTimeChanged(Long time) {
         //TextView timeText = findViewById(R.id.timeText);
         //timeText.setText(Utilities.formatTime(time));
+
+
+        ImageView img = findViewById(R.id.compassImg);
+        RotateAnimation rotateAnimation = new RotateAnimation(previous_orientation,
+                orientation, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation.setDuration(100);
+        rotateAnimation.setFillAfter(true);
+        img.startAnimation(rotateAnimation);
+
+        previous_orientation = orientation;
     }
 
     @Override
