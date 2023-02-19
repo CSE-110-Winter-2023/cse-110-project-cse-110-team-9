@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 
@@ -42,59 +43,42 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
         }
 
-
         locationService = LocationService.singleton(this);
         this.reobserveLocation();
-
-//        TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
-//        locationService.getLocation().observe(this, loc -> {
-//            textViewLoc.setText(Double.toString(loc.first) + " " + Double.toString(loc.second));
-//        });
 
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);
-        TextView textView = findViewById(R.id.textViewMain);
 
         CompassView compass = findViewById(R.id.compass);
         compass.setRangeDegrees(360);
-//        timeService.getTime().observe(this, time -> {
-//
-//
-//            float deg = (float) Math.toDegrees(orientation);
-//
-//            textView.setText(Float.toString(-deg));
-//
-//
-////            currentOrientation = -deg;
-//            compass.setDegrees(-deg, true);
-//
-//        });
-
 
         orientationService = OrientationService.singleton(this);
         var azimuthData = orientationService.getAzimuthData();
         azimuthData.observe(this, this::OnOrientationChanged);
-
     }
 
     private void OnOrientationChanged(Float azimuth)
     {
         CompassView compass = findViewById(R.id.compass);
 
-        //float deg = (float) Math.toDegrees(azimuth);
         compass.setDegrees(azimuth , true);
 
         orientation = azimuth;
 
-    }
+        ImageView marker = findViewById(R.id.compassImg);
+        float rotation = azimuth+90;
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
+        layoutParams.circleAngle = rotation;
+        marker.setLayoutParams(layoutParams);
 
+        // Set the rotation of the ImageView to match the circle angle
+        marker.setRotation(rotation);
+    }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
-
-
     }
 
     private void reobserveLocation() {
@@ -103,9 +87,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onTimeChanged(Long time) {
-        //TextView timeText = findViewById(R.id.timeText);
-        //timeText.setText(Utilities.formatTime(time));
-
 
         ImageView img = findViewById(R.id.compassImg);
         RotateAnimation rotateAnimation = new RotateAnimation(previous_orientation,
@@ -121,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         orientationService.unregisterSensorListeners();
-
     }
 
     @Override
