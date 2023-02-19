@@ -83,14 +83,23 @@ public class MainActivity extends AppCompatActivity {
 
         orientation = -azimuth;
 
-        ImageView marker = findViewById(R.id.compassImg);
+        ImageView needle = findViewById(R.id.compassImg);
         float rotation = orientation;
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) needle.getLayoutParams();
         layoutParams.circleAngle = rotation;
-        marker.setLayoutParams(layoutParams);
+        needle.setLayoutParams(layoutParams);
 
         // Set the rotation of the ImageView to match the circle angle
-        marker.setRotation(rotation);
+        needle.setRotation(rotation);
+
+        ImageView location_marker = findViewById(R.id.imageView2);
+        float rotation2 = orientation+180;
+        ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
+        layoutParams2.circleAngle = rotation2;
+        location_marker.setLayoutParams(layoutParams2);
+
+        // Set the rotation of the ImageView to match the circle angle
+        location_marker.setRotation(rotation2);
     }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
