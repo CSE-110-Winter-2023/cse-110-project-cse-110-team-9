@@ -3,6 +3,8 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -20,6 +22,8 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private OrientationService orientationService;
     private float orientation = 0f;
     private float previous_orientation = 0f;
-
+    private RecyclerView recyclerView;
 
     private LocationService locationService;
 
@@ -43,8 +47,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+
         locationService = LocationService.singleton(this);
         this.reobserveLocation();
+
+
+        AddLocationAdapter adapter = new AddLocationAdapter();
+        adapter.setHasStableIds(true);
+
+        recyclerView = findViewById(R.id.locations);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
+
 
 //        TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
 //        locationService.getLocation().observe(this, loc -> {
@@ -93,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
     private void onLocationChanged(Pair<Double, Double> latLong) {
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
-
-
     }
 
     private void reobserveLocation() {
