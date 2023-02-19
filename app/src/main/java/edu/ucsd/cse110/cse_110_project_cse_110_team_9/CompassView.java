@@ -20,18 +20,6 @@ limitations under the License.
 
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;

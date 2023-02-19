@@ -1,10 +1,14 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,12 +17,15 @@ import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private OrientationService orientationService;
     private float orientation = 0f;
     private float previous_orientation = 0f;
-
+    private RecyclerView recyclerView;
 
     private LocationService locationService;
 
@@ -42,35 +49,25 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
         }
 
-
         locationService = LocationService.singleton(this);
         this.reobserveLocation();
 
-//        TextView textViewLoc = (TextView) findViewById(R.id.textViewLoc);
-//        locationService.getLocation().observe(this, loc -> {
-//            textViewLoc.setText(Double.toString(loc.first) + " " + Double.toString(loc.second));
-//        });
+
+        AddLocationAdapter adapter = new AddLocationAdapter();
+        adapter.setHasStableIds(true);
+
+        recyclerView = findViewById(R.id.locations);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
 
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);
-        TextView textView = findViewById(R.id.textViewMain);
 
         CompassView compass = findViewById(R.id.compass);
         compass.setRangeDegrees(360);
-//        timeService.getTime().observe(this, time -> {
-//
-//
-//            float deg = (float) Math.toDegrees(orientation);
-//
-//            textView.setText(Float.toString(-deg));
-//
-//
-////            currentOrientation = -deg;
-//            compass.setDegrees(-deg, true);
-//
-//        });
-
 
         orientationService = OrientationService.singleton(this);
         var azimuthData = orientationService.getAzimuthData();
@@ -82,19 +79,23 @@ public class MainActivity extends AppCompatActivity {
     {
         CompassView compass = findViewById(R.id.compass);
 
-        //float deg = (float) Math.toDegrees(azimuth);
         compass.setDegrees(azimuth , true);
 
-        orientation = azimuth;
+        orientation = -azimuth;
 
+        ImageView marker = findViewById(R.id.compassImg);
+        float rotation = orientation;
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
+        layoutParams.circleAngle = rotation;
+        marker.setLayoutParams(layoutParams);
+
+        // Set the rotation of the ImageView to match the circle angle
+        marker.setRotation(rotation);
     }
-
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
-
-
     }
 
     private void reobserveLocation() {
@@ -103,10 +104,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onTimeChanged(Long time) {
-        //TextView timeText = findViewById(R.id.timeText);
-        //timeText.setText(Utilities.formatTime(time));
-
-
         ImageView img = findViewById(R.id.compassImg);
         RotateAnimation rotateAnimation = new RotateAnimation(previous_orientation,
                 orientation, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -128,5 +125,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         orientationService.registerSensorListeners();
+    }
+
+    public void onLaunchDataEntry(View view) {
+        Intent intent = new Intent(this, DataEntryActivity.class);
+        startActivity(intent);
     }
 }
