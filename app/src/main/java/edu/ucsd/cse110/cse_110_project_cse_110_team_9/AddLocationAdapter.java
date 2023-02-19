@@ -1,5 +1,6 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,26 +23,35 @@ public class AddLocationAdapter extends RecyclerView.Adapter<AddLocationAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+         View view = LayoutInflater.from(parent.getContext())
+                 .inflate(R.layout.location_entry, parent, false);
+         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        holder.setAddLocation(addLocations.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return addLocations.size();
     }
+
+//    @Override
+//    public long getItemId(int position)
+//    {
+//        return addLocations.get(position).id;
+//    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView textView;
         private AddLocation addLocation;
 
-        public ViewHolder(@NonNull View itemView, TextView textView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.textView = textView;
+            this.textView = itemView.findViewById(R.id.location_item_text);
         }
 
         public AddLocation getAddLocation(){
