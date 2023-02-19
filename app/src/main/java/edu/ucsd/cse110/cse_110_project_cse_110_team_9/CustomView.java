@@ -43,6 +43,7 @@ public class CustomView extends View {
         canvas.drawPaint(paint);
         paint.setColor(Color.RED);
         canvas.drawCircle(20,20,40,paint);
+
         canvas.save();
     }
 
