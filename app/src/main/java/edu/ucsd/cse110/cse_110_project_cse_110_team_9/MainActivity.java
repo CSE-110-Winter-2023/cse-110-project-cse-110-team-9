@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
     {
         CompassView compass = findViewById(R.id.compass);
 
-        compass.setDegrees(azimuth , true);
+        compass.setDegrees(azimuth+90 , true);
 
         orientation = azimuth;
 
         ImageView marker = findViewById(R.id.compassImg);
-        float rotation = azimuth+90;
+        float rotation = azimuth+210;
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
         layoutParams.circleAngle = rotation;
         marker.setLayoutParams(layoutParams);
