@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,6 +15,7 @@ import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -108,5 +110,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         orientationService.registerSensorListeners();
+    }
+
+    public void onLaunchDataEntry(View view) {
+        Intent intent = new Intent(this, data_entry.class);
+        startActivity(intent);
     }
 }
