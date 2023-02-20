@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
 
+        List<AddLocation> addLocationList = AddLocation.loadJson(this, "saved_locations.json");
+        Log.d("AddLocs", addLocationList.toString());
+
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);

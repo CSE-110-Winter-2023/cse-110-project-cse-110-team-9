@@ -3,8 +3,11 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,12 +20,20 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
+@Entity(tableName = "locations")
 public class AddLocation {
+
+    @PrimaryKey(autoGenerate = true)
+    public long id;
+
+    @NonNull
     public Double latVal;
+    @NonNull
     public Double longVal;
+    @NonNull
     public String name;
 
-    public AddLocation(String name, Double latVal,Double longVal) {
+    public AddLocation(@NonNull String name, @NonNull Double latVal, @NonNull Double longVal) {
         this.name = name;
         this.latVal = latVal;
         this.longVal = longVal;
