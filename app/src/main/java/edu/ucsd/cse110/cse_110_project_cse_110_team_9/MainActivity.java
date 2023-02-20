@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +30,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
@@ -52,15 +54,15 @@ public class MainActivity extends AppCompatActivity {
         locationService = LocationService.singleton(this);
         this.reobserveLocation();
 
+        //For future code push
+        //AddLocationAdapter adapter = new AddLocationAdapter();
+        //adapter.setHasStableIds(true);
 
-        AddLocationAdapter adapter = new AddLocationAdapter();
-        adapter.setHasStableIds(true);
+        //recyclerView = findViewById(R.id.locations);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setAdapter(adapter);
 
-        recyclerView = findViewById(R.id.locations);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
+        //adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
 
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
@@ -78,19 +80,35 @@ public class MainActivity extends AppCompatActivity {
     private void OnOrientationChanged(Float azimuth)
     {
         CompassView compass = findViewById(R.id.compass);
+        SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
+
+        float degree = preferences.getFloat("degree", 0);
+        float lat_n = preferences.getFloat("lat", 0);
+        float long_n = preferences.getFloat("long", 0);
 
         compass.setDegrees(azimuth , true);
 
-        orientation = -azimuth;
+        orientation = azimuth;
 
         ImageView marker = findViewById(R.id.compassImg);
-        float rotation = orientation;
+        float rotation = (-orientation)+degree;
+        System.out.println("This is the rotation "+ degree);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
         layoutParams.circleAngle = rotation;
         marker.setLayoutParams(layoutParams);
 
         // Set the rotation of the ImageView to match the circle angle
         marker.setRotation(rotation);
+
+        ImageView location_marker = findViewById(R.id.imageView2);
+        double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
+        float rotation_f = (float) deltaTheta;
+        ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
+        layoutParams2.circleAngle = rotation_f;
+        location_marker.setLayoutParams(layoutParams2);
+
+        // Set the rotation of the ImageView to match the circle angle
+        location_marker.setRotation(rotation_f);
     }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
@@ -129,6 +147,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onLaunchDataEntry(View view) {
         Intent intent = new Intent(this, DataEntryActivity.class);
+        startActivity(intent);
+    }
+
+    public void onLaunchDegree(View view) {
+        Intent intent = new Intent(this, DegreeActivity.class);
         startActivity(intent);
     }
 }

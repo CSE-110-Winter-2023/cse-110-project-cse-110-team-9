@@ -1,5 +1,8 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+
 import java.util.Locale;
 
 public class Utilities {
@@ -13,6 +16,17 @@ public class Utilities {
         return String.format(Locale.US, "%.0f° %.0f' %.0f\" N, %.0f° %.0f' %.0f\" W",
                 Math.abs(latitude), Math.abs(latitude % 1) * 60, Math.abs(latitude % 1 % 1) * 60,
                 Math.abs(longitude), Math.abs(longitude % 1) * 60, Math.abs(longitude % 1 % 1) * 60);
+    }
+
+    public static void showAlert(Activity activity, String message){
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
+
+        alertBuilder.setTitle("Alert!").setMessage(message).setPositiveButton("Ok", (dialog, id) -> {
+            dialog.cancel();
+        }).setCancelable(true);
+
+        AlertDialog alertDialog = alertBuilder.create();
+        alertDialog.show();
     }
 
     static String formatTime(long time) {
