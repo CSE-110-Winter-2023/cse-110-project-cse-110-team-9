@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
 public class DegreeActivity extends AppCompatActivity {
 
     @Override
@@ -33,8 +34,7 @@ public class DegreeActivity extends AppCompatActivity {
     public void saveProfile() {
         // Get the number input from the user
         EditText numberInput = findViewById(R.id.compassDegree);
-        float number = Float.parseFloat(numberInput.getText().toString());
-
+        Float number = Float.parseFloat(numberInput.getText().toString());;
         // Save the number to SharedPreferences
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -42,7 +42,16 @@ public class DegreeActivity extends AppCompatActivity {
         editor.apply();
     }
 
+
     public void onExitClicked(View view) {
-        finish();
+        EditText numberInput = findViewById(R.id.compassDegree);
+        Float number = Float.parseFloat(numberInput.getText().toString());;
+
+        if(number > 360 || number < 0){
+            Utilities.showAlert(this, "Input a double number between 0 and 360");
+        }
+        else{
+            finish();
+        }
     }
 }
