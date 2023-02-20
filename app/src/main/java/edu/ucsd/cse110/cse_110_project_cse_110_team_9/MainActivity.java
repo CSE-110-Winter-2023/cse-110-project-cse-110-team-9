@@ -72,11 +72,16 @@ public class  MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * changes the orientation of each marker dpending on the device's orientation and the respective
+     * offset
+     * @param azimuth orinetation degree
+     *
+     */
     private void OnOrientationChanged(Float azimuth)
     {
         CompassView compass = findViewById(R.id.compass);
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
-
         float degree = preferences.getFloat("degree", 0);
         float lat_n = preferences.getFloat("lat", 0);
         float long_n = preferences.getFloat("long", 0);
@@ -86,13 +91,10 @@ public class  MainActivity extends AppCompatActivity {
         orientation = azimuth;
 
         ImageView marker = findViewById(R.id.compassImg);
-        float rotation = (-orientation)+degree;
-        System.out.println("This is the rotation "+ degree);
+        float rotation = (-orientation)+degree; //offset orientation with inputted degrees
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
         layoutParams.circleAngle = rotation;
         marker.setLayoutParams(layoutParams);
-
-        // Set the rotation of the ImageView to match the circle angle
         marker.setRotation(rotation);
 
         ImageView location_marker = findViewById(R.id.imageView2);
@@ -101,11 +103,14 @@ public class  MainActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
         layoutParams2.circleAngle = rotation_f;
         location_marker.setLayoutParams(layoutParams2);
-
-        // Set the rotation of the ImageView to match the circle angle
         location_marker.setRotation(rotation_f);
     }
 
+    /**
+     * changes the location textView depending on the device's current location
+     * @param latLong pair of lat long inputs
+     *
+     */
     private void onLocationChanged(Pair<Double, Double> latLong) {
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
