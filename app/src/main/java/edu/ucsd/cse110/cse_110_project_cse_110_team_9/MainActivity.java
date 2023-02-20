@@ -7,14 +7,8 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,9 +17,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.List;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         locationService = LocationService.singleton(this);
-        this.reobserveLocation();
+        var locationData = locationService.getLocation();
+        locationData.observe(this, this::onLocationChanged);
 
 
         AddLocationAdapter adapter = new AddLocationAdapter();
@@ -98,10 +93,6 @@ public class MainActivity extends AppCompatActivity {
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
     }
 
-    private void reobserveLocation() {
-        var locationData = locationService.getLocation();
-        locationData.observe(this, this::onLocationChanged);
-    }
 
     private void onTimeChanged(Long time) {
         ImageView img = findViewById(R.id.compassImg);

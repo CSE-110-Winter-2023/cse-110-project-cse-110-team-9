@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
+package edu.ucsd.cse110.cse_110_project_cse_110_team_9.services;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -16,6 +16,7 @@ import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.Arrays;
@@ -33,7 +34,12 @@ public class LocationService implements LocationListener {
 
     private static LocationService instance;
 
-    private MutableLiveData<Pair<Double, Double>> locationValue;
+    private MutableLiveData<Pair<Double, Double>> realLocationData;
+
+    private MediatorLiveData<Pair<Double, Double>> locationData;
+
+    private LiveData<Pair<Double,Double>> mockLocationData = null;
+
 
     private final LocationManager locationManager;
 
@@ -50,7 +56,12 @@ public class LocationService implements LocationListener {
      * @param activity Context needed to initiate LocationManager
      */
     protected LocationService(AppCompatActivity activity) {
-        this.locationValue = new MutableLiveData<>();
+        realLocationData = new MutableLiveData<>();
+        locationData = new MediatorLiveData<>();
+        locationData.addSource(realLocationData, locationData::postValue);
+
+
+
         this.activity = activity;
         this.locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         // Register sensor listeners
@@ -70,7 +81,7 @@ public class LocationService implements LocationListener {
 
         Location lastLocation = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (lastLocation != null) {
-            this.locationValue.postValue(new Pair<>(lastLocation.getLatitude(), lastLocation.getLongitude()));
+            this.locationData.postValue(new Pair<>(lastLocation.getLatitude(), lastLocation.getLongitude()));
         }
 
 
@@ -104,7 +115,7 @@ public class LocationService implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        this.locationValue.postValue(new Pair<>(location.getLatitude(), location.getLongitude()));
+        this.locationData.postValue(new Pair<>(location.getLatitude(), location.getLongitude()));
     }
 
     private void unregisterLocationListener() {
@@ -112,11 +123,19 @@ public class LocationService implements LocationListener {
     }
 
     public LiveData<Pair<Double, Double>> getLocation() {
-        return this.locationValue;
+        return this.locationData;
     }
 
-    public void setMockOrientationData(MutableLiveData<Pair<Double, Double>> mockData) {
+    public void setMockLocationData(MutableLiveData<Pair<Double, Double>> mockLocationData) {
         unregisterLocationListener();
-        this.locationValue = mockData;
+        this.mockLocationData = mockLocationData;
+        locationData.removeSource(realLocationData);
+        locationData.addSource(mockLocationData, locationData::postValue);
+    }
+
+    public void claerMockLocationSource(){
+        withLocationPermissions(this::registerLocationListener);
+        locationData.removeSource(mockLocationData);
+        locationData.addSource(realLocationData, locationData::postValue);
     }
 }

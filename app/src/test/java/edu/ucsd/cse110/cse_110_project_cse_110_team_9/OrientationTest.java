@@ -3,8 +3,6 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import android.widget.TextView;
-
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
 import androidx.test.core.app.ActivityScenario;
@@ -18,6 +16,8 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 
 
 @RunWith(RobolectricTestRunner.class)

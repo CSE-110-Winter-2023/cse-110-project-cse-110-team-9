@@ -2,8 +2,6 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import static org.junit.Assert.assertEquals;
 
-import android.widget.TextView;
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
@@ -15,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import java.util.Optional;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
 
 @RunWith(RobolectricTestRunner.class)
 public class TimeServiceTest {
