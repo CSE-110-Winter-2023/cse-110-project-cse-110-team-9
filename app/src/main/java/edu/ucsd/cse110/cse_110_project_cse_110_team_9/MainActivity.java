@@ -30,7 +30,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
@@ -83,12 +83,15 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
         float degree = preferences.getFloat("degree", 0);
+        float lat_n = preferences.getFloat("lat", 0);
+        float long_n = preferences.getFloat("long", 0);
+
         compass.setDegrees(azimuth , true);
 
-        orientation = -azimuth;
+        orientation = azimuth;
 
         ImageView marker = findViewById(R.id.compassImg);
-        float rotation = orientation+degree;
+        float rotation = (-orientation)+degree;
         System.out.println("This is the rotation "+ degree);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
         layoutParams.circleAngle = rotation;
@@ -98,13 +101,14 @@ public class MainActivity extends AppCompatActivity {
         marker.setRotation(rotation);
 
         ImageView location_marker = findViewById(R.id.imageView2);
-        float rotation2 = orientation+132;
+        double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
+        float rotation_f = (float) deltaTheta;
         ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
-        layoutParams2.circleAngle = rotation2;
+        layoutParams2.circleAngle = rotation_f;
         location_marker.setLayoutParams(layoutParams2);
 
         // Set the rotation of the ImageView to match the circle angle
-        location_marker.setRotation(rotation2);
+        location_marker.setRotation(rotation_f);
     }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
