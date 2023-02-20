@@ -49,7 +49,7 @@
             app:layout_constraintHorizontal_bias="0.939"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.923" />
+            app:layout_constraintVertical_bias="0.976" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/locations"
@@ -73,7 +73,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.132" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="47dp"
+            android:layout_height="41dp"
+            app:layout_constraintCircleAngle="210"
+            app:layout_constraintCircleRadius="170dp"
+            app:layout_constraintCircle="@+id/imageView"
+            app:srcCompat="@drawable/greendot"
+            tools:layout_editor_absoluteX="118dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Parent's"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Degree ->"
+            android:onClick="onLaunchDegree"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.943"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.888" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <edu.ucsd.cse110.cse_110_project_cse_110_team_9.CompassView
         android:id="@+id/compass"
