@@ -16,6 +16,13 @@
         android:theme="@style/Theme.Cse110projectcse110team9"
         tools:targetApi="31">
         <activity
+            android:name=".DegreeActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".DataEntryActivity"
             android:exported="false">
             <meta-data
