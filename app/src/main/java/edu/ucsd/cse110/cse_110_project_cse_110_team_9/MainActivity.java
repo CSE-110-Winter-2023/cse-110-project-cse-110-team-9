@@ -54,15 +54,15 @@ public class  MainActivity extends AppCompatActivity {
         locationService = LocationService.singleton(this);
         this.reobserveLocation();
 
+        //For future code push
+        //AddLocationAdapter adapter = new AddLocationAdapter();
+        //adapter.setHasStableIds(true);
 
-        AddLocationAdapter adapter = new AddLocationAdapter();
-        adapter.setHasStableIds(true);
+        //recyclerView = findViewById(R.id.locations);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setAdapter(adapter);
 
-        recyclerView = findViewById(R.id.locations);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
+        //adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
 
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
