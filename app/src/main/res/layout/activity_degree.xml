@@ -21,7 +21,7 @@
         app:layout_constraintVertical_bias="0.398" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/setDegreeBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onExitClicked"
@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.395" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/set_degree_text"
         android:layout_width="317dp"
         android:layout_height="56dp"
         android:text="Set Compass Degree"
