@@ -28,7 +28,7 @@
             app:srcCompat="@drawable/cface" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/ToDataEntryBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onLaunchDataEntry"
@@ -98,7 +98,7 @@
             tools:layout_editor_absoluteY="541dp" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/ToSetDegreePageBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Set Degree ->"
