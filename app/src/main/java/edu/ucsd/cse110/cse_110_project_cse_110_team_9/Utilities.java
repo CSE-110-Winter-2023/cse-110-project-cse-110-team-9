@@ -33,6 +33,14 @@ public class Utilities {
         return String.format(Locale.US, "%tT %tZ", time, time);
     }
 
+    /**
+     * Returns the angle in degrees from point A to point B
+     * @param fromLatitude Latitude of current location
+     * @param fromLongitude Longitude of current location
+     * @param toLatitude  Latitude of destination
+     * @param toLongitude Longitude of destination
+     * @return angle in degrees
+     */
     public static double angleBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
 
 //
