@@ -35,13 +35,14 @@ public class Utilities {
 
     /**
      * Returns the angle in degrees from point A to point B
-     * @param fromLatitude Latitude of current location
+     *
+     * @param fromLatitude  Latitude of current location
      * @param fromLongitude Longitude of current location
-     * @param toLatitude  Latitude of destination
-     * @param toLongitude Longitude of destination
+     * @param toLatitude    Latitude of destination
+     * @param toLongitude   Longitude of destination
      * @return angle in degrees
      */
-    public static double angleBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
+    public static double radiansBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
 
 //
 
@@ -50,17 +51,21 @@ public class Utilities {
         var latB = Math.toRadians(toLatitude);
         var longB = Math.toRadians(toLongitude);
 
-        //Beta = atan(x,y
         var deltaL = longB - longA;
-        //L is longitude
-        //theta is latitude
+
         var x = Math.cos(latB) * Math.sin(deltaL);
         var y = Math.cos(latA) * Math.sin(latB) - (Math.sin(latA) * Math.cos(latB) * Math.cos(deltaL));
         var beta = Math.atan2(x, y);
-        var betaDeg = Math.toDegrees(beta);
-        betaDeg = (betaDeg + 360) % 360;
-        return betaDeg;
+        return beta;
+       // var betaDeg = Math.toDegrees(beta);
+        //betaDeg = (betaDeg + 360) % 360;
+       // return betaDeg;
     }
 
-
+    public static double angleBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
+        var beta = radiansBetweenTwoLocations(fromLatitude,fromLongitude,toLatitude,toLongitude);
+        var deg = Math.toDegrees(beta);
+        deg = (deg + 360) % 360;
+        return deg;
+    }
 }
