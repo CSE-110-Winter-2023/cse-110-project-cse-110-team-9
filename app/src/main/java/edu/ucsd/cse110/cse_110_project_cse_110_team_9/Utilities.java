@@ -18,7 +18,7 @@ public class Utilities {
                 Math.abs(longitude), Math.abs(longitude % 1) * 60, Math.abs(longitude % 1 % 1) * 60);
     }
 
-    public static void showAlert(Activity activity, String message){
+    public static void showAlert(Activity activity, String message) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
 
         alertBuilder.setTitle("Alert!").setMessage(message).setPositiveButton("Ok", (dialog, id) -> {
@@ -32,4 +32,27 @@ public class Utilities {
     static String formatTime(long time) {
         return String.format(Locale.US, "%tT %tZ", time, time);
     }
+
+    public static double angleBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
+
+//
+
+        var latA = Math.toRadians(fromLatitude);
+        var longA = Math.toRadians(fromLongitude);
+        var latB = Math.toRadians(toLatitude);
+        var longB = Math.toRadians(toLongitude);
+
+        //Beta = atan(x,y
+        var deltaL = longB - longA;
+        //L is longitude
+        //theta is latitude
+        var x = Math.cos(latB) * Math.sin(deltaL);
+        var y = Math.cos(latA) * Math.sin(latB) - (Math.sin(latA) * Math.cos(latB) * Math.cos(deltaL));
+        var beta = Math.atan2(x, y);
+        var betaDeg = Math.toDegrees(beta);
+        betaDeg = (betaDeg + 360) % 360;
+        return betaDeg;
+    }
+
+
 }
