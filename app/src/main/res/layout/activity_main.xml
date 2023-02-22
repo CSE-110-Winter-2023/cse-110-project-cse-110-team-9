@@ -64,7 +64,7 @@
             app:layout_constraintVertical_bias="0.132" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/parentsImageView"
             android:layout_width="47dp"
             android:layout_height="41dp"
             app:layout_constraintCircleAngle="210"
@@ -74,16 +74,16 @@
             tools:layout_editor_absoluteX="118dp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/parentsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Parent's"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintBottom_toBottomOf="@+id/parentsImageView"
+            app:layout_constraintEnd_toStartOf="@+id/parentsImageView"
             app:layout_constraintHorizontal_bias="0.52"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/parentsImageView"
+            app:layout_constraintTop_toTopOf="@+id/parentsImageView"
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView

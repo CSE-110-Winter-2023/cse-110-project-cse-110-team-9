@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -95,7 +93,7 @@ public class  MainActivity extends AppCompatActivity {
         // Set the rotation of the ImageView to match the circle angle
         marker.setRotation(rotation);
 
-        ImageView location_marker = findViewById(R.id.imageView2);
+        ImageView location_marker = findViewById(R.id.parentsImageView);
         double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
         float rotation_f = (float) deltaTheta;
         ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
