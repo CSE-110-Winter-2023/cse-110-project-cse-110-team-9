@@ -35,21 +35,17 @@ public class Utilities {
 
     /**
      * Returns the angle in degrees from point A to point B
-     *
-     * @param fromLatitude  Latitude of current location
-     * @param fromLongitude Longitude of current location
-     * @param toLatitude    Latitude of destination
-     * @param toLongitude   Longitude of destination
+
      * @return angle in degrees
      */
-    public static double radiansBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
+    public static double radiansBetweenTwoLocations(Location a, Location b) {
 
 //
 
-        var latA = Math.toRadians(fromLatitude);
-        var longA = Math.toRadians(fromLongitude);
-        var latB = Math.toRadians(toLatitude);
-        var longB = Math.toRadians(toLongitude);
+        var latA = Math.toRadians(a.getLatitude());
+        var longA = Math.toRadians(a.getLongitude());
+        var latB = Math.toRadians(b.getLatitude());
+        var longB = Math.toRadians(b.getLongitude());
 
         var deltaL = longB - longA;
 
@@ -57,15 +53,40 @@ public class Utilities {
         var y = Math.cos(latA) * Math.sin(latB) - (Math.sin(latA) * Math.cos(latB) * Math.cos(deltaL));
         var beta = Math.atan2(x, y);
         return beta;
-       // var betaDeg = Math.toDegrees(beta);
+        // var betaDeg = Math.toDegrees(beta);
         //betaDeg = (betaDeg + 360) % 360;
-       // return betaDeg;
+        // return betaDeg;
     }
 
-    public static double angleBetweenTwoLocations(double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) {
-        var beta = radiansBetweenTwoLocations(fromLatitude,fromLongitude,toLatitude,toLongitude);
+    public static double angleBetweenTwoLocations(Location a, Location b) {
+        var beta = radiansBetweenTwoLocations(a, b);
         var deg = Math.toDegrees(beta);
         deg = (deg + 360) % 360;
         return deg;
+    }
+
+
+    public static double findDistanceBetweenTwoPoints(Location a, Location b) {
+
+        var latA = Math.toRadians(a.getLatitude());
+        var longA = Math.toRadians(a.getLongitude());
+        var latB = Math.toRadians(b.getLatitude());
+        var longB = Math.toRadians(b.getLongitude());
+
+   /*
+
+
+    Haverine Formula:
+    a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+    c = 2 ⋅ atan2( √a, √(1−a) )
+    d = R ⋅ c
+    where 	φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
+    note that angles need to be in radians to pass to trig functions!
+
+
+    */
+        var R = 6371; // Radius of earth in kilometers
+
+        return 0.0d;
     }
 }

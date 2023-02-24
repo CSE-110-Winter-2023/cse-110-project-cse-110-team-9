@@ -12,11 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class AddLocationAdapter extends RecyclerView.Adapter<AddLocationAdapter.ViewHolder> {
-    private List<AddLocation> addLocations = Collections.emptyList();
+    private List<Location> locations = Collections.emptyList();
 
-    public void setLocations(List<AddLocation> addLocations){
-        this.addLocations.clear();
-        this.addLocations = addLocations;
+    public void setLocations(List<Location> locations){
+        this.locations.clear();
+        this.locations = locations;
         notifyDataSetChanged();
     }
 
@@ -30,12 +30,12 @@ public class AddLocationAdapter extends RecyclerView.Adapter<AddLocationAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setAddLocation(addLocations.get(position));
+        holder.setAddLocation(locations.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return addLocations.size();
+        return locations.size();
     }
 
 //    @Override
@@ -47,20 +47,20 @@ public class AddLocationAdapter extends RecyclerView.Adapter<AddLocationAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView textView;
-        private AddLocation addLocation;
+        private Location location;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textView = itemView.findViewById(R.id.location_item_text);
         }
 
-        public AddLocation getAddLocation(){
-            return addLocation;
+        public Location getAddLocation(){
+            return location;
         }
 
-        public void setAddLocation(AddLocation addLocation){
-            this.addLocation = addLocation;
-            this.textView.setText(addLocation.toString());
+        public void setAddLocation(Location location){
+            this.location = location;
+            this.textView.setText(location.toString());
         }
     }
 }

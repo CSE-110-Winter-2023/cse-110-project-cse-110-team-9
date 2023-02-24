@@ -3,9 +3,6 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import android.content.Context;
 
-import androidx.core.util.Pair;
-import androidx.lifecycle.MutableLiveData;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,32 +14,41 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
-public class AddLocation {
-    public Double latVal;
-    public Double longVal;
+public class Location {
+    public Double longitude;
+    public Double latitude;
     public String name;
 
-    public AddLocation(String name, Double latVal,Double longVal) {
+    public Location(String name, Double latitude, Double longitude) {
         this.name = name;
-        this.latVal = latVal;
-        this.longVal = longVal;
+        this.longitude = latitude;
+        this.latitude = longitude;
     }
+
 
     @Override
     public String toString() {
-        return "AddLocation{" +
-                "latVal=" + latVal +
-                ", longVal=" + longVal +
+        return "Location{" +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
                 ", name='" + name + '\'' +
                 '}';
     }
 
-    public static List<AddLocation> loadJson(Context context, String path){
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public static List<Location> loadJson(Context context, String path){
         try{
             InputStream input = context.getAssets().open(path);
             Reader reader = new InputStreamReader(input);
             Gson gson = new Gson();
-            Type type = new TypeToken<List<AddLocation>>(){}.getType();
+            Type type = new TypeToken<List<Location>>(){}.getType();
             return gson.fromJson(reader, type);
         }
         catch (IOException e){

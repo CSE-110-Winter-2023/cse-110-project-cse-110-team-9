@@ -16,7 +16,8 @@ public class TestUtils {
         var latB = (38.627089);
         var longB = (-90.200203);
 
-       var result =  Utilities.angleBetweenTwoLocations(latA, longA, latB, longB);
+       var result =  Utilities.angleBetweenTwoLocations(
+               new Location("",latA, longA), new Location("",latB,longB));
        // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
 
@@ -27,7 +28,8 @@ public class TestUtils {
         longA = -117.2340;
         latB = 42.3601;
         longB = -71.0942;
-         result =  Utilities.angleBetweenTwoLocations(latA, longA, latB, longB);
+         result =  Utilities.angleBetweenTwoLocations(
+                new Location("",latA, longA), new Location("",latB,longB));
         // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
 
@@ -41,7 +43,8 @@ public class TestUtils {
         longB = -58.381592;
 
         expected = 37.855;
-        result =  Utilities.angleBetweenTwoLocations(latA, longA, latB, longB);
+        result =  Utilities.angleBetweenTwoLocations(
+                new Location("",latA, longA), new Location("",latB,longB));
         // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
 
