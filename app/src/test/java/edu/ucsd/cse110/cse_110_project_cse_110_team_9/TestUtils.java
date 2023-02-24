@@ -7,7 +7,7 @@ import org.junit.Test;
 public class TestUtils {
 
     @Test
-    public void testUtils(){
+    public void testAngleBetweenTwoLocations(){
 
 
         var expected  = 96.51;
@@ -47,24 +47,23 @@ public class TestUtils {
                 new Location("",latA, longA), new Location("",latB,longB));
         // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
+    }
 
+    @Test
+    public void testDistanceBetweenTwoPoints()
+    {
 
-//        latA = 32.862140;
-//        longA = -117.213878;
-//
-//        latB = 32.892314;
-//        longB = -117.215096;
-//
-//        expected = 37.855;
-//        result =  Utilities.angleBetweenTwoLocations(latA, longA, latB, longB);
-//        // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
-//        assertEquals(expected,result, 0.1);
+        var expected  = 382.9;
+        var latA = (39.099912);
+        var longA = (-94.581213);
+        var latB = (38.627089);
+        var longB = (-90.200203);
 
+        var result = Utilities.findDistanceinKMBetweenTwoPoints(
+                new Location("",latA, longA), new Location("",latB,longB));
 
-
-
-
-
+        System.out.println("Disntace: " + result);
+        assertEquals(expected, result, 0.2);
 
 
     }

@@ -42,10 +42,10 @@ public class Utilities {
 
 //
 
-        var latA = Math.toRadians(a.getLatitude());
-        var longA = Math.toRadians(a.getLongitude());
-        var latB = Math.toRadians(b.getLatitude());
-        var longB = Math.toRadians(b.getLongitude());
+        var latA = a.getLatitudeRadians();
+        var longA = a.getLongitudeRadians();
+        var latB = b.getLatitudeRadians();
+        var longB = b.getLongitudeRadians();
 
         var deltaL = longB - longA;
 
@@ -66,27 +66,37 @@ public class Utilities {
     }
 
 
-    public static double findDistanceBetweenTwoPoints(Location a, Location b) {
-
-        var latA = Math.toRadians(a.getLatitude());
-        var longA = Math.toRadians(a.getLongitude());
-        var latB = Math.toRadians(b.getLatitude());
-        var longB = Math.toRadians(b.getLongitude());
-
-   /*
+    public static double findDistanceinKMBetweenTwoPoints(Location A, Location B) {
 
 
-    Haverine Formula:
-    a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
-    c = 2 ⋅ atan2( √a, √(1−a) )
-    d = R ⋅ c
-    where 	φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
-    note that angles need to be in radians to pass to trig functions!
+        var latA = A.getLatitudeRadians();
+        var longA = A.getLongitudeRadians();
+        var latB = B.getLatitudeRadians();
+        var longB = B.getLongitudeRadians();
 
+       /*
+        Haverine Formula:
+        a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
+        c = 2 ⋅ atan2( √a, √(1−a) )
+        d = R ⋅ c
+        where 	φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
+        note that angles need to be in radians to pass to trig functions!
 
-    */
+        */
+        double deltaLong = longB - longA;
+        double deltaLat = latB - latA;
         var R = 6371; // Radius of earth in kilometers
 
-        return 0.0d;
+        double a = Math.pow((Math.sin(deltaLat/2)), 2) +
+                Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(deltaLong/2), 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double d = R * c; //calcualte distance in km
+        return d;
+    }
+
+    public static double KMtoMiles(double KM)
+    {
+        return (KM * 0.621371);
     }
 }

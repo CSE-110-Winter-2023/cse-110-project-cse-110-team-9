@@ -21,8 +21,8 @@ public class Location {
 
     public Location(String name, Double latitude, Double longitude) {
         this.name = name;
-        this.longitude = latitude;
-        this.latitude = longitude;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
 
@@ -41,6 +41,14 @@ public class Location {
 
     public Double getLongitude() {
         return longitude;
+    }
+
+    public Double getLatitudeRadians() {
+        return Math.toRadians(getLatitude());
+    }
+
+    public Double getLongitudeRadians() {
+        return Math.toRadians(getLongitude());
     }
 
     public static List<Location> loadJson(Context context, String path){
