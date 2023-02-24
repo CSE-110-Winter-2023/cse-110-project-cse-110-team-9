@@ -85,7 +85,7 @@ public class Utilities {
         */
         double deltaLong = longB - longA;
         double deltaLat = latB - latA;
-        var R = 6371; // Radius of earth in kilometers
+        double R = 6371; // Radius of earth in kilometers
 
         double a = Math.pow((Math.sin(deltaLat/2)), 2) +
                 Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(deltaLong/2), 2);

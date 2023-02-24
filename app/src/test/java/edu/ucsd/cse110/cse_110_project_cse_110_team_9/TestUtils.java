@@ -66,5 +66,18 @@ public class TestUtils {
         assertEquals(expected, result, 0.2);
 
 
+         latA = (32.862020);
+         longA = (-117.213690);
+         latB = (37.950530);
+         longB = (-122.542780);
+
+         result = Utilities.findDistanceinKMBetweenTwoPoints(
+                new Location("",latA, longA), new Location("",latB,longB));
+
+
+        System.out.println("home is:" + Utilities.KMtoMiles(result) + " Miles");
+
+
+
     }
 }
