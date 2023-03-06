@@ -4,8 +4,10 @@ import android.util.Log;
 
 import androidx.annotation.WorkerThread;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class ServerAPI {
 
@@ -27,9 +29,17 @@ public class ServerAPI {
     }
 
 
+    /**
+     * Gets a friends location from the server
+     * @param public_uid this is the uid that your friend gives you
+     * @return Friend POJO
+     */
     @WorkerThread
     public Friend getFriend(String public_uid)
     {
+
+
+
 
         var request = new Request.Builder()
                 .url("https://socialcompass.goto.ucsd.edu/location/" + public_uid)
@@ -49,6 +59,42 @@ public class ServerAPI {
         }
 
     }
+
+
+    @WorkerThread
+    public void updateUserLocation(User user) {
+        var userJson = user.toJSON();
+
+        System.out.println(userJson);
+
+        RequestBody body = RequestBody.create(userJson, MediaType.parse("application/json; charset=utf-8"));
+
+        var request = new Request.Builder()
+                .url("https://socialcompass.goto.ucsd.edu/location/" + user.public_uid)
+                .put(body)
+                .build();
+
+
+        System.out.println(request.body().toString());
+
+
+        try (
+                var response = client.newCall(request).execute()) {
+
+                System.out.println(response.body().toString());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+
+//    @WorkerThread
+//    public boolean putLocation(String private_code, )
+//
 
 
 
