@@ -57,6 +57,9 @@ public class  MainActivity extends AppCompatActivity {
 
         //adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
 
+
+
+
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);
@@ -143,4 +146,10 @@ public class  MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DegreeActivity.class);
         startActivity(intent);
     }
+
+    public void onLaunchName(View view){
+        Intent intent = new Intent(this, NameActivity.class);
+        startActivity(intent);
+    }
+
 }
