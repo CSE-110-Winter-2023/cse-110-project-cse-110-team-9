@@ -9,12 +9,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 
-@Database(entities = {Friend.class, User.class}, version =  2, exportSchema = false)
+@Database(entities = {Friend.class, User.class}, version =  3, exportSchema = false)
 public abstract class SocialCompassDatabase extends RoomDatabase {
 
     private volatile static SocialCompassDatabase instance = null;
 
-    public abstract SocialCompassDao getFriendDao();
+    public abstract SocialCompassDao getDao();
 
     public synchronized static SocialCompassDatabase provide(Context context) {
 

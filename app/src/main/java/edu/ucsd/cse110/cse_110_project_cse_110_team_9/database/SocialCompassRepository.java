@@ -10,42 +10,46 @@ public class SocialCompassRepository {
     private final SocialCompassDao dao;
 
 
-    public SocialCompassRepository(SocialCompassDao dao ) {
+    public SocialCompassRepository(SocialCompassDao dao) {
         this.dao = dao;
 
     }
 
-    public LiveData<List<Friend>> getAllLocalFriends()
-    {
+    public LiveData<List<Friend>> getAllLocalFriends() {
         return dao.getAllFriends();
     }
 
 
-
-    public boolean userExists()
-    {
-        return dao.userExists();
+    public boolean friendExistsLocal(String public_uid) {
+        return dao.friendExists(public_uid);
     }
 
-    public LiveData<User> getUser()
-    {
+    public void upsertUserRemote(User user) {
+        ServerAPI.provide().updateUserLocationAsync(user);
+    }
+
+    public boolean userExists() {
+        return dao.userExists();
+    }
+    public LiveData<User> getLiveUser() {
+        return dao.getLiveUser();
+    }
+
+    public User getUser() {
         return dao.getUser();
     }
 
-    public void deleteLocalFriend(Friend friend)
-    {
+    public void deleteLocalFriend(Friend friend) {
         dao.deleteFriend(friend);
     }
 
 
-    public void upsertLocalUser(User user)
-    {
+    public void upsertLocalUser(User user) {
         dao.upsertUser(user);
     }
 
 
-    public void upsertLocalFriend(Friend friend)
-    {
+    public void upsertLocalFriend(Friend friend) {
         dao.upsertFriend(friend);
     }
 

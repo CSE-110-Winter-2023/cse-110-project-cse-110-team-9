@@ -18,8 +18,12 @@ public abstract class SocialCompassDao {
     public abstract boolean userExists();
 
 
+    //NOTE THE USER TABLE SHOLUD ONLY EVER HAVE ONE USER, THE USER OF THE APP
     @Query("SELECT * FROM user LIMIT 1")
-    public abstract LiveData<User> getUser();
+    public abstract LiveData<User> getLiveUser();
+
+    @Query("SELECT * FROM user LIMIT 1")
+    public abstract User getUser();
 
     @Upsert
     public abstract long upsertUser(User user);

@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9.database;
 
+import android.util.Log;
+
 import androidx.annotation.AnyThread;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
@@ -110,12 +112,20 @@ public class ServerAPI {
 
     }
 
+
+    @AnyThread
+    public Future<?> updateUserLocationAsync(User user)
+    {
+        var executer = Executors.newSingleThreadExecutor();
+        var future = executer.submit(()->updateUserLocation(user));
+        return future;
+    }
+
     @WorkerThread
     public void updateUserLocation(User user) {
         var userJson = user.toJSON();
 
-        System.out.println(userJson);
-
+    Log.d("Trying to send to server user:", userJson);
         RequestBody body = RequestBody.create(userJson, MediaType.parse("application/json; charset=utf-8"));
 
         var request = new Request.Builder()
@@ -127,7 +137,7 @@ public class ServerAPI {
         try (var response = client.newCall(request).execute()) {
 
             System.out.println(response.body().toString());
-
+            Log.d("Response from updating user location",response.body().toString());
 
         } catch (Exception e) {
             e.printStackTrace();

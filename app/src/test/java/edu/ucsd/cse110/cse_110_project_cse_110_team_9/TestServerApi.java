@@ -11,6 +11,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.objectweb.asm.commons.SerialVersionUIDAdder;
+
+import java.time.Instant;
 
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.Friend;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.ServerAPI;
@@ -46,8 +49,10 @@ public class TestServerApi {
         System.out.println(friend.latitude);
 
 
-        User user = new User("test", "private", "test415", 100.0, 100.0);
+        User user = new User("test", "private", "test415", 65.0, 65, Instant.now().getEpochSecond());
 
+
+        ServerAPI.provide().updateUserLocation(user);
 
 
 
