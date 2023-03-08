@@ -1,8 +1,17 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9.database;
 
-import android.util.Log;
-
+import androidx.annotation.AnyThread;
 import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -15,29 +24,73 @@ public class ServerAPI {
 
     private OkHttpClient client;
 
+    private ScheduledThreadPoolExecutor threadPool;
 
-    public ServerAPI(){
+
+    //private MediatorLiveData<List<Friend>> friendsLive;
+    private HashMap<String, ScheduledFuture<?>> friendsScheduledFutureHashMap;
+
+
+    public ServerAPI() {
         this.client = new OkHttpClient();
+
+        friendsScheduledFutureHashMap = new HashMap<>();
+        this.threadPool = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
+
+
 
     }
 
-    public static ServerAPI provide(){
-        if (instance == null){
+    public static ServerAPI provide() {
+        if (instance == null) {
             instance = new ServerAPI();
+
+
         }
         return instance;
     }
 
+    public LiveData<Friend> getFriendUpdates(String public_uid) {
+;
+
+        var remoteFriend = new MediatorLiveData<Friend>();
+
+        var future = threadPool.scheduleWithFixedDelay(()->
+                {
+                   var friend = getFriend(public_uid);
+                   remoteFriend.postValue(friend);
+                    System.out.println("Got friend: "+ friend.label);
+                }
+
+                , 0, 5, TimeUnit.SECONDS);
+        friendsScheduledFutureHashMap.put(public_uid, future);
+        return remoteFriend;
+        //need to add this to the Mutable live data lis
+    }
+
+    public void createTask()
+    {
+        var test = new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        };
+    }
+
+    public void shutDownPool()
+    {
+        threadPool.shutdown();
+    }
 
     /**
      * Gets a friends location from the server
+     *
      * @param public_uid this is the uid that your friend gives you
      * @return Friend POJO
      */
     @WorkerThread
-    public Friend getFriend(String public_uid)
-    {
-
+    public Friend getFriend(String public_uid) {
 
 
 
@@ -61,6 +114,14 @@ public class ServerAPI {
     }
 
 
+    @AnyThread
+    public Future<Friend> getNoteAsync(String title){
+        var executor = Executors.newSingleThreadExecutor();
+        var future = executor.submit(() -> getFriend(title));
+        return future;
+
+    }
+
     @WorkerThread
     public void updateUserLocation(User user) {
         var userJson = user.toJSON();
@@ -81,7 +142,7 @@ public class ServerAPI {
         try (
                 var response = client.newCall(request).execute()) {
 
-                System.out.println(response.body().toString());
+            System.out.println(response.body().toString());
 
 
         } catch (Exception e) {
@@ -95,8 +156,6 @@ public class ServerAPI {
 //    @WorkerThread
 //    public boolean putLocation(String private_code, )
 //
-
-
 
 
 }

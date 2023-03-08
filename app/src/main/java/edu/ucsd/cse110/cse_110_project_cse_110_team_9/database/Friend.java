@@ -51,6 +51,7 @@ public class Friend {
         this.longitude = longitude;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.label = label;
     }
 
     public static Friend fromJSON(String json) {

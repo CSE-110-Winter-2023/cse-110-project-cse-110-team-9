@@ -17,6 +17,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.Friend;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.ServerAPI;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
@@ -68,7 +70,10 @@ public class  MainActivity extends AppCompatActivity {
         var azimuthData = orientationService.getAzimuthData();
         azimuthData.observe(this, this::OnOrientationChanged);
 
+
     }
+
+
 
     private void OnOrientationChanged(Float azimuth)
     {

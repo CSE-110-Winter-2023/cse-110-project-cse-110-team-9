@@ -13,8 +13,7 @@ import java.util.List;
 public abstract class FriendDao {
 
 
-    @Upsert
-    public abstract void upsertFriend(Friend friend);
+
 
 
     //Not really needed for our project
@@ -24,6 +23,18 @@ public abstract class FriendDao {
     //Get all the friends in the local data base
     @Query("SELECT * FROM friends ORDER BY public_uid")
     public abstract LiveData<List<Friend>> getAll();
+
+
+
+
+    @Query("SELECT * FROM friends WHERE public_uid = :public_uid")
+    public abstract LiveData<Friend> get(String public_uid);
+
+    //Might not be used?
+    @Delete
+    public abstract int delete(Friend friend);
+
+
 
 
 
