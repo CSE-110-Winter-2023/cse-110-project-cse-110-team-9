@@ -76,7 +76,7 @@ public class LocationService implements LocationListener {
         this.locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 0,
-                1,
+                0.5,
                 LocationService.this);
 
         Location lastLocation = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
