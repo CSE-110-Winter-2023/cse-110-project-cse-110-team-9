@@ -136,8 +136,7 @@ public class ServerAPI {
 
         try (var response = client.newCall(request).execute()) {
 
-            System.out.println(response.body().toString());
-            Log.d("Response from updating user location",response.body().toString());
+            //Log.d("Response from updating user location",response.body().toString());
 
         } catch (Exception e) {
             e.printStackTrace();
