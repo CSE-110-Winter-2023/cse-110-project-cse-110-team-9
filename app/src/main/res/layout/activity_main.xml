@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -40,16 +41,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.976" />
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/locations"-->
-<!--            android:layout_width="199dp"-->
-<!--            android:layout_height="89dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.075"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="0.975" />-->
+        <!--        <androidx.recyclerview.widget.RecyclerView-->
+        <!--            android:id="@+id/locations"-->
+        <!--            android:layout_width="199dp"-->
+        <!--            android:layout_height="89dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.075"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:layout_constraintVertical_bias="0.975" />-->
 
         <TextView
             android:id="@+id/locationText"
@@ -63,13 +64,23 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.132" />
 
+        <TextView
+            android:id="@+id/public_uid_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="null"
+            android:textIsSelectable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/locationText" />
+
         <ImageView
             android:id="@+id/parentsImageView"
             android:layout_width="47dp"
             android:layout_height="41dp"
+            app:layout_constraintCircle="@+id/imageView"
             app:layout_constraintCircleAngle="210"
             app:layout_constraintCircleRadius="170dp"
-            app:layout_constraintCircle="@+id/imageView"
             app:srcCompat="@drawable/greendot"
             tools:layout_editor_absoluteX="118dp" />
 
@@ -101,16 +112,29 @@
             android:id="@+id/ToSetDegreePageBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set Degree ->"
             android:onClick="onLaunchDegree"
+            android:text="Set Degree ->"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.943"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.888" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <Button
+            android:id="@+id/ToSetNamePageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onLaunchName"
+            android:text="Set Name ->"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.049"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.888" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <edu.ucsd.cse110.cse_110_project_cse_110_team_9.CompassView
         android:id="@+id/compass"

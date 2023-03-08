@@ -1,11 +1,18 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,20 +24,33 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.time.Instant;
+import java.util.UUID;
+
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
 
 
-public class  MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
     private float orientation = 0f;
     private float previous_orientation = 0f;
     private RecyclerView recyclerView;
+    private static final int NAME_ACTIVITY_REQUEST_CODE = 0;
+
+    private SocialCompassRepository repo; //in previous labs this was final.
 
     private LocationService locationService;
+    private String user_public_code = "";
+
+    private User userTemplate = null; //keep a instnace of the user.
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +58,60 @@ public class  MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("Main Activity", "main activity launched");
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-        }
+
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+//        }
+
+
+
+
+
+
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        String name = data.getStringExtra("name");
+
+                        if (name != null) {
+                            if (repo.userExists()) {
+                                //update the users name;
+//                                LiveData<User> liveUser = repo.getUser();
+//
+//                                liveUser.observe(this, user ->{
+//                                    user.setLabel(name);
+//                                    repo.upsertLocalUser(user);
+//                                } );
+                                User user = repo.getUser();
+                                userTemplate = user;
+                                user.setLabel(name);
+                                repo.upsertLocalUser(user);
+                                repo.upsertUserRemote(user);
+
+                            } else {
+                                //create user for the first time
+
+                                user_public_code = UUID.randomUUID().toString();
+                                String private_code = UUID.randomUUID().toString();
+                                User user = new User(name, private_code, user_public_code,
+                                        0d, 0d, Instant.now().getEpochSecond());
+
+                                //insert user into user database
+                                repo.upsertLocalUser(user);
+                                repo.upsertUserRemote(user);
+
+                                TextView public_uid_view = findViewById(R.id.public_uid_textView);
+                                public_uid_view.setText(user_public_code);
+
+                                userTemplate = user;
+                            }
+                        }
+                    }
+                });
 
         locationService = LocationService.singleton(this);
         var locationData = locationService.getLocation();
@@ -57,6 +127,25 @@ public class  MainActivity extends AppCompatActivity {
 
         //adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
 
+
+        //SETUP DATABASE
+
+        var db = SocialCompassDatabase.provide(getApplicationContext());
+        var dao = db.getDao();
+        repo = new SocialCompassRepository(dao);
+
+
+        //if the user has never opened the app before and entered their name request it.
+        if (!repo.userExists()) {
+            Intent intent = new Intent(this, NameActivity.class);
+            activityResultLauncher.launch(intent);
+        }
+        else{
+            TextView public_uid_textView = findViewById(R.id.public_uid_textView);
+            public_uid_textView.setText(repo.getUser().get_public_code());
+        }
+
+
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);
@@ -68,10 +157,11 @@ public class  MainActivity extends AppCompatActivity {
         var azimuthData = orientationService.getAzimuthData();
         azimuthData.observe(this, this::OnOrientationChanged);
 
+
     }
 
-    private void OnOrientationChanged(Float azimuth)
-    {
+
+    private void OnOrientationChanged(Float azimuth) {
         CompassView compass = findViewById(R.id.compass);
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
@@ -79,13 +169,13 @@ public class  MainActivity extends AppCompatActivity {
         float lat_n = preferences.getFloat("lat", 0);
         float long_n = preferences.getFloat("long", 0);
 
-        compass.setDegrees(azimuth , true);
+        compass.setDegrees(azimuth, true);
 
         orientation = azimuth;
 
         ImageView marker = findViewById(R.id.compassImg);
-        float rotation = (-orientation)+degree;
-        System.out.println("This is the rotation "+ degree);
+        float rotation = (-orientation) + degree;
+        // System.out.println("This is the rotation "+ degree);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
         layoutParams.circleAngle = rotation;
         marker.setLayoutParams(layoutParams);
@@ -107,6 +197,15 @@ public class  MainActivity extends AppCompatActivity {
     private void onLocationChanged(Pair<Double, Double> latLong) {
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
+
+        Log.d("location change", "locationChange");
+        if (userTemplate != null) {
+            userTemplate.setUpdated_at(Instant.now().getEpochSecond());
+            userTemplate.setLatitude(latLong.first);
+            userTemplate.setLongitude(latLong.second);
+            repo.upsertUserRemote(userTemplate);
+            repo.upsertLocalUser(userTemplate);
+        }
     }
 
 
@@ -143,4 +242,11 @@ public class  MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DegreeActivity.class);
         startActivity(intent);
     }
+
+    public void onLaunchName(View view) {
+        Intent intent = new Intent(this, NameActivity.class);
+        activityResultLauncher.launch(intent);
+    }
+
+
 }

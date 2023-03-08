@@ -38,7 +38,7 @@ public class DataEntryActivity extends AppCompatActivity {
     public void saveProfile() {
         // Get the number input from the user
         EditText latInput = findViewById(R.id.editTextTextPersonName);
-        Float lat_num = Float.parseFloat(latInput.getText().toString());;
+        float lat_num = Float.parseFloat(latInput.getText().toString());;
         // Save the number to SharedPreferences
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -46,7 +46,7 @@ public class DataEntryActivity extends AppCompatActivity {
         editor.apply();
 
         EditText longInput = findViewById(R.id.editTextTextPersonName2);
-        Float long_num = Float.parseFloat(longInput.getText().toString());;
+        float long_num = Float.parseFloat(longInput.getText().toString());;
         // Save the number to SharedPreferences
         editor = preferences.edit();
         editor.putFloat("long", long_num);
