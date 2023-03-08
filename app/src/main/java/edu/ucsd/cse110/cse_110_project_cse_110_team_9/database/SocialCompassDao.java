@@ -13,7 +13,7 @@ public abstract class SocialCompassDao {
 
 
 
-
+    //[---------------METHODS FOR USER TABLE IN DATABASE ------------]
     @Query("SELECT EXISTS(SELECT 1 FROM user)")
     public abstract boolean userExists();
 
@@ -27,6 +27,9 @@ public abstract class SocialCompassDao {
 
     @Upsert
     public abstract long upsertUser(User user);
+
+    @Delete
+    public abstract int deleteUser(User user);
 
 
     //[---------------METHODS FOR FRIEND TABLE IN DATABASE ------------]
@@ -56,5 +59,6 @@ public abstract class SocialCompassDao {
     //Might not be used?
     @Delete
     public abstract int deleteFriend(Friend friend);
+
 
 }

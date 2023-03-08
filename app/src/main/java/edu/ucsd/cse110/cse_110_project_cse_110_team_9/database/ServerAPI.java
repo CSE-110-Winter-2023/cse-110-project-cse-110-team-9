@@ -65,6 +65,10 @@ public class ServerAPI {
         threadPool.shutdown();
     }
 
+    public void restartThreadPool() {
+       threadPool = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
+    }
+
     /**
      * Gets a friends location from the server
      *

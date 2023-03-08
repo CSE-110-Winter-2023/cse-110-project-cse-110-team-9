@@ -43,6 +43,13 @@ public class SocialCompassRepository {
         dao.deleteFriend(friend);
     }
 
+    public void deleteUserOnRemoteLocally(User user)
+    {
+        ServerAPI.provide().deleteUserLocationOnRemoteAsync(user);
+        dao.deleteUser(user);
+
+    }
+
 
     public void upsertLocalUser(User user) {
         dao.upsertUser(user);
