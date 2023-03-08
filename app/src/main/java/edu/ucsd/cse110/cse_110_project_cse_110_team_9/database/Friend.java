@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.GenericArrayType;
-
 
 @Entity(tableName = "friends")
 public class Friend {

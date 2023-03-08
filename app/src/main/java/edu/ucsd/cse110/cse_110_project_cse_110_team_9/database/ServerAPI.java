@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -38,7 +37,6 @@ public class ServerAPI {
         this.threadPool = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
 
 
-
     }
 
     public static ServerAPI provide() {
@@ -50,16 +48,20 @@ public class ServerAPI {
         return instance;
     }
 
+    /**
+     * Gets updates continously from the server for friend give UID
+     * @param public_uid
+     * @return
+     */
     public LiveData<Friend> getFriendUpdates(String public_uid) {
-;
 
         var remoteFriend = new MediatorLiveData<Friend>();
 
-        var future = threadPool.scheduleWithFixedDelay(()->
+        var future = threadPool.scheduleWithFixedDelay(() ->
                 {
-                   var friend = getFriend(public_uid);
-                   remoteFriend.postValue(friend);
-                    System.out.println("Got friend: "+ friend.label);
+                    var friend = getFriend(public_uid);
+                    remoteFriend.postValue(friend);
+                    System.out.println("Got friend: " + friend.label);
                 }
 
                 , 0, 5, TimeUnit.SECONDS);
@@ -69,8 +71,7 @@ public class ServerAPI {
     }
 
 
-    public void shutDownPool()
-    {
+    public void shutDownPool() {
         threadPool.shutdown();
     }
 
@@ -102,7 +103,7 @@ public class ServerAPI {
     }
 
     @AnyThread
-    public Future<Friend> getFriendAsync(String public_uid){
+    public Future<Friend> getFriendAsync(String public_uid) {
         var executor = Executors.newSingleThreadExecutor();
         var future = executor.submit(() -> getFriend(public_uid));
         return future;
@@ -123,11 +124,7 @@ public class ServerAPI {
                 .build();
 
 
-        System.out.println(request.body().toString());
-
-
-        try (
-                var response = client.newCall(request).execute()) {
+        try (var response = client.newCall(request).execute()) {
 
             System.out.println(response.body().toString());
 
@@ -138,11 +135,6 @@ public class ServerAPI {
         }
 
     }
-
-
-//    @WorkerThread
-//    public boolean putLocation(String private_code, )
-//
 
 
 }
