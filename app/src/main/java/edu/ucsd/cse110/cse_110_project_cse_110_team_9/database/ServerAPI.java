@@ -68,15 +68,6 @@ public class ServerAPI {
         //need to add this to the Mutable live data lis
     }
 
-    public void createTask()
-    {
-        var test = new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        };
-    }
 
     public void shutDownPool()
     {
@@ -91,9 +82,6 @@ public class ServerAPI {
      */
     @WorkerThread
     public Friend getFriend(String public_uid) {
-
-
-
         var request = new Request.Builder()
                 .url("https://socialcompass.goto.ucsd.edu/location/" + public_uid)
                 .method("GET", null)
@@ -113,11 +101,10 @@ public class ServerAPI {
 
     }
 
-
     @AnyThread
-    public Future<Friend> getNoteAsync(String title){
+    public Future<Friend> getFriendAsync(String public_uid){
         var executor = Executors.newSingleThreadExecutor();
-        var future = executor.submit(() -> getFriend(title));
+        var future = executor.submit(() -> getFriend(public_uid));
         return future;
 
     }
