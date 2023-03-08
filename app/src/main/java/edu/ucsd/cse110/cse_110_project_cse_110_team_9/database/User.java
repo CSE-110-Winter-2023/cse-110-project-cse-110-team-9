@@ -15,9 +15,9 @@ public class User {
 
 
     @PrimaryKey
-    @SerializedName("public_uid")
+    @SerializedName("public_code")
     @NonNull
-    String public_uid;
+    String public_code;
 
     @SerializedName("private_code")
     @NonNull
@@ -46,19 +46,24 @@ public class User {
 
 
     public User(@NonNull String label, @NonNull String private_code,
-                @NonNull String public_uid, double latitude, double longitude, long updated_at) {
+                @NonNull String public_code, double latitude, double longitude, long updated_at) {
 
         this.label = label;
         this.latitude = latitude;
         this.longitude = longitude;
         this.private_code = private_code;
-        this.public_uid = public_uid;
+        this.public_code = public_code;
         this.updated_at = updated_at;
     }
 
     @NonNull
-    public String getPublic_uid() {
-        return public_uid;
+    public String getPrivate_code() {
+        return private_code;
+    }
+
+    @NonNull
+    public String get_public_code() {
+        return public_code;
     }
 
 

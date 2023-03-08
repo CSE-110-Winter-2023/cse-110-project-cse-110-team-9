@@ -33,7 +33,7 @@ public abstract class SocialCompassDao {
 
 
     //Get all the friends in the local data base
-    @Query("SELECT * FROM friends ORDER BY public_uid")
+    @Query("SELECT * FROM friends ORDER BY public_code")
     public abstract LiveData<List<Friend>> getAllFriends();
 
     //yeah cool
@@ -45,13 +45,13 @@ public abstract class SocialCompassDao {
     See if friend already exists in the local database so we don't
     add the same friend twice to the database
      */
-    @Query("SELECT EXISTS(SELECT 1 FROM friends WHERE public_uid = :public_uid)")
-    public abstract boolean friendExists(String public_uid);
+    @Query("SELECT EXISTS(SELECT 1 FROM friends WHERE public_code = :public_code)")
+    public abstract boolean friendExists(String public_code);
 
 
     //get a single friend, might not be needed, but useful for testing
-    @Query("SELECT * FROM friends WHERE public_uid = :public_uid")
-    public abstract LiveData<Friend> getFriend(String public_uid);
+    @Query("SELECT * FROM friends WHERE public_code = :public_code")
+    public abstract LiveData<Friend> getFriend(String public_code);
 
     //Might not be used?
     @Delete

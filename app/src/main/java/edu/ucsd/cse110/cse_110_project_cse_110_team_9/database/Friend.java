@@ -14,9 +14,9 @@ public class Friend {
 
     //Friend public code used as the primary key for friends (
     @PrimaryKey
-    @SerializedName("public_uid")
+    @SerializedName("public_code")
     @NonNull
-    public String public_uid;
+    public String public_code;
 
 
     //This will contain the friend's name
@@ -40,11 +40,11 @@ public class Friend {
     public String updated_at;
 
 
-    public Friend(@NonNull String public_uid, @NonNull String label,
+    public Friend(@NonNull String public_code, @NonNull String label,
                   @NonNull double latitude, @NonNull double longitude,
                   String created_at, String updated_at) {
 
-        this.public_uid = public_uid;
+        this.public_code = public_code;
         this.latitude = latitude;
         this.longitude = longitude;
         this.created_at = created_at;

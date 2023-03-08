@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private SocialCompassRepository repo; //in previous labs this was final.
 
     private LocationService locationService;
-    private String user_public_uid = "";
+    private String user_public_code = "";
 
     private User userTemplate = null; //keep a instnace of the user.
     private ActivityResultLauncher<Intent> activityResultLauncher;
@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 //create user for the first time
 
-                                user_public_uid = UUID.randomUUID().toString();
+                                user_public_code = UUID.randomUUID().toString();
                                 String private_code = UUID.randomUUID().toString();
-                                User user = new User(name, private_code, user_public_uid,
+                                User user = new User(name, private_code, user_public_code,
                                         0d, 0d, Instant.now().getEpochSecond());
 
                                 //insert user into user database
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                                 repo.upsertUserRemote(user);
 
                                 TextView public_uid_view = findViewById(R.id.public_uid_textView);
-                                public_uid_view.setText(user_public_uid);
+                                public_uid_view.setText(user_public_code);
 
                                 userTemplate = user;
                             }
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             TextView public_uid_textView = findViewById(R.id.public_uid_textView);
-            public_uid_textView.setText(repo.getUser().getPublic_uid());
+            public_uid_textView.setText(repo.getUser().get_public_code());
         }
 
 
