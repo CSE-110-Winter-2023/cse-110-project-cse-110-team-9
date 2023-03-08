@@ -19,7 +19,6 @@ import java.time.Instant;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.Friend;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.ServerAPI;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
-import edu.ucsd.cse110.cse_110_project_cse_110_team_9.util.Log;
 
 
 @RunWith(MockitoJUnitRunner.class)

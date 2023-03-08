@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                                 userTemplate = user;
                                 user.setLabel(name);
                                 repo.upsertLocalUser(user);
+                                repo.upsertUserRemote(user);
+
                             } else {
                                 //create user for the first time
 
