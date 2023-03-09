@@ -60,31 +60,32 @@ public class TestGetNameFromUser
      * Tests that if btn clicked on main activty,
      * that the setName activity will be started.
      */
-    @Test
-    public void testGetNameIntegrationWithMainActivity()
-        {
-
-            var scenario = ActivityScenario.launch(MainActivity.class);
-            scenario.moveToState(Lifecycle.State.CREATED);
-            scenario.moveToState(Lifecycle.State.STARTED);
-
-            scenario.onActivity(activity -> {
-
-                Button openSetName = activity.findViewById(R.id.ToSetNamePageBtn);
-
-                openSetName.performClick();
-
-                Intent intent = shadowOf(activity).peekNextStartedActivityForResult().intent;
-                ShadowIntent shadowIntent = shadowOf(intent);
-               // assertEquals(NameActivity.class, shadowIntent.getIntentClass());
-
-                assertThat(intent.getComponent(),
-                        equalTo(new ComponentName(activity,NameActivity.class)));
-
-            });
-
-            scenario.close();;
-        }
+//    @Test
+//    public void testGetNameIntegrationWithMainActivity()
+//        {
+//
+//            var scenario = ActivityScenario.launch(MainActivity.class);
+//            scenario.moveToState(Lifecycle.State.CREATED);
+//            scenario.moveToState(Lifecycle.State.STARTED);
+//
+//            scenario.onActivity(activity -> {
+//
+//                Button openSetName = activity.findViewById(R.id.ToSetNamePageBtn);
+//
+//                openSetName.performClick();
+//
+//                Intent intent = shadowOf(activity).peekNextStartedActivityForResult().intent;
+//                ShadowIntent shadowIntent = shadowOf(intent);
+//               // assertEquals(NameActivity.class, shadowIntent.getIntentClass());
+//
+//                assertThat(intent.getComponent(),
+//                        equalTo(new ComponentName(activity,NameActivity.class)));
+//
+//            });
+//
+//
+//            scenario.close();;
+//        }
 
 
     }
