@@ -50,7 +50,7 @@ public class ServerAPI {
 
         var future = threadPool.scheduleWithFixedDelay(() ->
                 {
-                    var friend = getFriend(public_uid);
+                    var friend = getFriendFromRemote(public_uid);
                     remoteFriend.postValue(friend);
                     System.out.println("Got friend: " + friend.label);
                 }
@@ -76,7 +76,7 @@ public class ServerAPI {
      * @return Friend POJO
      */
     @WorkerThread
-    public Friend getFriend(String public_uid) {
+    public Friend getFriendFromRemote(String public_uid) {
         var request = new Request.Builder()
                 .url("https://socialcompass.goto.ucsd.edu/location/" + public_uid)
                 .method("GET", null)
@@ -104,7 +104,7 @@ public class ServerAPI {
     public Future<Friend> getFriendAsync(String public_uid) {
 
         var executor = Executors.newSingleThreadExecutor();
-        var future = executor.submit(() -> getFriend(public_uid));
+        var future = executor.submit(() -> getFriendFromRemote(public_uid));
         return future;
     }
 

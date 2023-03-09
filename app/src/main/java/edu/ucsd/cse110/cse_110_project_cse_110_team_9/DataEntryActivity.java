@@ -35,8 +35,11 @@ public class DataEntryActivity extends AppCompatActivity {
         EditText public_uid = findViewById(R.id.public_uid_textView);
 
         //send text to server to get friend's user info
-        LiveData<Friend> friend = repo.getFriend(public_uid.getText().toString());
+        //LiveData<Friend> friend = repo.getFriend(public_uid.getText().toString());
+
+
+
         //call method that inserts the friend's info into the local database
-        repo.upsertLocalFriend(friend);
+        //epo.upsertLocalFriend(friend);
     }
 }
