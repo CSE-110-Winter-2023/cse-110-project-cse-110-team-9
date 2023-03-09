@@ -12,12 +12,12 @@ public class AndroidTest
     @Test
     public void Testthis()
     {
-//        var act = ActivityScenario.launch(MainActivity.class);
-//
-//        act.onActivity(activity -> {
-//
-//            var btn = activity.findViewById(R.id)
-//
-//        });
+        var act = ActivityScenario.launch(MainActivity.class);
+
+        act.onActivity(activity -> {
+
+
+
+        });
     }
 }
