@@ -24,6 +24,12 @@ public class SocialCompassRepository {
         return dao.friendExists(public_uid);
     }
 
+
+//    public Friend getFriendFromRemote(String public_uid)
+//    {
+//        ServerAPI.provide().getFriendAsync();
+//    }
+
     public void upsertUserRemote(User user) {
         ServerAPI.provide().updateUserLocationAsync(user);
     }

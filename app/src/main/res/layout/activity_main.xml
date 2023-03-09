@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="411dp"
-            android:layout_height="444dp"
+            android:layout_width="415dp"
+            android:layout_height="471dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onLaunchDataEntry"
-            android:text="Data entry ->"
+            android:text="Add Friends ->"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.939"
@@ -76,19 +76,21 @@
 
         <ImageView
             android:id="@+id/parentsImageView"
-            android:layout_width="47dp"
-            android:layout_height="41dp"
+            android:layout_width="39dp"
+            android:layout_height="32dp"
+            android:visibility="invisible"
             app:layout_constraintCircle="@+id/imageView"
             app:layout_constraintCircleAngle="210"
             app:layout_constraintCircleRadius="170dp"
             app:srcCompat="@drawable/greendot"
-            tools:layout_editor_absoluteX="118dp" />
+            tools:layout_editor_absoluteX="106dp"
+            tools:layout_editor_absoluteY="504dp" />
 
         <TextView
             android:id="@+id/parentsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Parent's"
+            android:text=""
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/parentsImageView"
             app:layout_constraintEnd_toStartOf="@+id/parentsImageView"
@@ -101,12 +103,14 @@
             android:id="@+id/compassImg"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            app:layout_constraintCircle="@+id/imageView"
-            app:layout_constraintCircleAngle="210"
-            app:layout_constraintCircleRadius="170dp"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:layout_editor_absoluteX="107dp"
-            tools:layout_editor_absoluteY="541dp" />
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.529"
+            app:srcCompat="@mipmap/ic_launcher" />
 
         <Button
             android:id="@+id/ToSetDegreePageBtn"
