@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<String> emojiStrings;
 
-
     private MutableLiveData<Integer> scale;
     private SocialCompassRepository repo; //in previous labs this was final.
 
