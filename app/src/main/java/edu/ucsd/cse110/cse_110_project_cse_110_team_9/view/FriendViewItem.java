@@ -77,6 +77,7 @@ public class FriendViewItem extends LinearLayout {
     }
 
 
+
     public FriendViewItem(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
@@ -91,6 +92,10 @@ public class FriendViewItem extends LinearLayout {
     {
         friend.observe(owner,this::onFriendDataChange);
        // this.
+    }
+
+    public void setFriendIcon(String text){
+        friendIcon.setText(text);
     }
 
     public void setOrientationService(OrientationService service, LifecycleOwner owner){

@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private float orientation = 0f;
     private float previous_orientation = 0f;
     private RecyclerView recyclerView;
+    private List<String> emojiStrings;
+
 
 
     private SocialCompassRepository repo; //in previous labs this was final.
@@ -58,7 +60,56 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         friendItems = new ArrayList<>();
+
+        emojiStrings = new ArrayList<>();
+
+        emojiStrings.add(new String(Character.toChars(0x1F99C)));
+        emojiStrings.add(new String(Character.toChars(0x1F99A)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A9)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A4)));
+        emojiStrings.add(new String(Character.toChars(0x1F986)));
+        emojiStrings.add(new String(Character.toChars(0x1F985)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F413)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A1)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A8)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A6)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A5)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F987)));
+        emojiStrings.add(new String(Character.toChars(0x1F994)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F9AB)));
+        emojiStrings.add(new String(Character.toChars(0x1F43F)));
+        emojiStrings.add(new String(Character.toChars(0x1F407)));
+        emojiStrings.add(new String(Character.toChars(0x1F400)));
+        emojiStrings.add(new String(Character.toChars(0x1F401)));
+        emojiStrings.add(new String(Character.toChars(0x1F99B)));
+        emojiStrings.add(new String(Character.toChars(0x1F98F)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A3)));
+        emojiStrings.add(new String(Character.toChars(0x1F992)));
+        emojiStrings.add(new String(Character.toChars(0x1F999)));
+        emojiStrings.add(new String(Character.toChars(0x1F42B)));
+        emojiStrings.add(new String(Character.toChars(0x1F411)));
+        emojiStrings.add(new String(Character.toChars(0x1F404)));
+        emojiStrings.add(new String(Character.toChars(0x1F402)));
+        emojiStrings.add(new String(Character.toChars(0x1F42E)));
+        emojiStrings.add(new String(Character.toChars(0x1F9AC)));
+        emojiStrings.add(new String(Character.toChars(0x1F98C)));
+        emojiStrings.add(new String(Character.toChars(0x1F993)));
+        emojiStrings.add(new String(Character.toChars(0x1F984)));
+        emojiStrings.add(new String(Character.toChars(0x1F40E)));
+        emojiStrings.add(new String(Character.toChars(0x1F406)));
+        emojiStrings.add(new String(Character.toChars(0x1F405)));
+        emojiStrings.add(new String(Character.toChars(0x1F408)));
+        emojiStrings.add(new String(Character.toChars(0x1F429)));
+        emojiStrings.add(new String(Character.toChars(0x1F415)));
+        emojiStrings.add(new String(Character.toChars(0x1F98D)));
+        emojiStrings.add(new String(Character.toChars(0x1F412)));
+
+
         Log.d("Main Activity", "main activity launched");
+
 
 
 
@@ -260,6 +311,11 @@ public class MainActivity extends AppCompatActivity {
         friendItems.add(newFriend);
         newFriend.setLocationService(locationService, this);
         newFriend.setOrientationService(orientationService, this);
+
+        int hashcode = public_code.hashCode() & 0xfffffff;
+        int index = hashcode % emojiStrings.size();
+        newFriend.setFriendIcon(emojiStrings.get(index));
+
     }
 
     private void onTimeChanged(Long time) {
