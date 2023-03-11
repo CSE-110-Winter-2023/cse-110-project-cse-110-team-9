@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private float orientation = 0f;
     private float previous_orientation = 0f;
     private RecyclerView recyclerView;
-    private static final int NAME_ACTIVITY_REQUEST_CODE = 0;
+
 
     private SocialCompassRepository repo; //in previous labs this was final.
 
@@ -72,18 +72,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Main Activity", "main activity launched");
 
 
-//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-//                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-//        }
-
-
 
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Constants.NAME_ACTIVITY_REQUEST_CODE) {
                         // There are no request codes
                         Intent data = result.getData();
                         String name = data.getStringExtra("name");
@@ -120,6 +114,21 @@ public class MainActivity extends AppCompatActivity {
 
                                 userTemplate = user;
                             }
+                        }
+                    }
+                    else if (result.getResultCode() == Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE)
+                    {
+                        Intent data = result.getData();
+                        String public_code = data.getStringExtra("public_code");
+
+
+                        Log.d("got public uid from activity" ,public_code);
+                        //check if friend exisits on remote
+
+                        if (public_code != null ) {
+
+                            addFriend(public_code);
+                            repo.upsertLocalFriend(public_code);
                         }
                     }
                 });
@@ -169,9 +178,26 @@ public class MainActivity extends AppCompatActivity {
         azimuthData.observe(this, this::OnOrientationChanged);
 
 
+        addFriend("jason12");
+        //ADD FRIEND STORED IN LOCAL DB
 
+//        var friends = repo.getAllLocalFriends();
+//
+//        friends.forEach(friend -> {
+//
+//
+//            if (repo.friendExistsRemote(friend.public_code)) {
+//
+//                addFriend(friend.public_code);
+//            }
+//            else{
+//
+//                Log.d("Server",
+//                        "Saved friend does not exists on REMOTE" + friend.public_code);
+//            }
+//        });
 
-        addFriend(300, 270);
+      //  addFriend("jason12");
 
 
     }
@@ -226,43 +252,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void addFriend(int radius, int angle)
+    public void addFriend(String public_code)
     {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraintLayout);
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
-        params.circleRadius = radius;
-        params.circleAngle =angle;
+
         params.circleConstraint = R.id.compassImg;
 
-        FriendViewItem test2 = new FriendViewItem(this);
-        test2.setLayoutParams(params);
-        var parms2 = (ConstraintLayout.LayoutParams)test2.getLayoutParams();
+        FriendViewItem newFriend = new FriendViewItem(this);
+        newFriend.setLayoutParams(params);
 
+        layout.addView(newFriend);
 
+        newFriend.setData(repo.getFriendFromRemoteLive(public_code), this);
 
-        var model = new ViewModelProvider(this).get(FriendViewModel.class);
-        //model.getFriend("point-nemo").observe(this, this::on);
-
-        layout.addView(test2);
-
-        test2.setNameLabel(Integer.toString(angle));
-        test2.setData(repo.getFriendFromRemoteLive("jason12"), this);
-
-
-        friendItems.add(test2);
-
-        test2.setLocationService(locationService, this);
-        test2.setOrientationService(orientationService, this);
-
-
-        //FriendViewItem newFriend = new FriendViewItem(this);
-
-
-
-       // layout.addView(newFriend);
-
+        friendItems.add(newFriend);
+        newFriend.setLocationService(locationService, this);
+        newFriend.setOrientationService(orientationService, this);
     }
 
     private void onTimeChanged(Long time) {
@@ -290,8 +298,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLaunchDataEntry(View view) {
+
         Intent intent = new Intent(this, DataEntryActivity.class);
-        startActivity(intent);
+        activityResultLauncher.launch(intent);
     }
 
     public void onLaunchDegree(View view) {

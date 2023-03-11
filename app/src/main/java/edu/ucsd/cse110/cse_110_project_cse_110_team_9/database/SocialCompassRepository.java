@@ -38,7 +38,10 @@ public class SocialCompassRepository {
         return null;
     }
 
-    public LiveData<List<Friend>> getAllLocalFriends() {
+    public LiveData<List<Friend>> getAllLocalFriendsLive() {
+        return dao.getAllFriendsLive();
+    }
+    public List<Friend> getAllLocalFriends() {
         return dao.getAllFriends();
     }
 
@@ -52,6 +55,25 @@ public class SocialCompassRepository {
 //    {
 //        ServerAPI.provide().getFriendAsync();
 //    }
+
+    public boolean friendExistsRemote(String public_uid)
+    {
+        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+        try {
+            var friend = fur.get(1, TimeUnit.SECONDS);
+            if (friend != null)
+            {
+                return  true;
+            }
+        } catch (ExecutionException e) {
+            //
+        } catch (InterruptedException e) {
+            //throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            //throw new RuntimeException(e);
+        }
+        return false;
+    }
 
     public void upsertUserRemote(User user) {
         ServerAPI.provide().updateUserLocationAsync(user);
@@ -85,8 +107,20 @@ public class SocialCompassRepository {
     }
 
 
-    public void upsertLocalFriend(Friend friend) {
-        dao.upsertFriend(friend);
+    public void upsertLocalFriend(String public_uid) {
+        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+        try {
+            var friend = fur.get(1, TimeUnit.SECONDS);
+            dao.upsertFriend(friend);
+        } catch (ExecutionException e) {
+            //throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            //throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+           // throw new RuntimeException(e);
+        }
+
+
     }
 
 

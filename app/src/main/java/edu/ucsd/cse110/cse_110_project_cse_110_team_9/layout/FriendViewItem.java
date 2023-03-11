@@ -109,7 +109,7 @@ public class FriendViewItem extends LinearLayout {
     public void onUserLocationChanged(Pair<Double, Double> location)
     {
 
-        if (location.first != null && location.second != null) {
+        if (userLocation!= null && location.first != null && location.second != null) {
 
             userLocation.setLatitude(location.first);
             userLocation.setLongitude(location.second);
@@ -150,7 +150,7 @@ public class FriendViewItem extends LinearLayout {
 
     public void reCalculateRadius()
     {
-
+        setRadius(300);
     }
 
     public void onFriendDataChange(Friend friend){
@@ -159,6 +159,8 @@ public class FriendViewItem extends LinearLayout {
         this.friend = friend;
         friendLocation.setLatitude(friend.latitude);
         friendLocation.setLongitude(friend.longitude);
+        reCalcualteAngle();
+        reCalculateRadius();
     }
 
     @Override

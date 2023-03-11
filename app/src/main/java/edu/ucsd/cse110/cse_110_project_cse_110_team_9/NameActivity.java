@@ -48,7 +48,7 @@ public class NameActivity extends AppCompatActivity {
         editor.putString("name", name);
 
         Intent intent = getIntent().putExtra("name", name);
-        setResult(RESULT_OK, intent);
+        setResult(Constants.NAME_ACTIVITY_REQUEST_CODE, intent);
         editor.apply();
     }
 

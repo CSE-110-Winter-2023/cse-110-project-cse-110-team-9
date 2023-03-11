@@ -27,13 +27,19 @@ public class DataEntryActivity extends AppCompatActivity {
     }
 
     public void onExitClicked(View view) {
+
+        EditText public_uid = findViewById(R.id.public_uid_textView);
+
+        Intent intent = getIntent().putExtra("public_code", public_uid.getText().toString());
+        setResult(Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE, intent);
         finish();
     }
 
     public void onAddClicked(View view) {
         //get text by calling id of text box
-        EditText public_uid = findViewById(R.id.public_uid_textView);
 
+        //need to close out bc of reasons
+        onExitClicked(view);
         //send text to server to get friend's user info
         //LiveData<Friend> friend = repo.getFriend(public_uid.getText().toString());
 
