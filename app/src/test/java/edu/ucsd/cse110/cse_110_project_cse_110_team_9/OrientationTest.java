@@ -31,7 +31,7 @@ public class OrientationTest {
     public void test_orientation_service() {
         float testValue = 180;
 
-        var scenario = ActivityScenario.launch(MainActivity.class);
+        var scenario = ActivityScenario.launch(NameActivity.class);
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.onActivity(activity -> {
             var orientationService = OrientationService.singleton(activity);
