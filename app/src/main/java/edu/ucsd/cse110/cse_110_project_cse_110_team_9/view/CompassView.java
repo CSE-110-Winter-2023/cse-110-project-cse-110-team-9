@@ -1,4 +1,4 @@
-package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
+package edu.ucsd.cse110.cse_110_project_cse_110_team_9.view;
 
 /*
 Adapted from:
@@ -36,6 +36,8 @@ import android.view.View;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
 
 public class CompassView extends View {
     OnCompassDragListener mListener;

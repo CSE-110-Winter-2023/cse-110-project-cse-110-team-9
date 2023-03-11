@@ -37,7 +37,10 @@ public abstract class SocialCompassDao {
 
     //Get all the friends in the local data base
     @Query("SELECT * FROM friends ORDER BY public_code")
-    public abstract LiveData<List<Friend>> getAllFriends();
+    public abstract LiveData<List<Friend>> getAllFriendsLive();
+
+    @Query("SELECT * FROM friends ORDER BY public_code")
+    public abstract List<Friend> getAllFriends();
 
     //yeah cool
     @Upsert

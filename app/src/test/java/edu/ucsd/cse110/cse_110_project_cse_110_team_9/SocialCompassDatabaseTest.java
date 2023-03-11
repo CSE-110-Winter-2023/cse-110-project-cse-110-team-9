@@ -195,7 +195,7 @@ public class SocialCompassDatabaseTest {
         dao.upsertFriend(insertedFriend2);
         dao.upsertFriend(insertedFriend3);
 
-        var allLiveFriends = dao.getAllFriends();
+        var allLiveFriends = dao.getAllFriendsLive();
 
         allLiveFriends.observe(lifeCycleOwner, new Observer<List<Friend>>() {
             @Override

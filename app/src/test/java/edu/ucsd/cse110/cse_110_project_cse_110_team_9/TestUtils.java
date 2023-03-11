@@ -17,7 +17,7 @@ public class TestUtils {
         var longB = (-90.200203);
 
        var result =  Utilities.angleBetweenTwoLocations(
-               new Location("",latA, longA), new Location("",latB,longB));
+               new Location(latA, longA), new Location(latB,longB));
        // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
 
@@ -29,7 +29,7 @@ public class TestUtils {
         latB = 42.3601;
         longB = -71.0942;
          result =  Utilities.angleBetweenTwoLocations(
-                new Location("",latA, longA), new Location("",latB,longB));
+                new Location(latA, longA), new Location(latB,longB));
         // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
 
@@ -44,7 +44,7 @@ public class TestUtils {
 
         expected = 37.855;
         result =  Utilities.angleBetweenTwoLocations(
-                new Location("",latA, longA), new Location("",latB,longB));
+                new Location(latA, longA), new Location(latB,longB));
         // v/ar result = Utilities.angleBetweenTwoLocations(Math.toRadians())a
         assertEquals(expected,result, 0.1);
     }
@@ -60,7 +60,7 @@ public class TestUtils {
         var longB = (-90.200203);
 
         var result = Utilities.findDistanceinKMBetweenTwoPoints(
-                new Location("",latA, longA), new Location("",latB,longB));
+                new Location(latA, longA), new Location(latB,longB));
 
         System.out.println("Disntace: " + result);
         assertEquals(expected, result, 0.2);
@@ -72,7 +72,7 @@ public class TestUtils {
          longB = (-122.542780);
 
          result = Utilities.findDistanceinKMBetweenTwoPoints(
-                new Location("",latA, longA), new Location("",latB,longB));
+                new Location(latA, longA), new Location(latB,longB));
 
 
         System.out.println("home is:" + Utilities.KMtoMiles(result) + " Miles");

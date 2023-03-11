@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class SocialCompassRepository {
@@ -15,7 +18,30 @@ public class SocialCompassRepository {
 
     }
 
-    public LiveData<List<Friend>> getAllLocalFriends() {
+
+    public LiveData<Friend> getFriendFromRemoteLive(String public_uid)
+    {
+        return ServerAPI.provide().getFriendUpdates(public_uid);
+    }
+
+    public Friend getFriendFromRemote(String public_uid)
+    {
+        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+
+        try {
+            return fur.get(1, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
+        } catch (InterruptedException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return null;
+    }
+
+    public LiveData<List<Friend>> getAllLocalFriendsLive() {
+        return dao.getAllFriendsLive();
+    }
+    public List<Friend> getAllLocalFriends() {
         return dao.getAllFriends();
     }
 
@@ -29,6 +55,25 @@ public class SocialCompassRepository {
 //    {
 //        ServerAPI.provide().getFriendAsync();
 //    }
+
+    public boolean friendExistsRemote(String public_uid)
+    {
+        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+        try {
+            var friend = fur.get(1, TimeUnit.SECONDS);
+            if (friend != null)
+            {
+                return  true;
+            }
+        } catch (ExecutionException e) {
+            //
+        } catch (InterruptedException e) {
+            //throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            //throw new RuntimeException(e);
+        }
+        return false;
+    }
 
     public void upsertUserRemote(User user) {
         ServerAPI.provide().updateUserLocationAsync(user);
@@ -62,8 +107,20 @@ public class SocialCompassRepository {
     }
 
 
-    public void upsertLocalFriend(Friend friend) {
-        dao.upsertFriend(friend);
+    public void upsertLocalFriend(String public_uid) {
+        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+        try {
+            var friend = fur.get(1, TimeUnit.SECONDS);
+            dao.upsertFriend(friend);
+        } catch (ExecutionException e) {
+            //throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            //throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+           // throw new RuntimeException(e);
+        }
+
+
     }
 
 

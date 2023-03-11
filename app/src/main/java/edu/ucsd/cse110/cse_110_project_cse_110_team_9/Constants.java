@@ -9,6 +9,8 @@ public class Constants {
     public static final float SOUTH = (float) Math.PI;
     public static final float WEST = (float) (3 * Math.PI / 2);
 
+    public static final int NAME_ACTIVITY_REQUEST_CODE = 0;
+    public static final int ADD_FRIEND_ACTIVITY_REQUEST_CODE = 1;
 
 
     public static String LocationNotFoundJsonResponse;
