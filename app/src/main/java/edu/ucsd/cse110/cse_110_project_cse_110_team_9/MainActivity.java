@@ -6,10 +6,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -18,18 +20,24 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.layout.FriendViewItem;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
@@ -52,10 +60,14 @@ public class MainActivity extends AppCompatActivity {
     private User userTemplate = null; //keep a instnace of the user.
     private ActivityResultLauncher<Intent> activityResultLauncher;
 
+   private List<FriendViewItem> friendItems;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        friendItems = new ArrayList<>();
         Log.d("Main Activity", "main activity launched");
 
 
@@ -63,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
 //                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
 //        }
-
-
 
 
 
@@ -158,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
         azimuthData.observe(this, this::OnOrientationChanged);
 
 
+
+
+        addFriend(300, 270);
+
+
     }
 
 
@@ -183,15 +198,21 @@ public class MainActivity extends AppCompatActivity {
         // Set the rotation of the ImageView to match the circle angle
         marker.setRotation(rotation);
 
-        ImageView location_marker = findViewById(R.id.parentsImageView);
+        //ImageView location_marker = findViewById(R.id.parentsImageView);
         double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
         float rotation_f = (float) deltaTheta;
-        ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
-        layoutParams2.circleAngle = rotation_f;
-        location_marker.setLayoutParams(layoutParams2);
+       // ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
+      // / layoutParams2.circleAngle = rotation_f;
+       // location_marker.setLayoutParams(layoutParams2);
 
         // Set the rotation of the ImageView to match the circle angle
-        location_marker.setRotation(rotation_f);
+     //   location_marker.setRotation(rotation_f);
+
+
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.setAngle(Math.round(azimuth));
+        });
+
     }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
@@ -208,6 +229,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void addFriend(int radius, int angle)
+    {
+        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraintLayout);
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+        params.circleRadius = radius;
+        params.circleAngle =angle;
+        params.circleConstraint = R.id.compassImg;
+
+        FriendViewItem test2 = new FriendViewItem(this);
+        test2.setLayoutParams(params);
+        var parms2 = (ConstraintLayout.LayoutParams)test2.getLayoutParams();
+
+
+
+        var model = new ViewModelProvider(this).get(FriendViewModel.class);
+        //model.getFriend("point-nemo").observe(this, this::on);
+
+        layout.addView(test2);
+
+        test2.setNameLabel(Integer.toString(angle));
+        test2.setData(repo.getFriendFromRemoteLive("jason12"), this);
+
+
+        friendItems.add(test2);
+
+        //FriendViewItem newFriend = new FriendViewItem(this);
+
+
+
+       // layout.addView(newFriend);
+
+    }
 
     private void onTimeChanged(Long time) {
         ImageView img = findViewById(R.id.compassImg);

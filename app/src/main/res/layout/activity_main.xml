@@ -17,17 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="415dp"
-            android:layout_height="471dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.567"
-            app:srcCompat="@drawable/cface" />
-
         <Button
             android:id="@+id/ToDataEntryBtn"
             android:layout_width="wrap_content"
@@ -73,31 +62,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/locationText" />
-
-        <ImageView
-            android:id="@+id/parentsImageView"
-            android:layout_width="39dp"
-            android:layout_height="32dp"
-            android:visibility="invisible"
-            app:layout_constraintCircle="@+id/imageView"
-            app:layout_constraintCircleAngle="210"
-            app:layout_constraintCircleRadius="170dp"
-            app:srcCompat="@drawable/greendot"
-            tools:layout_editor_absoluteX="106dp"
-            tools:layout_editor_absoluteY="504dp" />
-
-        <TextView
-            android:id="@+id/parentsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/parentsImageView"
-            app:layout_constraintEnd_toStartOf="@+id/parentsImageView"
-            app:layout_constraintHorizontal_bias="0.52"
-            app:layout_constraintStart_toEndOf="@+id/parentsImageView"
-            app:layout_constraintTop_toTopOf="@+id/parentsImageView"
-            app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
             android:id="@+id/compassImg"

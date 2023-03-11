@@ -11,13 +11,20 @@ import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.lifecycle.LifecycleOwner;
 
-public class CustomView extends View {
-
+public class CustomView extends ViewGroup {
     private int mWidth;
     private int mHeight;
+
+    private Context context;
+
+    private TextView label;
+    private TextView info;
+
 
     public CustomView(Context context) {
         super(context);
@@ -28,10 +35,16 @@ public class CustomView extends View {
     public CustomView(Context context, AttributeSet attrs){
         super(context,attrs);
         init(context);
+
     }
     public CustomView(Context context, AttributeSet attrs, int defStyle){
         super(context,attrs,defStyle);
         init(context);
+    }
+
+    @Override
+    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
+
     }
 
 
@@ -40,9 +53,10 @@ public class CustomView extends View {
     {
         super.onDraw(canvas);
         Paint paint = new Paint();
-        canvas.drawPaint(paint);
+        //canvas.drawPaint(paint);
         paint.setColor(Color.RED);
-        canvas.drawCircle(20,20,40,paint);
+        paint.setStrokeWidth(4);
+        canvas.drawCircle(50,50,50, paint);
 
         canvas.save();
     }

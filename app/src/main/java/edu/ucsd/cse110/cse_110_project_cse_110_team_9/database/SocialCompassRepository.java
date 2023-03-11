@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class SocialCompassRepository {
@@ -13,6 +16,26 @@ public class SocialCompassRepository {
     public SocialCompassRepository(SocialCompassDao dao) {
         this.dao = dao;
 
+    }
+
+
+    public LiveData<Friend> getFriendFromRemoteLive(String public_uid)
+    {
+        return ServerAPI.provide().getFriendUpdates(public_uid);
+    }
+
+    public Friend getFriendFromRemote(String public_uid)
+    {
+        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+
+        try {
+            return fur.get(1, TimeUnit.SECONDS);
+        } catch (ExecutionException e) {
+        } catch (InterruptedException e) {
+        } catch (TimeoutException e) {
+        }
+
+        return null;
     }
 
     public LiveData<List<Friend>> getAllLocalFriends() {
