@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
+
     private float orientation = 0f;
     private float previous_orientation = 0f;
     private RecyclerView recyclerView;
@@ -208,11 +209,6 @@ public class MainActivity extends AppCompatActivity {
         // Set the rotation of the ImageView to match the circle angle
      //   location_marker.setRotation(rotation_f);
 
-
-        friendItems.forEach(friendViewItem -> {
-            friendViewItem.setAngle(Math.round(azimuth));
-        });
-
     }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
@@ -256,6 +252,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         friendItems.add(test2);
+
+        test2.setLocationService(locationService, this);
+        test2.setOrientationService(orientationService, this);
+
 
         //FriendViewItem newFriend = new FriendViewItem(this);
 

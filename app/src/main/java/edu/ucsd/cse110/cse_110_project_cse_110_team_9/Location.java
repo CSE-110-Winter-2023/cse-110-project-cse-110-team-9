@@ -19,21 +19,23 @@ public class Location {
     public Double latitude;
     public String name;
 
-    public Location(String name, Double latitude, Double longitude) {
-        this.name = name;
+    public Location(Double latitude, Double longitude) {
+
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
 
-    @Override
-    public String toString() {
-        return "Location{" +
-                "longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", name='" + name + '\'' +
-                '}';
+    public void setLongitude(double longitude)
+    {
+        this.longitude  = longitude;
     }
+
+    public void setLatitude(double latitude){
+        this.latitude = latitude;
+    }
+
+
 
     public Double getLatitude() {
         return latitude;
