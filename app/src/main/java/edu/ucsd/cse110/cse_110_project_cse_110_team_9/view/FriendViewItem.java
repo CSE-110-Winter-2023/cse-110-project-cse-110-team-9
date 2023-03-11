@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.core.util.Pair;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Location;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Utilities;
@@ -41,6 +43,9 @@ public class FriendViewItem extends LinearLayout {
     private float userAngle = 0;
 
     private Friend friend;
+
+
+    private int scale = 1;
     public FriendViewItem(Context context)
     {
         super(context);
@@ -153,7 +158,25 @@ public class FriendViewItem extends LinearLayout {
 
     public void reCalculateRadius()
     {
-        setRadius(300);
+
+
+
+        var distance =
+                Utilities.findDistanceinMilesBetweenTwoPoints(userLocation, friendLocation);
+
+
+        //scale
+
+
+        View parent = (View)getParent();
+        int width = parent.getWidth();
+
+
+
+        setRadius(width/2- Constants.EDGE_PADDING);
+
+        //pixels per miles o
+        //if scale is 10 miles then we have (width/2) / 10
     }
 
     public void onFriendDataChange(Friend friend){

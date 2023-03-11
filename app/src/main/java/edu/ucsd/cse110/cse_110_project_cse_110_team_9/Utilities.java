@@ -35,7 +35,7 @@ public class Utilities {
 
     /**
      * Returns the angle in degrees from point A to point B
-
+     *
      * @return angle in degrees
      */
     public static double radiansBetweenTwoLocations(Location a, Location b) {
@@ -87,16 +87,21 @@ public class Utilities {
         double deltaLat = latB - latA;
         double R = 6371; // Radius of earth in kilometers
 
-        double a = Math.pow((Math.sin(deltaLat/2)), 2) +
-                Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(deltaLong/2), 2);
+        double a = Math.pow((Math.sin(deltaLat / 2)), 2) +
+                Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(deltaLong / 2), 2);
 
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = R * c; //calcualte distance in km
         return d;
     }
 
-    public static double KMtoMiles(double KM)
-    {
+    public static double KMtoMiles(double KM) {
         return (KM * 0.621371);
     }
+
+
+    public static double findDistanceinMilesBetweenTwoPoints(Location A, Location B) {
+        return KMtoMiles(findDistanceinKMBetweenTwoPoints(A, B));
+    }
+
 }

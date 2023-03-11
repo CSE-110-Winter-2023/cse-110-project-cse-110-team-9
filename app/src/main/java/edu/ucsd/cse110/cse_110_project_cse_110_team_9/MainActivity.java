@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.util.Pair;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> emojiStrings;
 
 
-
+    private MutableLiveData<Integer> scale;
     private SocialCompassRepository repo; //in previous labs this was final.
 
     private LocationService locationService;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
    private List<FriendViewItem> friendItems;
 
+   private int[] scaleValues = new int[]{1, 10, 500, };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
         friendItems = new ArrayList<>();
 
         emojiStrings = new ArrayList<>();
+
+
+        //SCALE SETUP
+
+        scale = new MutableLiveData<>();
+        scale.postValue(1);
+
+
+
+
 
         emojiStrings.add(new String(Character.toChars(0x1F99C)));
         emojiStrings.add(new String(Character.toChars(0x1F99A)));
@@ -177,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
         var locationData = locationService.getLocation();
         locationData.observe(this, this::onLocationChanged);
 
+
+
         //For future code push
         //AddLocationAdapter adapter = new AddLocationAdapter();
         //adapter.setHasStableIds(true);
@@ -247,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         CompassView compass = findViewById(R.id.compass);
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
-        float degree = preferences.getFloat("degree", 0);
+       // float degree = preferences.getFloat("degree", 0);
         float lat_n = preferences.getFloat("lat", 0);
         float long_n = preferences.getFloat("long", 0);
 
@@ -255,19 +270,19 @@ public class MainActivity extends AppCompatActivity {
 
         orientation = azimuth;
 
-        ImageView marker = findViewById(R.id.compassImg);
-        float rotation = (-orientation) + degree;
+        ImageView compassImageView = findViewById(R.id.compassImg);
+        float rotation = (-orientation);
         // System.out.println("This is the rotation "+ degree);
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) marker.getLayoutParams();
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) compassImageView.getLayoutParams();
         layoutParams.circleAngle = rotation;
-        marker.setLayoutParams(layoutParams);
+        compassImageView.setLayoutParams(layoutParams);
 
         // Set the rotation of the ImageView to match the circle angle
-        marker.setRotation(rotation);
+        compassImageView.setRotation(rotation);
 
         //ImageView location_marker = findViewById(R.id.parentsImageView);
-        double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
-        float rotation_f = (float) deltaTheta;
+//        double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
+//        float rotation_f = (float) deltaTheta;
        // ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
       // / layoutParams2.circleAngle = rotation_f;
        // location_marker.setLayoutParams(layoutParams2);
@@ -319,12 +334,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onTimeChanged(Long time) {
-        ImageView img = findViewById(R.id.compassImg);
-        RotateAnimation rotateAnimation = new RotateAnimation(previous_orientation,
-                orientation, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotateAnimation.setDuration(100);
-        rotateAnimation.setFillAfter(true);
-        img.startAnimation(rotateAnimation);
+//        ImageView img = findViewById(R.id.compassImg);
+//        RotateAnimation rotateAnimation = new RotateAnimation(previous_orientation,
+//                orientation, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+//        rotateAnimation.setDuration(100);
+//        rotateAnimation.setFillAfter(true);
+//        img.startAnimation(rotateAnimation);
 
         previous_orientation = orientation;
     }
@@ -359,4 +374,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void onZoomOut(View view) {
+
+    }
+
+    public void onZoomIn(View view) {
+    }
 }
