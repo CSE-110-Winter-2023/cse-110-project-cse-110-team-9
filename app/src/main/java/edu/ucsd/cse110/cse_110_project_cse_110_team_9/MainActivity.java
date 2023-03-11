@@ -1,43 +1,32 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
-import edu.ucsd.cse110.cse_110_project_cse_110_team_9.layout.FriendViewItem;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.view.CompassView;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.view.FriendViewItem;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
@@ -178,24 +167,24 @@ public class MainActivity extends AppCompatActivity {
         azimuthData.observe(this, this::OnOrientationChanged);
 
 
-        addFriend("jason12");
+
         //ADD FRIEND STORED IN LOCAL DB
 
-//        var friends = repo.getAllLocalFriends();
-//
-//        friends.forEach(friend -> {
-//
-//
-//            if (repo.friendExistsRemote(friend.public_code)) {
-//
-//                addFriend(friend.public_code);
-//            }
-//            else{
-//
-//                Log.d("Server",
-//                        "Saved friend does not exists on REMOTE" + friend.public_code);
-//            }
-//        });
+        var friends = repo.getAllLocalFriends();
+
+        friends.forEach(friend -> {
+
+
+            if (repo.friendExistsRemote(friend.public_code)) {
+
+                addFriend(friend.public_code);
+            }
+            else{
+
+                Log.d("Server",
+                        "Saved friend does not exists on REMOTE" + friend.public_code);
+            }
+        });
 
       //  addFriend("jason12");
 

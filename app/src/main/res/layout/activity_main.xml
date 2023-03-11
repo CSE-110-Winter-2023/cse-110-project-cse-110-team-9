@@ -104,7 +104,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <edu.ucsd.cse110.cse_110_project_cse_110_team_9.CompassView
+    <edu.ucsd.cse110.cse_110_project_cse_110_team_9.view.CompassView
         android:id="@+id/compass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

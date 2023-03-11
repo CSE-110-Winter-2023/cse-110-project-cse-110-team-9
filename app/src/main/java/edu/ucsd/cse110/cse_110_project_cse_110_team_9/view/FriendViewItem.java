@@ -1,9 +1,7 @@
-package edu.ucsd.cse110.cse_110_project_cse_110_team_9.layout;
+package edu.ucsd.cse110.cse_110_project_cse_110_team_9.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
