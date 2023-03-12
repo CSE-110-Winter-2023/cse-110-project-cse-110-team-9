@@ -12,6 +12,9 @@ public class Constants {
     public static final int NAME_ACTIVITY_REQUEST_CODE = 0;
     public static final int ADD_FRIEND_ACTIVITY_REQUEST_CODE = 1;
 
+    public static final int EDGE_PADDING = 80;
+
+
 
     public static String LocationNotFoundJsonResponse;
 

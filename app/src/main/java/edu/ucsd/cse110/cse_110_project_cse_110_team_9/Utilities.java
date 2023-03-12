@@ -3,6 +3,7 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 import android.app.Activity;
 import android.app.AlertDialog;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Utilities {
@@ -35,7 +36,7 @@ public class Utilities {
 
     /**
      * Returns the angle in degrees from point A to point B
-
+     *
      * @return angle in degrees
      */
     public static double radiansBetweenTwoLocations(Location a, Location b) {
@@ -87,16 +88,72 @@ public class Utilities {
         double deltaLat = latB - latA;
         double R = 6371; // Radius of earth in kilometers
 
-        double a = Math.pow((Math.sin(deltaLat/2)), 2) +
-                Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(deltaLong/2), 2);
+        double a = Math.pow((Math.sin(deltaLat / 2)), 2) +
+                Math.cos(latA) * Math.cos(latB) * Math.pow(Math.sin(deltaLong / 2), 2);
 
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double d = R * c; //calcualte distance in km
         return d;
     }
 
-    public static double KMtoMiles(double KM)
-    {
+    public static double KMtoMiles(double KM) {
         return (KM * 0.621371);
+    }
+
+
+    public static double findDistanceinMilesBetweenTwoPoints(Location A, Location B) {
+        return KMtoMiles(findDistanceinKMBetweenTwoPoints(A, B));
+    }
+
+
+
+
+    public static ArrayList<String> getEmojis()
+    {
+        var emojiStrings = new ArrayList<String>();
+        emojiStrings.add(new String(Character.toChars(0x1F99C)));
+        emojiStrings.add(new String(Character.toChars(0x1F99A)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A9)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A4)));
+        emojiStrings.add(new String(Character.toChars(0x1F986)));
+        emojiStrings.add(new String(Character.toChars(0x1F985)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F413)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A1)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A8)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A6)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A5)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F987)));
+        emojiStrings.add(new String(Character.toChars(0x1F994)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F9AB)));
+        emojiStrings.add(new String(Character.toChars(0x1F43F)));
+        emojiStrings.add(new String(Character.toChars(0x1F407)));
+        emojiStrings.add(new String(Character.toChars(0x1F400)));
+        emojiStrings.add(new String(Character.toChars(0x1F401)));
+        emojiStrings.add(new String(Character.toChars(0x1F99B)));
+        emojiStrings.add(new String(Character.toChars(0x1F98F)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A3)));
+        emojiStrings.add(new String(Character.toChars(0x1F992)));
+        emojiStrings.add(new String(Character.toChars(0x1F999)));
+        emojiStrings.add(new String(Character.toChars(0x1F42B)));
+        emojiStrings.add(new String(Character.toChars(0x1F411)));
+        emojiStrings.add(new String(Character.toChars(0x1F404)));
+        emojiStrings.add(new String(Character.toChars(0x1F402)));
+        emojiStrings.add(new String(Character.toChars(0x1F42E)));
+        emojiStrings.add(new String(Character.toChars(0x1F9AC)));
+        emojiStrings.add(new String(Character.toChars(0x1F98C)));
+        emojiStrings.add(new String(Character.toChars(0x1F993)));
+        emojiStrings.add(new String(Character.toChars(0x1F984)));
+        emojiStrings.add(new String(Character.toChars(0x1F40E)));
+        emojiStrings.add(new String(Character.toChars(0x1F406)));
+        emojiStrings.add(new String(Character.toChars(0x1F405)));
+        emojiStrings.add(new String(Character.toChars(0x1F408)));
+        emojiStrings.add(new String(Character.toChars(0x1F429)));
+        emojiStrings.add(new String(Character.toChars(0x1F415)));
+        emojiStrings.add(new String(Character.toChars(0x1F98D)));
+        emojiStrings.add(new String(Character.toChars(0x1F412)));
+        return emojiStrings;
     }
 }

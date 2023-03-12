@@ -57,7 +57,10 @@ public class Friend {
     }
 
     public String toJSON() {
+
         return new Gson().toJson(this);
+
     }
+
 
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.core.util.Pair;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Location;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Utilities;
@@ -20,6 +22,8 @@ import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.Friend;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 
+
+//THIS IS WHERE THE MAGIC HAPPENS BOIS
 public class FriendViewItem extends LinearLayout {
 
     LinearLayout layout;
@@ -32,15 +36,25 @@ public class FriendViewItem extends LinearLayout {
     private LocationService locationService;
 
 
+    //used to store the location of the user when we get an update from the the locationService.
     private Location userLocation;
 
+
+    //USed to store the location of the friend when we get an update from the server
     private Location friendLocation;
 
     private double distance = 0;
 
+    //used to store the angle of the user when we get an update from the orientationService.
+
     private float userAngle = 0;
 
+
+    //used to store
     private Friend friend;
+
+
+    private int scale = 1;
     public FriendViewItem(Context context)
     {
         super(context);
@@ -65,9 +79,8 @@ public class FriendViewItem extends LinearLayout {
         // rightTextView = (TextView) layout.findViewById(R.id.right_text);
 
         nameLabel.setText("default_string");
-        friendIcon.setText(new String(Character.toChars(0x1F4A9)));
-        //friendIcon.setText("Test");
-        // rightTextView.setText(rightText)
+        friendIcon.setText("default_icon");
+
         mContext = context;
     }
 
@@ -77,12 +90,10 @@ public class FriendViewItem extends LinearLayout {
     }
 
 
-
     public FriendViewItem(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
-
 
     public void setNameLabel(String name) {
        nameLabel.setText(name);
@@ -91,7 +102,6 @@ public class FriendViewItem extends LinearLayout {
     public void setData(LiveData<Friend> friend, LifecycleOwner owner)
     {
         friend.observe(owner,this::onFriendDataChange);
-       // this.
     }
 
     public void setFriendIcon(String text){
@@ -109,11 +119,13 @@ public class FriendViewItem extends LinearLayout {
         service.getLocation().observe(owner, this::onUserLocationChanged);
     }
 
+    /**
+     * Update the friends angle and radius when the user's location changes
+     * @param location of the user
+     */
     public void onUserLocationChanged(Pair<Double, Double> location)
     {
-
         if (userLocation!= null && location.first != null && location.second != null) {
-
             userLocation.setLatitude(location.first);
             userLocation.setLongitude(location.second);
             reCalcualteAngle();
@@ -121,6 +133,10 @@ public class FriendViewItem extends LinearLayout {
         }
     }
 
+    /**
+     * Update the friend's angle when the users orientation changes
+     * @param orientation of the user
+     */
     public void onUserOrientationChanged(Float orientation)
     {
         userAngle = orientation;
@@ -128,6 +144,10 @@ public class FriendViewItem extends LinearLayout {
     }
 
 
+    /**
+     * Set the ange of the friend
+     * @param angle to set
+     */
     private void setAngle(int angle)
     {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) this.getLayoutParams();
@@ -136,12 +156,21 @@ public class FriendViewItem extends LinearLayout {
 
     }
 
+    /**
+     * Set the radius of the friend
+     * @param radius
+     */
     private void setRadius(int radius)
     {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) this.getLayoutParams();
         layoutParams.circleRadius = radius;
         this.setLayoutParams(layoutParams);
     }
+
+    /**
+     * Recaultes what the angle for the friend should be based on the user's location, the
+     * friends location, and the user's orientation
+     */
     public void reCalcualteAngle()
     {
         if (userLocation != null && friendLocation != null) {
@@ -151,11 +180,30 @@ public class FriendViewItem extends LinearLayout {
         }
     }
 
+    /**
+     * reCalcuates the radius of the friend based on the distance between the friend and the user
+     * and the current zoom level of the map.
+     */
     public void reCalculateRadius()
     {
-        setRadius(300);
+        //TODO: Finish this method and implement map scale.
+        var distance =
+                Utilities.findDistanceinMilesBetweenTwoPoints(userLocation, friendLocation);
+        //scale
+
+        View parent = (View)getParent();
+        int width = parent.getWidth();
+
+        setRadius(width/2- Constants.EDGE_PADDING);
+        //pixels per miles o
+        //if scale is 10 miles then we have (width/2) / 10
     }
 
+    /**
+     * update the local instance  for the friend's location whenever we get an update from
+     * the server
+     * @param friend
+     */
     public void onFriendDataChange(Friend friend){
 
         setNameLabel(friend.label);
