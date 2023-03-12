@@ -61,7 +61,6 @@ public class LocationService implements LocationListener {
         locationData.addSource(realLocationData, locationData::postValue);
 
 
-
         this.activity = activity;
         this.locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         // Register sensor listeners
@@ -72,7 +71,7 @@ public class LocationService implements LocationListener {
      * This will only be called when we for sure have permissions.
      */
     @RequiresPermission(anyOf = {ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION})
-    private void registerLocationListener() {
+    public void registerLocationListener() {
         this.locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 0,
@@ -118,7 +117,8 @@ public class LocationService implements LocationListener {
         this.locationData.postValue(new Pair<>(location.getLatitude(), location.getLongitude()));
     }
 
-    private void unregisterLocationListener() {
+
+    public void unregisterLocationListener() {
         locationManager.removeUpdates(this);
     }
 
@@ -133,7 +133,7 @@ public class LocationService implements LocationListener {
         locationData.addSource(mockLocationData, locationData::postValue);
     }
 
-    public void claerMockLocationSource(){
+    public void clearMockLocationSource(){
         withLocationPermissions(this::registerLocationListener);
         locationData.removeSource(mockLocationData);
         locationData.addSource(realLocationData, locationData::postValue);

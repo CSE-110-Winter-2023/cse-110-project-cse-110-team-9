@@ -26,10 +26,10 @@ public class SocialCompassRepository {
 
     public Friend getFriendFromRemote(String public_uid)
     {
-        var fur = ServerAPI.provide().getFriendAsync(public_uid);
+        var future = ServerAPI.provide().getFriendAsync(public_uid);
 
         try {
-            return fur.get(1, TimeUnit.SECONDS);
+            return future.get(1, TimeUnit.SECONDS);
         } catch (ExecutionException e) {
         } catch (InterruptedException e) {
         } catch (TimeoutException e) {
@@ -45,6 +45,11 @@ public class SocialCompassRepository {
         return dao.getAllFriends();
     }
 
+
+    public void shutdownPool()
+    {
+        ServerAPI.provide().shutDownPool();
+    }
 
     public boolean friendExistsLocal(String public_uid) {
         return dao.friendExists(public_uid);

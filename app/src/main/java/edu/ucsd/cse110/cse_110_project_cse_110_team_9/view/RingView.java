@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+
+//TODO Create a custom view class that display the rings on the map
 public class RingView extends View {
     public RingView(Context context) {
         super(context);

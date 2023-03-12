@@ -4,17 +4,16 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.util.Pair;
 import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.ServerAPI;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
@@ -38,22 +38,29 @@ public class MainActivity extends AppCompatActivity {
     private TimeService timeService;
     private OrientationService orientationService;
     private float orientation = 0f;
-    private float previous_orientation = 0f;
-    private RecyclerView recyclerView;
+
     private List<String> emojiStrings;
 
     private MutableLiveData<Integer> scale;
     private SocialCompassRepository repo; //in previous labs this was final.
-
     private LocationService locationService;
     private String user_public_code = "";
 
-    private User userTemplate = null; //keep a instnace of the user.
-    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private User userCache = null; //cache an instance of the users so we don't have to get
+    // the user's public_uid, private_code, and label every time we want to update the users
+    // location on the server.
+    private ActivityResultLauncher<Intent> activityResultLauncher; //We use this to launch
+    // NameAcitity and DataEntryActivity which allows us to get a result from an activty. For
+    // NameActivity the result is the user's name and for DataEntryActivity the result is the
+    // public_uid of the friend you want to add. SEE LINE 78 for this is used.
+    // See: https://developer.android.com/training/basics/intents/result
 
-   private List<FriendViewItem> friendItems;
 
-   private int[] scaleValues = new int[]{1, 10, 500, };
+    //List of references to our friendViewItems on the map
+    private List<FriendViewItem> friendItems;
+
+    //Working in progress
+    private int[] scaleValues = new int[]{1, 10, 500,};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +89,23 @@ public class MainActivity extends AppCompatActivity {
 
                         if (name != null) {
                             if (repo.userExists()) {
-                                //update the users name;
-//                                LiveData<User> liveUser = repo.getUser();
-//
-//                                liveUser.observe(this, user ->{
-//                                    user.setLabel(name);
-//                                    repo.upsertLocalUser(user);
-//                                } );
+
+                                //THE user already exists in the database so just update the name
+                                // of the user locally, and on the server
                                 User user = repo.getUser();
-                                userTemplate = user;
+                                userCache = user;
                                 user.setLabel(name);
                                 repo.upsertLocalUser(user);
                                 repo.upsertUserRemote(user);
 
                             } else {
-                                //create user for the first time
-
+                                //The user does not exist in the database (first time app is
+                                // opened from clean install) so we generate a public_code and
+                                // private_code for the user, and save it locally, and to the
+                                // server;
                                 user_public_code = UUID.randomUUID().toString();
                                 String private_code = UUID.randomUUID().toString();
+
                                 User user = new User(name, private_code, user_public_code,
                                         0d, 0d, Instant.now().getEpochSecond());
 
@@ -107,37 +113,39 @@ public class MainActivity extends AppCompatActivity {
                                 repo.upsertLocalUser(user);
                                 repo.upsertUserRemote(user);
 
+                                //SET the public_uid of the user to the Textview
                                 TextView public_uid_view = findViewById(R.id.public_uid_textView);
                                 public_uid_view.setText(user_public_code);
-
-                                userTemplate = user;
+                                //update user cache
+                                userCache = user;
                             }
                         }
-                    }
-                    else if (result.getResultCode() == Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE)
-                    {
+                    } else if (result.getResultCode() == Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE) {
                         Intent data = result.getData();
-                        String public_code = data.getStringExtra("public_code");
+
+                        if (data != null) {
+                            String public_code = data.getStringExtra("public_code");
 
 
-                        Log.d("got public uid from activity" ,public_code);
-                        //check if friend exisits on remote
+                            Log.d("got public uid from activity", public_code);
+                            //check if friend exisits on remote
 
-                        if (public_code != null ) {
+                            if (public_code != null) {
 
-                            addFriend(public_code);
-                            repo.upsertLocalFriend(public_code);
+                                addFriend(public_code);
+                                repo.upsertLocalFriend(public_code);
+                            }
                         }
                     }
                 });
 
+        //SETUP the location service
         locationService = LocationService.singleton(this);
         var locationData = locationService.getLocation();
         locationData.observe(this, this::onLocationChanged);
 
 
         //SETUP DATABASE
-
         var db = SocialCompassDatabase.provide(getApplicationContext());
         var dao = db.getDao();
         repo = new SocialCompassRepository(dao);
@@ -147,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
         if (!repo.userExists()) {
             Intent intent = new Intent(this, NameActivity.class);
             activityResultLauncher.launch(intent);
-        }
-        else{
+        } else {
             TextView public_uid_textView = findViewById(R.id.public_uid_textView);
             public_uid_textView.setText(repo.getUser().get_public_code());
         }
 
+        //SETUP TIME SERVICE (I don't think we are really using this rn).
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);
@@ -160,22 +168,27 @@ public class MainActivity extends AppCompatActivity {
         CompassView compass = findViewById(R.id.compass);
         compass.setRangeDegrees(360);
 
+
+        //SETUP ORIENTATION SERVICE
         orientationService = OrientationService.singleton(this);
         var azimuthData = orientationService.getAzimuthData();
         azimuthData.observe(this, this::OnOrientationChanged);
 
-        //ADD FRIEND STORED IN LOCAL DB
 
+        //ADD ALL FRIENDS STORED IN THE LOCAL DATABASE TO THE MAP
+        addFriendsFromDatabaseToMap();
+
+    }
+
+
+    private void addFriendsFromDatabaseToMap() {
         var friends = repo.getAllLocalFriends();
-
         friends.forEach(friend -> {
-
 
             if (repo.friendExistsRemote(friend.public_code)) {
 
                 addFriend(friend.public_code);
-            }
-            else{
+            } else {
 
                 Log.d("Server",
                         "Saved friend does not exists on REMOTE" + friend.public_code);
@@ -183,12 +196,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void OnOrientationChanged(Float azimuth) {
         CompassView compass = findViewById(R.id.compass);
         SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
-       // float degree = preferences.getFloat("degree", 0);
+        // float degree = preferences.getFloat("degree", 0);
         float lat_n = preferences.getFloat("lat", 0);
         float long_n = preferences.getFloat("long", 0);
 
@@ -203,42 +215,35 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.circleAngle = rotation;
         compassImageView.setLayoutParams(layoutParams);
 
-        // Set the rotation of the ImageView to match the circle angle
         compassImageView.setRotation(rotation);
-
-        //ImageView location_marker = findViewById(R.id.parentsImageView);
-//        double deltaTheta = Math.toDegrees(Math.atan2(lat_n, long_n)) - azimuth;
-//        float rotation_f = (float) deltaTheta;
-       // ConstraintLayout.LayoutParams layoutParams2 = (ConstraintLayout.LayoutParams) location_marker.getLayoutParams();
-      // / layoutParams2.circleAngle = rotation_f;
-       // location_marker.setLayoutParams(layoutParams2);
-
-        // Set the rotation of the ImageView to match the circle angle
-     //   location_marker.setRotation(rotation_f);
-
     }
 
     private void onLocationChanged(Pair<Double, Double> latLong) {
+
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
-
+        //UPDATE THE LOCATION IN our cached user object.
         Log.d("location change", "locationChange");
-        if (userTemplate != null) {
-            userTemplate.setUpdated_at(Instant.now().getEpochSecond());
-            userTemplate.setLatitude(latLong.first);
-            userTemplate.setLongitude(latLong.second);
-            repo.upsertUserRemote(userTemplate);
-            repo.upsertLocalUser(userTemplate);
+        if (userCache != null) {
+            userCache.setUpdated_at(Instant.now().getEpochSecond());
+            userCache.setLatitude(latLong.first);
+            userCache.setLongitude(latLong.second);
+            repo.upsertUserRemote(userCache);
+            repo.upsertLocalUser(userCache);
         }
     }
 
-    public void addFriend(String public_code)
-    {
+    /**
+     * Add a friend to the map given a public uid
+     * @param public_code
+     */
+    public void addFriend(String public_code) {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraintLayout);
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
 
+        //Constrain friend to compassIMG
         params.circleConstraint = R.id.compassImg;
 
         FriendViewItem newFriend = new FriendViewItem(this);
@@ -246,33 +251,51 @@ public class MainActivity extends AppCompatActivity {
 
         layout.addView(newFriend);
 
+        //get the friend from remote and setup polling. Pass the liveDAta object into
+        // FriendViewobject
         newFriend.setData(repo.getFriendFromRemoteLive(public_code), this);
 
         friendItems.add(newFriend);
+        //set the location and orientation services for the friend view item, so the friendView
+        // item can adjust it's angle and radius whenever the users' orientation and location change
         newFriend.setLocationService(locationService, this);
         newFriend.setOrientationService(orientationService, this);
 
-        int hashcode = public_code.hashCode() & 0xfffffff;
+        //SET the friends
+        int hashcode = public_code.hashCode() & 0xfffffff; // &0xfff... makes hash code positive
         int index = hashcode % emojiStrings.size();
         newFriend.setFriendIcon(emojiStrings.get(index));
 
     }
 
     private void onTimeChanged(Long time) {
-        previous_orientation = orientation;
     }
 
     @Override
     protected void onPause() {
+        //TODO: Stop polling threads for friends
         super.onPause();
         orientationService.unregisterSensorListeners();
+        locationService.unregisterLocationListener();
 
     }
 
     @Override
     protected void onResume() {
+        //TODO: restart polling threads for friends
         super.onResume();
         orientationService.registerSensorListeners();
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        else{
+            locationService.registerLocationListener();
+        }
+
     }
 
     public void onLaunchDataEntry(View view) {

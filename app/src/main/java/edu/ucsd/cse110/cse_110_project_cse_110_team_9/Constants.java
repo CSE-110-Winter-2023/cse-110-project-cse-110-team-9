@@ -16,12 +16,6 @@ public class Constants {
 
 
 
-    public static enum scaleLevels{}
-    {
-
-    }
-
-
     public static String LocationNotFoundJsonResponse;
 
     static {

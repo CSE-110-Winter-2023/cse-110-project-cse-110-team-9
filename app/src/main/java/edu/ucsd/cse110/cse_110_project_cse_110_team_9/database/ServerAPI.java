@@ -32,6 +32,13 @@ public class ServerAPI {
         this.threadPool = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
     }
 
+
+    public void initThreadPool()
+    {
+        friendsScheduledFutureHashMap = new HashMap<>();
+        this.threadPool = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
+    }
+
     public static ServerAPI provide() {
         if (instance == null) {
             instance = new ServerAPI();

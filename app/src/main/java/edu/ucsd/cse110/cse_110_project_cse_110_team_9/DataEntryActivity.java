@@ -24,14 +24,13 @@ public class DataEntryActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_entry);
+        setResult(Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE, null);
+
     }
 
     public void onExitClicked(View view) {
 
-        EditText public_uid = findViewById(R.id.public_uid_textView);
 
-        Intent intent = getIntent().putExtra("public_code", public_uid.getText().toString());
-        setResult(Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE, intent);
         finish();
     }
 
@@ -39,10 +38,25 @@ public class DataEntryActivity extends AppCompatActivity {
         //get text by calling id of text box
 
         //need to close out bc of reasons
-        onExitClicked(view);
+
+        EditText public_code_View = findViewById(R.id.public_uid_textView);
+
+        String public_code = public_code_View.getText().toString();
+
+        if (!repo.friendExistsRemote(public_code))
+        {
+            Utilities.showAlert(this, "Friend does not exist on the Server. Please enter a valid " +
+                    "public_code");
+        }
+        else {
+
+            Intent intent = getIntent().putExtra("public_code", public_code);
+            setResult(Constants.ADD_FRIEND_ACTIVITY_REQUEST_CODE, intent);
+            onExitClicked(view);
+        }
+
         //send text to server to get friend's user info
         //LiveData<Friend> friend = repo.getFriend(public_uid.getText().toString());
-
 
 
         //call method that inserts the friend's info into the local database
