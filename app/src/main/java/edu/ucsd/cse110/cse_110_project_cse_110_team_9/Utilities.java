@@ -3,6 +3,7 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 import android.app.Activity;
 import android.app.AlertDialog;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Utilities {
@@ -104,4 +105,55 @@ public class Utilities {
         return KMtoMiles(findDistanceinKMBetweenTwoPoints(A, B));
     }
 
+
+
+
+    public static ArrayList<String> getEmojis()
+    {
+        var emojiStrings = new ArrayList<String>();
+        emojiStrings.add(new String(Character.toChars(0x1F99C)));
+        emojiStrings.add(new String(Character.toChars(0x1F99A)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A9)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A4)));
+        emojiStrings.add(new String(Character.toChars(0x1F986)));
+        emojiStrings.add(new String(Character.toChars(0x1F985)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F413)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A1)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A8)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A6)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A5)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F987)));
+        emojiStrings.add(new String(Character.toChars(0x1F994)));
+        emojiStrings.add(new String(Character.toChars(0x1F54A)));
+        emojiStrings.add(new String(Character.toChars(0x1F9AB)));
+        emojiStrings.add(new String(Character.toChars(0x1F43F)));
+        emojiStrings.add(new String(Character.toChars(0x1F407)));
+        emojiStrings.add(new String(Character.toChars(0x1F400)));
+        emojiStrings.add(new String(Character.toChars(0x1F401)));
+        emojiStrings.add(new String(Character.toChars(0x1F99B)));
+        emojiStrings.add(new String(Character.toChars(0x1F98F)));
+        emojiStrings.add(new String(Character.toChars(0x1F9A3)));
+        emojiStrings.add(new String(Character.toChars(0x1F992)));
+        emojiStrings.add(new String(Character.toChars(0x1F999)));
+        emojiStrings.add(new String(Character.toChars(0x1F42B)));
+        emojiStrings.add(new String(Character.toChars(0x1F411)));
+        emojiStrings.add(new String(Character.toChars(0x1F404)));
+        emojiStrings.add(new String(Character.toChars(0x1F402)));
+        emojiStrings.add(new String(Character.toChars(0x1F42E)));
+        emojiStrings.add(new String(Character.toChars(0x1F9AC)));
+        emojiStrings.add(new String(Character.toChars(0x1F98C)));
+        emojiStrings.add(new String(Character.toChars(0x1F993)));
+        emojiStrings.add(new String(Character.toChars(0x1F984)));
+        emojiStrings.add(new String(Character.toChars(0x1F40E)));
+        emojiStrings.add(new String(Character.toChars(0x1F406)));
+        emojiStrings.add(new String(Character.toChars(0x1F405)));
+        emojiStrings.add(new String(Character.toChars(0x1F408)));
+        emojiStrings.add(new String(Character.toChars(0x1F429)));
+        emojiStrings.add(new String(Character.toChars(0x1F415)));
+        emojiStrings.add(new String(Character.toChars(0x1F98D)));
+        emojiStrings.add(new String(Character.toChars(0x1F412)));
+        return emojiStrings;
+    }
 }

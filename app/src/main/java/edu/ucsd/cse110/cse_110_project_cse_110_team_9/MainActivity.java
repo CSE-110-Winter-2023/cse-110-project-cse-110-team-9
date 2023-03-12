@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TimeService timeService;
     private OrientationService orientationService;
-
     private float orientation = 0f;
     private float previous_orientation = 0f;
     private RecyclerView recyclerView;
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
    private int[] scaleValues = new int[]{1, 10, 500, };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,66 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
         emojiStrings = new ArrayList<>();
 
+        emojiStrings = Utilities.getEmojis();
 
         //SCALE SETUP
 
         scale = new MutableLiveData<>();
         scale.postValue(1);
 
-
-
-
-
-        emojiStrings.add(new String(Character.toChars(0x1F99C)));
-        emojiStrings.add(new String(Character.toChars(0x1F99A)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A9)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A4)));
-        emojiStrings.add(new String(Character.toChars(0x1F986)));
-        emojiStrings.add(new String(Character.toChars(0x1F985)));
-        emojiStrings.add(new String(Character.toChars(0x1F54A)));
-        emojiStrings.add(new String(Character.toChars(0x1F413)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A1)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A8)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A6)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A5)));
-        emojiStrings.add(new String(Character.toChars(0x1F54A)));
-        emojiStrings.add(new String(Character.toChars(0x1F987)));
-        emojiStrings.add(new String(Character.toChars(0x1F994)));
-        emojiStrings.add(new String(Character.toChars(0x1F54A)));
-        emojiStrings.add(new String(Character.toChars(0x1F9AB)));
-        emojiStrings.add(new String(Character.toChars(0x1F43F)));
-        emojiStrings.add(new String(Character.toChars(0x1F407)));
-        emojiStrings.add(new String(Character.toChars(0x1F400)));
-        emojiStrings.add(new String(Character.toChars(0x1F401)));
-        emojiStrings.add(new String(Character.toChars(0x1F99B)));
-        emojiStrings.add(new String(Character.toChars(0x1F98F)));
-        emojiStrings.add(new String(Character.toChars(0x1F9A3)));
-        emojiStrings.add(new String(Character.toChars(0x1F992)));
-        emojiStrings.add(new String(Character.toChars(0x1F999)));
-        emojiStrings.add(new String(Character.toChars(0x1F42B)));
-        emojiStrings.add(new String(Character.toChars(0x1F411)));
-        emojiStrings.add(new String(Character.toChars(0x1F404)));
-        emojiStrings.add(new String(Character.toChars(0x1F402)));
-        emojiStrings.add(new String(Character.toChars(0x1F42E)));
-        emojiStrings.add(new String(Character.toChars(0x1F9AC)));
-        emojiStrings.add(new String(Character.toChars(0x1F98C)));
-        emojiStrings.add(new String(Character.toChars(0x1F993)));
-        emojiStrings.add(new String(Character.toChars(0x1F984)));
-        emojiStrings.add(new String(Character.toChars(0x1F40E)));
-        emojiStrings.add(new String(Character.toChars(0x1F406)));
-        emojiStrings.add(new String(Character.toChars(0x1F405)));
-        emojiStrings.add(new String(Character.toChars(0x1F408)));
-        emojiStrings.add(new String(Character.toChars(0x1F429)));
-        emojiStrings.add(new String(Character.toChars(0x1F415)));
-        emojiStrings.add(new String(Character.toChars(0x1F98D)));
-        emojiStrings.add(new String(Character.toChars(0x1F412)));
-
-
         Log.d("Main Activity", "main activity launched");
-
-
-
-
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -190,18 +136,6 @@ public class MainActivity extends AppCompatActivity {
         locationData.observe(this, this::onLocationChanged);
 
 
-
-        //For future code push
-        //AddLocationAdapter adapter = new AddLocationAdapter();
-        //adapter.setHasStableIds(true);
-
-        //recyclerView = findViewById(R.id.locations);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //recyclerView.setAdapter(adapter);
-
-        //adapter.setLocations(AddLocation.loadJson(this, "saved_locations.json"));
-
-
         //SETUP DATABASE
 
         var db = SocialCompassDatabase.provide(getApplicationContext());
@@ -219,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
             public_uid_textView.setText(repo.getUser().get_public_code());
         }
 
-
         timeService = TimeService.singleton();
         var timeData = timeService.getTimeData();
         timeData.observe(this, this::onTimeChanged);
@@ -230,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
         orientationService = OrientationService.singleton(this);
         var azimuthData = orientationService.getAzimuthData();
         azimuthData.observe(this, this::OnOrientationChanged);
-
-
 
         //ADD FRIEND STORED IN LOCAL DB
 
@@ -250,10 +181,6 @@ public class MainActivity extends AppCompatActivity {
                         "Saved friend does not exists on REMOTE" + friend.public_code);
             }
         });
-
-      //  addFriend("jason12");
-
-
     }
 
 
@@ -305,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void addFriend(String public_code)
     {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraintLayout);
@@ -333,13 +259,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onTimeChanged(Long time) {
-//        ImageView img = findViewById(R.id.compassImg);
-//        RotateAnimation rotateAnimation = new RotateAnimation(previous_orientation,
-//                orientation, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//        rotateAnimation.setDuration(100);
-//        rotateAnimation.setFillAfter(true);
-//        img.startAnimation(rotateAnimation);
-
         previous_orientation = orientation;
     }
 
@@ -379,4 +298,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void onZoomIn(View view) {
     }
+
 }

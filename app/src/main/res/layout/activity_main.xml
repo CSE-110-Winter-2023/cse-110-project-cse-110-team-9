@@ -15,20 +15,7 @@
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <Button
-            android:id="@+id/ToDataEntryBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onLaunchDataEntry"
-            android:text="Add Friends ->"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.939"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.976" />
+        app:layout_constraintVertical_bias="1.0">
 
         <!--        <androidx.recyclerview.widget.RecyclerView-->
         <!--            android:id="@+id/locations"-->
@@ -40,6 +27,20 @@
         <!--            app:layout_constraintStart_toStartOf="parent"-->
         <!--            app:layout_constraintTop_toTopOf="parent"-->
         <!--            app:layout_constraintVertical_bias="0.975" />-->
+
+        <Button
+            android:id="@+id/ToDataEntryBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+
+            android:layout_marginBottom="16dp"
+            android:onClick="onLaunchDataEntry"
+            android:text="Add Friends"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ToSetNamePageBtn" />
 
         <TextView
             android:id="@+id/locationText"
@@ -78,51 +79,45 @@
 
         <Button
             android:id="@+id/ToSetNamePageBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="16dp"
+            android:maxLines="2"
             android:onClick="onLaunchName"
-            android:text="Set Name ->"
+            android:text="Set Name"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.049"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.888" />
+            app:layout_constraintEnd_toStartOf="@+id/ToDataEntryBtn"
+            app:layout_constraintStart_toEndOf="@+id/zoom_out" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="16dp"
-            android:onClick="onZoomIn"
-            android:text="ZOOM IN"
-            android:textSize="8sp"
+        <ImageView
+            android:id="@+id/zoom_out"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toEndOf="@+id/zoom_in"
             android:onClick="onZoomOut"
-            android:text="ZOOM OUT"
-            android:textSize="8sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button3" />
+            style="?android:borderlessButtonStyle"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/zoom_out" />
 
-        <TextView
-            android:id="@+id/scaleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
-            android:text="TextView"
-            app:layout_constraintBottom_toBottomOf="@+id/button4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.525"
-            app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/zoom_in"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="onZoomIn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="?android:borderlessButtonStyle"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/zoom_in" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
