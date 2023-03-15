@@ -9,19 +9,34 @@ import androidx.annotation.Nullable;
 
 //TODO Create a custom view class that display the rings on the map
 public class RingView extends View {
+
+
+
+
+
+    private void init(Context context)
+    {
+
+    }
+
     public RingView(Context context) {
         super(context);
+        init(context);
     }
 
     public RingView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
+
 
     public RingView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
     public RingView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init(context);
     }
 }

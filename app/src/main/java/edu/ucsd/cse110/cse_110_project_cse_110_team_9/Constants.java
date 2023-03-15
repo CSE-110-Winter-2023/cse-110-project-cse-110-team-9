@@ -15,6 +15,9 @@ public class Constants {
     public static final int EDGE_PADDING = 80;
 
 
+    public enum scale{
+        ONE, TEN, FIVE_HUNDRED, FIVE_HUNDRED_PLUS
+    }
 
     public static String LocationNotFoundJsonResponse;
 
