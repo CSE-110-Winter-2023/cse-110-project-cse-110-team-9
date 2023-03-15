@@ -1,8 +1,11 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
+import android.provider.ContactsContract;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +37,8 @@ public class FriendViewItem extends LinearLayout {
 
     private OrientationService orientationService;
     private LocationService locationService;
+
+    private Constants.scale zoomLevel;
 
 
     //used to store the location of the user when we get an update from the the locationService.
@@ -81,7 +86,9 @@ public class FriendViewItem extends LinearLayout {
         nameLabel.setText("default_string");
         friendIcon.setText("default_icon");
 
+        zoomLevel = Constants.scale.TEN;
         mContext = context;
+
     }
 
     public FriendViewItem(Context context, AttributeSet attrs) {
@@ -162,9 +169,12 @@ public class FriendViewItem extends LinearLayout {
      */
     private void setRadius(int radius)
     {
+
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) this.getLayoutParams();
         layoutParams.circleRadius = radius;
         this.setLayoutParams(layoutParams);
+
+        Log.d(Double.toString(distance), Integer.toString(radius));
     }
 
     /**
@@ -186,18 +196,132 @@ public class FriendViewItem extends LinearLayout {
      */
     public void reCalculateRadius()
     {
-        //TODO: Finish this method and implement map scale.
-        var distance =
-                Utilities.findDistanceinMilesBetweenTwoPoints(userLocation, friendLocation);
-        //scale
+         distance = Utilities.findDistanceinMilesBetweenTwoPoints(userLocation, friendLocation);
+
+        //IDK THIS IS JANK BUT IT WORKS
 
         View parent = (View)getParent();
         int width = parent.getWidth();
+        Log.d("FriendView", Integer.toString(width));
 
-        setRadius(width/2- Constants.EDGE_PADDING);
+
+        // float radius = (float)width/2 - Constants.OUTER_RING_PADDING;
+
+        float circleRadius = (float) width / 2 - Constants.OUTER_RING_PADDING;
+
+
+        switch (zoomLevel) {
+            case ONE:
+                 circleRadius = (float) width / 2 - Constants.OUTER_RING_PADDING;
+                if (distance > 1)
+                {
+                    this.setVisibility(INVISIBLE);
+                }
+                else {
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = circleRadius/1;
+                    float radius = (float) (pixelsPerMile * distance);
+                    setRadius((int) radius);
+                }
+                break;
+            case TEN:
+                 float oneCircleRadius = circleRadius/ 2;
+                if (distance < 1)
+                {
+                    //DRAW in the inner most circle
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius/1;
+                    float radius = (float) (pixelsPerMile * distance);
+                    setRadius((int) radius);
+                }
+                else if (distance < 10) {
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius/10; //note that oneCircleRadius is the
+                    // distance between onemile ring and 10 miles ring
+                    float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius; // we
+                    // add onecircleradius so we draw outside of 1 miles ring
+                    setRadius((int) radius);
+                }
+                else
+                {
+                    this.setVisibility(INVISIBLE);
+                }
+                break;
+            case FIVE_HUNDRED:
+                float oneCircleRadius3 = circleRadius/3;
+
+                if (distance < 1)
+                {
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius3/1;
+                    float radius = (float) (pixelsPerMile * distance);
+                    setRadius((int) radius);
+                }
+                else if (distance < 10)
+                {
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius3/10; //note that oneCircleRadius is the
+                    // distance between ten mile ring and 500 mile ring miles ring
+                    float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius3; // we
+                    // add onecircleradius so we draw outside of 1 miles ring
+                    setRadius((int) radius);
+                }
+                else if (distance < 500){
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius3/500; //note that oneCircleRadius is the
+                    // distance between onemile ring and 10 miles ring
+                    float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3); // we
+                    // add onecircleradius so we draw outside of 1 miles ring
+                    setRadius((int) radius);
+                }
+                else{
+                    this.setVisibility(INVISIBLE);
+                }
+                break;
+            case FIVE_HUNDRED_PLUS:
+                float oneCircleRadius3plus = circleRadius/3;
+
+                if (distance < 1)
+                {
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius3plus/1;
+                    float radius = (float) (pixelsPerMile * distance);
+                    setRadius((int) radius);
+                }
+                else if (distance < 10)
+                {
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius3plus/10; //note that oneCircleRadius is
+                    // the
+                    // distance between ten mile ring and 500 mile ring miles ring
+                    float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius3plus;
+                    // we
+                    // add onecircleradius so we draw outside of 1 miles ring
+                    setRadius((int) radius);
+                }
+                else if (distance < 500){
+                    this.setVisibility(VISIBLE);
+                    float pixelsPerMile = oneCircleRadius3plus/500; //note that oneCircleRadius is
+                    // the
+                    // distance between onemile ring and 10 miles ring
+                    float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3plus);
+                    // we
+                    // add onecircleradius so we draw outside of 1 miles ring
+                    setRadius((int) radius);
+                }
+                else{
+                    this.setVisibility(VISIBLE);
+                    setRadius((int) circleRadius);
+                }
+                break;
+        }
+
         //pixels per miles o
         //if scale is 10 miles then we have (width/2) / 10
     }
+
+
+
 
     /**
      * update the local instance  for the friend's location whenever we get an update from
@@ -211,6 +335,19 @@ public class FriendViewItem extends LinearLayout {
         friendLocation.setLatitude(friend.latitude);
         friendLocation.setLongitude(friend.longitude);
         reCalcualteAngle();
+        reCalculateRadius();
+    }
+
+
+    public void setScaleObserver(LiveData<Constants.scale> zoomLevel, LifecycleOwner owner){
+        zoomLevel.observe(owner, this::onZoomLevelChanged);
+        reCalculateRadius();
+        reCalcualteAngle();
+    }
+
+    private void onZoomLevelChanged(Constants.scale zoomLevel)
+    {
+        this.zoomLevel = zoomLevel;
         reCalculateRadius();
     }
 
