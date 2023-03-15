@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
+import static edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants.scale.ONE;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import edu.ucsd.cse110.cse_110_project_cse_110_team_9.view.FriendViewItem;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.view.RingView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> emojiStrings;
 
-    private MutableLiveData<Integer> scale;
+    private MutableLiveData<Constants.scale> zoomLevel;
     private SocialCompassRepository repo; //in previous labs this was final.
     private LocationService locationService;
     private String user_public_code = "";
@@ -59,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
     //List of references to our friendViewItems on the map
     private List<FriendViewItem> friendItems;
 
-    //Working in progress
-    private int[] scaleValues = new int[]{1, 10, 500,};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +75,14 @@ public class MainActivity extends AppCompatActivity {
         emojiStrings = Utilities.getEmojis();
 
         //SCALE SETUP
+        zoomLevel = new MutableLiveData<>();
 
-        scale = new MutableLiveData<>();
-        scale.postValue(1);
+
+        RingView ringView = findViewById(R.id.ringView);
+
+        ringView.setZoomObserver(zoomLevel, this);
+
+        //SETUP RING VIEW
 
         Log.d("Main Activity", "main activity launched");
 
@@ -178,6 +185,11 @@ public class MainActivity extends AppCompatActivity {
         //ADD ALL FRIENDS STORED IN THE LOCAL DATABASE TO THE MAP
         addFriendsFromDatabaseToMap();
 
+        // set default zoom level
+        //As a user I want the zoom level at app launch to be the inner two levels so that I can
+        // initially be focused on the friends who are closest to me (Figures (a) and (b))
+        zoomLevel.postValue(Constants.scale.TEN);
+
     }
 
 
@@ -265,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         int hashcode = public_code.hashCode() & 0xfffffff; // &0xfff... makes hash code positive
         int index = hashcode % emojiStrings.size();
         newFriend.setFriendIcon(emojiStrings.get(index));
+        newFriend.setScaleObserver(zoomLevel, this);
 
     }
 
@@ -317,9 +330,66 @@ public class MainActivity extends AppCompatActivity {
 
     public void onZoomOut(View view) {
 
+        Constants.scale currentZoom = zoomLevel.getValue();
+        Log.d("current zoom level", currentZoom.toString());
+
+        if (currentZoom != null) {
+
+            switch (currentZoom) {
+                case ONE:
+                    zoomLevel.postValue(Constants.scale.TEN);
+
+                    ImageView zoomIn = findViewById(R.id.zoom_in);
+                    zoomIn.setClickable(true);
+                    zoomIn.setAlpha(1.0f);
+                    //ungrey zoom in
+                    break;
+                case TEN:
+                    zoomLevel.postValue(Constants.scale.FIVE_HUNDRED);
+                    break;
+                case FIVE_HUNDRED:
+                    zoomLevel.postValue(Constants.scale.FIVE_HUNDRED_PLUS);
+                    ImageView zoomOutBtn = findViewById(R.id.zoom_out);
+                    zoomOutBtn.setClickable(false);
+                    zoomOutBtn.setAlpha(0.5f);
+                    break;
+                case FIVE_HUNDRED_PLUS:
+                    //WE SHOULD NEVER GET HERE
+                    Log.d("Zoom out ", "this case should not be possible");
+                    break;
+            }
+        }
     }
 
     public void onZoomIn(View view) {
+
+
+        Constants.scale currentZoom = zoomLevel.getValue();
+
+        if (currentZoom != null) {
+
+            switch (currentZoom) {
+                case ONE:
+                    Log.d("Zoom in ", "this case should not be possible");
+                    break;
+                case TEN:
+                    zoomLevel.postValue(Constants.scale.ONE);
+                    ImageView zoomIn = findViewById(R.id.zoom_in);
+                    zoomIn.setClickable(false);
+                    zoomIn.setAlpha(0.5f);
+                    break;
+                case FIVE_HUNDRED:
+                    zoomLevel.postValue(Constants.scale.TEN);
+                    break;
+                case FIVE_HUNDRED_PLUS:
+                    zoomLevel.postValue(Constants.scale.FIVE_HUNDRED);
+                    ImageView zoomOut = findViewById(R.id.zoom_out);
+                    zoomOut.setClickable(true);
+                    zoomOut.setAlpha(1.0f);
+                    break;
+            }
+        }
+
     }
 
 }
