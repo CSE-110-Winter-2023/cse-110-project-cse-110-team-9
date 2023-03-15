@@ -319,7 +319,25 @@ public class MainActivity extends AppCompatActivity {
             long timeNow = Instant.now().getEpochSecond();
             long diff = timeNow - user.getUpdated_at();
             Log.d("Seconds since last update", Long.toString(diff));
-            //UPDATE UI
+            ImageView gpsLive = findViewById(R.id.gpsLive);
+            ImageView gpsnotLive = findViewById(R.id.gpsnotLive);
+            TextView lastLive = (TextView) findViewById(R.id.lastLive);
+
+            if(diff > 30){
+                gpsLive.setVisibility(View.INVISIBLE);
+                gpsnotLive.setVisibility(View.VISIBLE);
+                int timeInMinutes = (int) Math.floor((double) diff/60);
+                Log.d("Minutes test", Integer.toString(timeInMinutes));
+                lastLive.setVisibility(View.VISIBLE);
+                lastLive.setText(timeInMinutes + " minutes");
+            }
+            else{
+                gpsLive.setVisibility(View.VISIBLE);
+                gpsnotLive.setVisibility(View.INVISIBLE);
+                lastLive.setText("");
+                lastLive.setVisibility(View.INVISIBLE);
+            }
+
         }
 
     }
