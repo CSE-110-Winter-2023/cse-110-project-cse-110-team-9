@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void onTimeChanged(Long time) {
 
-        //THIS METHOD RUNS EVERY 30 SECONDS TO CHANGE IT CHANGE IT IN CONSTANTS CLASS
+        //THIS METHOD RUNS EVERY 3 SECONDS TO CHANGE IT CHANGE IT IN CONSTANTS CLASS
 
         var user = repo.getUser();
 
@@ -326,8 +326,8 @@ public class MainActivity extends AppCompatActivity {
             if(diff > 3){
                 gpsLive.setVisibility(View.INVISIBLE);
                 gpsnotLive.setVisibility(View.VISIBLE);
-                int timeInMinutes = (int) Math.floor((double) diff/60);
-                Log.d("Minutes test", Integer.toString(timeInMinutes));
+                double timeInMinutes =  Math.floor((double) diff/30) / 2;
+                Log.d("Minutes test", Double.toString(timeInMinutes));
                 lastLive.setVisibility(View.VISIBLE);
                 lastLive.setText(timeInMinutes + " minutes");
             }
