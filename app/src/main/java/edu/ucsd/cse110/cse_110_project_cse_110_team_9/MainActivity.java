@@ -1,13 +1,11 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
-import static edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants.scale.ONE;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.util.Pair;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import android.content.Intent;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.ServerAPI;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
@@ -34,6 +31,7 @@ import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.TimeService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.view.RingView;
+import kotlin.Triple;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private float orientation = 0f;
 
     private List<String> emojiStrings;
+    private LiveData<Triple<Double, Double, Long>> locationData;
 
     private MutableLiveData<Constants.scale> zoomLevel;
     private SocialCompassRepository repo; //in previous labs this was final.
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     //List of references to our friendViewItems on the map
     private List<FriendViewItem> friendItems;
-
 
 
     @Override
@@ -134,11 +132,10 @@ public class MainActivity extends AppCompatActivity {
                             String public_code = data.getStringExtra("public_code");
 
 
-                            Log.d("got public uid from activity", public_code);
+                           // Log.d("got public uid from activity", public_code);
                             //check if friend exisits on remote
 
                             if (public_code != null) {
-
                                 addFriend(public_code);
                                 repo.upsertLocalFriend(public_code);
                             }
@@ -148,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         //SETUP the location service
         locationService = LocationService.singleton(this);
-        var locationData = locationService.getLocation();
+        locationData = locationService.getLocation();
         locationData.observe(this, this::onLocationChanged);
 
 
@@ -190,6 +187,23 @@ public class MainActivity extends AppCompatActivity {
         // initially be focused on the friends who are closest to me (Figures (a) and (b))
         zoomLevel.postValue(Constants.scale.TEN);
 
+
+        userCache = repo.getUser();
+
+        //SET LOCATION TO LAST KNOW LOCATION
+
+        if (userCache !=null)
+        {
+            locationService.forceUpdate(new Triple<>(userCache.getLatitude() ,
+                    userCache.getLongitude(), userCache.getUpdated_at()));
+        }else
+        {
+            Log.e("Main OnCreate", "User cache is null!!!");
+        }
+
+
+
+
     }
 
 
@@ -202,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 addFriend(friend.public_code);
             } else {
 
-                Log.d("Server",
+                Log.e("Server",
                         "Saved friend does not exists on REMOTE" + friend.public_code);
             }
         });
@@ -230,23 +244,32 @@ public class MainActivity extends AppCompatActivity {
         compassImageView.setRotation(rotation);
     }
 
-    private void onLocationChanged(Pair<Double, Double> latLong) {
+    private void onLocationChanged(Triple<Double, Double, Long> locationUpdate) {
 
         TextView locationText = findViewById(R.id.locationText);
-        locationText.setText(Utilities.formatLocation(latLong.first, latLong.second));
+        locationText.setText(Utilities.formatLocation(locationUpdate.getFirst(),
+                locationUpdate.getSecond()));
         //UPDATE THE LOCATION IN our cached user object.
-        Log.d("location change", "locationChange");
-        if (userCache != null) {
-            userCache.setUpdated_at(Instant.now().getEpochSecond());
-            userCache.setLatitude(latLong.first);
-            userCache.setLongitude(latLong.second);
-            repo.upsertUserRemote(userCache);
-            repo.upsertLocalUser(userCache);
+        if (userCache == null) {
+
+            userCache = repo.getUser();
+            if (userCache == null) {
+                Log.e("ERROR", "NO USER FOUND IN DATABASE");
+                return;
+            }
         }
+
+        userCache.setUpdated_at(locationUpdate.getThird());
+        userCache.setLatitude(locationUpdate.getFirst());
+        userCache.setLongitude(locationUpdate.getSecond());
+        repo.upsertUserRemote(userCache); //update the server
+        repo.upsertLocalUser(userCache); //update the local db
+
     }
 
     /**
      * Add a friend to the map given a public uid
+     *
      * @param public_code
      */
     public void addFriend(String public_code) {
@@ -270,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         friendItems.add(newFriend);
         //set the location and orientation services for the friend view item, so the friendView
         // item can adjust it's angle and radius whenever the users' orientation and location change
-        newFriend.setLocationService(locationService, this);
+        newFriend.setLocationDataSource(locationData, this);
         newFriend.setOrientationService(orientationService, this);
 
         //SET the friends
@@ -281,7 +304,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method run's every 5 seconds
+     *
+     * @param time
+     */
     private void onTimeChanged(Long time) {
+
+        //THIS METHOD RUNS EVERY 30 SECONDS TO CHANGE IT CHANGE IT IN CONSTANTS CLASS
+
+        var user = repo.getUser();
+
+        if (user != null) {
+            long timeNow = Instant.now().getEpochSecond();
+            long diff = timeNow - user.getUpdated_at();
+            Log.d("Seconds since last update", Long.toString(diff));
+            //UPDATE UI
+        }
+
     }
 
     @Override
@@ -304,8 +344,7 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             return;
-        }
-        else{
+        } else {
             locationService.registerLocationListener();
         }
 

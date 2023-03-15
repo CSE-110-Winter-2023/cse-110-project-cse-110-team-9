@@ -17,7 +17,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import java.time.Instant;
+
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
+import kotlin.Triple;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -41,10 +44,10 @@ public class LocationServiceTest {
         scenario.onActivity(activity -> {
 
            var locationService = LocationService.singleton(activity);
-           var mockLocation = new MutableLiveData<Pair<Double, Double>>();
+           var mockLocation = new MutableLiveData<Triple<Double, Double, Long>>();
           locationService.setMockLocationData(mockLocation);
 
-          mockLocation.setValue(new Pair<>(latitude, longitude));
+          mockLocation.setValue(new Triple<>(latitude, longitude, Instant.now().getEpochSecond()));
             TextView locationView = activity.findViewById(R.id.locationText);
 
             var expected = Utilities.formatLocation(latitude, longitude);
