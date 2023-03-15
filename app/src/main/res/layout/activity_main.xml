@@ -32,16 +32,16 @@
             android:id="@+id/ToDataEntryBtn"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
 
-            android:layout_marginBottom="16dp"
             android:onClick="onLaunchDataEntry"
             android:text="Add Friends"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ToSetNamePageBtn"
-            app:layout_constraintTop_toBottomOf="@+id/lastLive" />
+            app:layout_constraintHorizontal_bias="0.945"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.976" />
 
         <TextView
             android:id="@+id/locationText"
@@ -82,24 +82,25 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.515" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/ToSetNamePageBtn"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="16dp"
             android:maxLines="2"
             android:onClick="onLaunchName"
             android:text="Set Name"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/ToDataEntryBtn"
-            app:layout_constraintStart_toEndOf="@+id/zoom_out" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.946"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.881" />
 
         <ImageView
             android:id="@+id/zoom_out"
@@ -128,44 +129,43 @@
 
         <ImageView
             android:id="@+id/gpsLive"
-            android:layout_width="38dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="45dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginBottom="584dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/ToDataEntryBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/lastLive"
+            app:layout_constraintHorizontal_bias="0.959"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/greendot" />
 
         <ImageView
             android:id="@+id/gpsnotLive"
-            android:layout_width="40dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="45dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginBottom="584dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/ToDataEntryBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.959"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/reddot" />
 
         <TextView
             android:id="@+id/lastLive"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="231dp"
-            android:layout_marginTop="45dp"
+            android:layout_width="83dp"
+            android:layout_height="31dp"
             android:layout_marginBottom="604dp"
             android:text=""
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/ToDataEntryBtn"
-            app:layout_constraintEnd_toStartOf="@+id/gpsLive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.868"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.666" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

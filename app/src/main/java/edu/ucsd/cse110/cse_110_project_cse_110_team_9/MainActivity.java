@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView gpsnotLive = findViewById(R.id.gpsnotLive);
             TextView lastLive = (TextView) findViewById(R.id.lastLive);
 
-            if(diff > 30){
+            if(diff > 3){
                 gpsLive.setVisibility(View.INVISIBLE);
                 gpsnotLive.setVisibility(View.VISIBLE);
                 int timeInMinutes = (int) Math.floor((double) diff/60);
