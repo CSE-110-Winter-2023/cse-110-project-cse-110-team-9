@@ -1,15 +1,19 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9.view;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -32,6 +36,7 @@ public class FriendViewItem extends LinearLayout {
     TextView friendIcon;
     String friendIconString = "";
     Context mContext;
+
 
     private OrientationService orientationService;
     private LiveData<Triple<Double, Double, Long>> locationData;
@@ -75,6 +80,8 @@ public class FriendViewItem extends LinearLayout {
 
         friendIcon=  (TextView) layout.findViewById(R.id.friendIcon);
 
+        friendIcon.setPadding(0,0,0,friendIcon.getHeight());
+
         friendLocation = new Location(0d,0d);
 
         userLocation = new Location(0d, 0d);
@@ -83,6 +90,10 @@ public class FriendViewItem extends LinearLayout {
 
         nameLabel.setText("default_string");
         friendIcon.setText("default_icon");
+
+
+        nameLabel.setTextColor(Color.rgb( 187,134,252));
+
 
         zoomLevel = Constants.scale.TEN;
         mContext = context;
@@ -286,35 +297,45 @@ public class FriendViewItem extends LinearLayout {
                 }
                 break;
             case FIVE_HUNDRED_PLUS:
-                float oneCircleRadius3plus = circleRadius/3;
+                float oneCircleRadius4plus = circleRadius/4;
 
                 if (distance < 1)
                 {
-                    float pixelsPerMile = oneCircleRadius3plus/1;
+                    float pixelsPerMile = oneCircleRadius4plus/1;
                     float radius = (float) (pixelsPerMile * distance);
                     setRadius((int) radius);
                 }
                 else if (distance < 10)
                 {
-                    float pixelsPerMile = oneCircleRadius3plus/10; //note that oneCircleRadius is
+                    float pixelsPerMile = oneCircleRadius4plus/10; //note that oneCircleRadius is
                     // the
                     // distance between ten mile ring and 500 mile ring miles ring
-                    float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius3plus;
+                    float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius4plus;
                     // we
                     // add onecircleradius so we draw outside of 1 miles ring
                     setRadius((int) radius);
                 }
                 else if (distance < 500){
-                    float pixelsPerMile = oneCircleRadius3plus/500; //note that oneCircleRadius is
+                    float pixelsPerMile = oneCircleRadius4plus/500; //note that oneCircleRadius is
                     // the
                     // distance between onemile ring and 10 miles ring
-                    float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3plus);
+                    float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius4plus);
                     // we
                     // add onecircleradius so we draw outside of 1 miles ring
                     setRadius((int) radius); //TODO: FIX THIS
                 }
-                else{
-                    setRadius((int) circleRadius + 20);
+                else if (distance < 5000){
+
+                    float pixelsPerMile = oneCircleRadius4plus/5000; //note that oneCircleRadius is
+                    // the
+                    // distance between onemile ring and 10 miles ring
+                    float radius = ((float) (pixelsPerMile * distance)) + (3*oneCircleRadius4plus);
+                    // we
+                    // add onecircleradius so we draw outside of 1 miles ring
+                    setRadius((int) radius); //TODO: FIX THIS
+                }
+                else {
+                    setRadius((int) circleRadius);
                 }
                 break;
         }
@@ -356,6 +377,8 @@ public class FriendViewItem extends LinearLayout {
 
     @Override
     protected void onDraw(final Canvas canvas){
+
+
         super.onDraw(canvas);
     }
 }

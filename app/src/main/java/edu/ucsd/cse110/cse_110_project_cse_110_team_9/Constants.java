@@ -20,7 +20,7 @@ public class Constants {
     public static final int TIME_SERVICE_UPDATE_INTERVAL = 30;
 
     public static final String FRIEND_DIRECTION_INDICATOR_EMOIJI =
-            new String(Character.toChars(0x1F539));
+            new String(Character.toChars(0x1F538));
     public enum scale{
         ONE, TEN, FIVE_HUNDRED, FIVE_HUNDRED_PLUS
     }

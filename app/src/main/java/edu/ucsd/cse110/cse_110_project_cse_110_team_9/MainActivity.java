@@ -402,7 +402,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onZoomIn(View view) {
 
-
         Constants.scale currentZoom = zoomLevel.getValue();
 
         if (currentZoom != null) {
