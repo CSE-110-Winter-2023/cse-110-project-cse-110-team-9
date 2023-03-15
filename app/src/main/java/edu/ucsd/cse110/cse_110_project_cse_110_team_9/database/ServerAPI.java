@@ -62,7 +62,7 @@ public class ServerAPI {
                     System.out.println("Got friend: " + friend.label);
                 }
 
-                , 0, 5, TimeUnit.SECONDS);
+                , 0, 3, TimeUnit.SECONDS);
         friendsScheduledFutureHashMap.put(public_uid, future);
         return remoteFriend;
         //need to add this to the Mutable live data lis
