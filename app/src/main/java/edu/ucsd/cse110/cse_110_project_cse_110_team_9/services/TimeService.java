@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants;
+
 public class TimeService {
     // LiveData variable which contains the latest real time value.
     private final MutableLiveData<Long> realTimeData;
@@ -53,7 +55,7 @@ public class TimeService {
         var executor = Executors.newSingleThreadScheduledExecutor();
         clockFuture = executor.scheduleAtFixedRate(() -> {
             timeData.postValue(System.currentTimeMillis());
-        }, 0, 200, TimeUnit.MILLISECONDS);
+        }, 0, Constants.TIME_SERVICE_UPDATE_INTERVAL, TimeUnit.SECONDS);
     }
 
     /**

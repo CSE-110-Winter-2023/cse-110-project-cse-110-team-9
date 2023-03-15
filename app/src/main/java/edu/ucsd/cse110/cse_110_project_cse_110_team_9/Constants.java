@@ -15,7 +15,12 @@ public class Constants {
     public static final int EDGE_PADDING = 80;
     public static final int OUTER_RING_PADDING = 40;
 
+    public static final int TIME_BETWEEN_USE_LOCATION_UPDATES = 3;
 
+    public static final int TIME_SERVICE_UPDATE_INTERVAL = 30;
+
+    public static final String FRIEND_DIRECTION_INDICATOR_EMOIJI =
+            new String(Character.toChars(0x1F539));
     public enum scale{
         ONE, TEN, FIVE_HUNDRED, FIVE_HUNDRED_PLUS
     }

@@ -1,9 +1,7 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
-import android.provider.ContactsContract;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.util.Pair;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
@@ -24,6 +21,7 @@ import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Utilities;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.Friend;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.LocationService;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.services.OrientationService;
+import kotlin.Triple;
 
 
 //THIS IS WHERE THE MAGIC HAPPENS BOIS
@@ -32,11 +30,11 @@ public class FriendViewItem extends LinearLayout {
     LinearLayout layout;
     TextView nameLabel;
     TextView friendIcon;
-    ImageView friendImg;
+    String friendIconString = "";
     Context mContext;
 
     private OrientationService orientationService;
-    private LocationService locationService;
+    private LiveData<Triple<Double, Double, Long>> locationData;
 
     private Constants.scale zoomLevel;
 
@@ -113,6 +111,7 @@ public class FriendViewItem extends LinearLayout {
 
     public void setFriendIcon(String text){
         friendIcon.setText(text);
+        friendIconString = text;
     }
 
     public void setOrientationService(OrientationService service, LifecycleOwner owner){
@@ -120,21 +119,22 @@ public class FriendViewItem extends LinearLayout {
         service.getAzimuthData().observe(owner, this::onUserOrientationChanged);
     }
 
-    public void setLocationService(LocationService service, LifecycleOwner owner)
+    public void setLocationDataSource(LiveData<Triple<Double, Double, Long>> locationData,
+                                      LifecycleOwner owner)
     {
-        locationService =service;
-        service.getLocation().observe(owner, this::onUserLocationChanged);
+        this.locationData = locationData;
+        locationData.observe(owner, this::onUserLocationChanged);
     }
 
     /**
      * Update the friends angle and radius when the user's location changes
      * @param location of the user
      */
-    public void onUserLocationChanged(Pair<Double, Double> location)
+    public void onUserLocationChanged(Triple<Double, Double,Long> location)
     {
-        if (userLocation!= null && location.first != null && location.second != null) {
-            userLocation.setLatitude(location.first);
-            userLocation.setLongitude(location.second);
+        if (userLocation!= null && location.getFirst() != null && location.getSecond() != null) {
+            userLocation.setLatitude(location.getFirst());
+            userLocation.setLongitude(location.getSecond());
             reCalcualteAngle();
 
         }
@@ -196,6 +196,8 @@ public class FriendViewItem extends LinearLayout {
      */
     public void reCalculateRadius()
     {
+
+        //TODO: CLEAN THIS CODE UP A BIT
          distance = Utilities.findDistanceinMilesBetweenTwoPoints(userLocation, friendLocation);
 
         //IDK THIS IS JANK BUT IT WORKS
@@ -209,16 +211,20 @@ public class FriendViewItem extends LinearLayout {
 
         float circleRadius = (float) width / 2 - Constants.OUTER_RING_PADDING;
 
+        nameLabel.setVisibility(VISIBLE);
+        friendIcon.setText(friendIconString);
 
         switch (zoomLevel) {
             case ONE:
                  circleRadius = (float) width / 2 - Constants.OUTER_RING_PADDING;
                 if (distance > 1)
                 {
-                    this.setVisibility(INVISIBLE);
+                    nameLabel.setVisibility(INVISIBLE);
+                    friendIcon.setText(Constants.FRIEND_DIRECTION_INDICATOR_EMOIJI);
+                    setRadius((int) circleRadius + getHeight()/2); //just on the ring
+
                 }
                 else {
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = circleRadius/1;
                     float radius = (float) (pixelsPerMile * distance);
                     setRadius((int) radius);
@@ -235,7 +241,6 @@ public class FriendViewItem extends LinearLayout {
                     setRadius((int) radius);
                 }
                 else if (distance < 10) {
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = oneCircleRadius/10; //note that oneCircleRadius is the
                     // distance between onemile ring and 10 miles ring
                     float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius; // we
@@ -244,7 +249,9 @@ public class FriendViewItem extends LinearLayout {
                 }
                 else
                 {
-                    this.setVisibility(INVISIBLE);
+                    nameLabel.setVisibility(INVISIBLE);
+                    friendIcon.setText(Constants.FRIEND_DIRECTION_INDICATOR_EMOIJI);
+                    setRadius((int) circleRadius+ getHeight()/2);
                 }
                 break;
             case FIVE_HUNDRED:
@@ -259,7 +266,6 @@ public class FriendViewItem extends LinearLayout {
                 }
                 else if (distance < 10)
                 {
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = oneCircleRadius3/10; //note that oneCircleRadius is the
                     // distance between ten mile ring and 500 mile ring miles ring
                     float radius = ((float) (pixelsPerMile * distance)) + oneCircleRadius3; // we
@@ -267,15 +273,16 @@ public class FriendViewItem extends LinearLayout {
                     setRadius((int) radius);
                 }
                 else if (distance < 500){
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = oneCircleRadius3/500; //note that oneCircleRadius is the
                     // distance between onemile ring and 10 miles ring
                     float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3); // we
                     // add onecircleradius so we draw outside of 1 miles ring
-                    setRadius((int) radius);
+                    setRadius((int) radius - getHeight() / 2); //TODO:FIX THIS
                 }
                 else{
-                    this.setVisibility(INVISIBLE);
+                    nameLabel.setVisibility(INVISIBLE);
+                    friendIcon.setText(Constants.FRIEND_DIRECTION_INDICATOR_EMOIJI);
+                    setRadius((int) circleRadius + getHeight()/2);
                 }
                 break;
             case FIVE_HUNDRED_PLUS:
@@ -283,14 +290,12 @@ public class FriendViewItem extends LinearLayout {
 
                 if (distance < 1)
                 {
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = oneCircleRadius3plus/1;
                     float radius = (float) (pixelsPerMile * distance);
                     setRadius((int) radius);
                 }
                 else if (distance < 10)
                 {
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = oneCircleRadius3plus/10; //note that oneCircleRadius is
                     // the
                     // distance between ten mile ring and 500 mile ring miles ring
@@ -300,18 +305,16 @@ public class FriendViewItem extends LinearLayout {
                     setRadius((int) radius);
                 }
                 else if (distance < 500){
-                    this.setVisibility(VISIBLE);
                     float pixelsPerMile = oneCircleRadius3plus/500; //note that oneCircleRadius is
                     // the
                     // distance between onemile ring and 10 miles ring
                     float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3plus);
                     // we
                     // add onecircleradius so we draw outside of 1 miles ring
-                    setRadius((int) radius);
+                    setRadius((int) radius - getHeight()/2); //TODO: FIX THIS
                 }
                 else{
-                    this.setVisibility(VISIBLE);
-                    setRadius((int) circleRadius);
+                    setRadius((int) circleRadius + 20);
                 }
                 break;
         }

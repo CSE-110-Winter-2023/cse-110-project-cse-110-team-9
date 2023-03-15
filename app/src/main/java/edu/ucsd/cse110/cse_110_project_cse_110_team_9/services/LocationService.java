@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.util.Log;
 
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions;
 import androidx.annotation.NonNull;
@@ -19,7 +20,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.time.Instant;
 import java.util.Arrays;
+
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants;
+import kotlin.Triple;
 
 public class LocationService implements LocationListener {
 
@@ -29,16 +34,19 @@ public class LocationService implements LocationListener {
     };
 
 
+    private long lastTime=0;
+
+
     // This needs to be more specific than just Activity for location permissions requesting.
     private final AppCompatActivity activity;
 
     private static LocationService instance;
 
-    private MutableLiveData<Pair<Double, Double>> realLocationData;
+    private MutableLiveData<Triple<Double, Double, Long>> realLocationData;
 
-    private MediatorLiveData<Pair<Double, Double>> locationData;
+    private MediatorLiveData<Triple<Double, Double, Long>> locationData;
 
-    private LiveData<Pair<Double,Double>> mockLocationData = null;
+    private LiveData<Triple<Double,Double, Long>> mockLocationData = null;
 
 
     private final LocationManager locationManager;
@@ -75,13 +83,21 @@ public class LocationService implements LocationListener {
         this.locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 0,
-                0.5f,
+                0,
                 LocationService.this);
 
-        Location lastLocation = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (lastLocation != null) {
-            this.locationData.postValue(new Pair<>(lastLocation.getLatitude(), lastLocation.getLongitude()));
-        }
+//        Location lastLocation =
+//                this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//
+//
+//
+//
+//        if (lastLocation != null) {
+//            this.locationData.postValue(new Pair<>(lastLocation.getLatitude(), lastLocation.getLongitude()));
+//            lastTime = Instant.now().getEpochSecond();
+//
+//        }
 
 
     }
@@ -114,7 +130,15 @@ public class LocationService implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        this.locationData.postValue(new Pair<>(location.getLatitude(), location.getLongitude()));
+
+        Log.d("location change", "location upadte");
+        if (Instant.now().getEpochSecond() - lastTime > Constants.TIME_BETWEEN_USE_LOCATION_UPDATES) {
+            this.locationData.postValue(new Triple<>(location.getLatitude(),
+                    location.getLongitude(), Instant.now().getEpochSecond()));
+
+            lastTime = Instant.now().getEpochSecond();
+
+        }
     }
 
 
@@ -122,11 +146,16 @@ public class LocationService implements LocationListener {
         locationManager.removeUpdates(this);
     }
 
-    public LiveData<Pair<Double, Double>> getLocation() {
+    //Not really the best way, but no other easy way
+    public void forceUpdate(Triple<Double, Double, Long> location)
+    {
+        this.locationData.postValue(location);
+    }
+    public LiveData<Triple<Double, Double, Long>> getLocation() {
         return this.locationData;
     }
 
-    public void setMockLocationData(MutableLiveData<Pair<Double, Double>> mockLocationData) {
+    public void setMockLocationData(MutableLiveData<Triple<Double, Double, Long>> mockLocationData) {
         unregisterLocationListener();
         this.mockLocationData = mockLocationData;
         locationData.removeSource(realLocationData);
