@@ -221,7 +221,7 @@ public class FriendViewItem extends LinearLayout {
                 {
                     nameLabel.setVisibility(INVISIBLE);
                     friendIcon.setText(Constants.FRIEND_DIRECTION_INDICATOR_EMOIJI);
-                    setRadius((int) circleRadius + getHeight()/2); //just on the ring
+                    setRadius((int) circleRadius); //just on the ring
 
                 }
                 else {
@@ -251,7 +251,7 @@ public class FriendViewItem extends LinearLayout {
                 {
                     nameLabel.setVisibility(INVISIBLE);
                     friendIcon.setText(Constants.FRIEND_DIRECTION_INDICATOR_EMOIJI);
-                    setRadius((int) circleRadius+ getHeight()/2);
+                    setRadius((int) circleRadius); //TODO:FIX
                 }
                 break;
             case FIVE_HUNDRED:
@@ -277,12 +277,12 @@ public class FriendViewItem extends LinearLayout {
                     // distance between onemile ring and 10 miles ring
                     float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3); // we
                     // add onecircleradius so we draw outside of 1 miles ring
-                    setRadius((int) radius - getHeight() / 2); //TODO:FIX THIS
+                    setRadius((int) radius); //TODO:FIX THIS
                 }
                 else{
                     nameLabel.setVisibility(INVISIBLE);
                     friendIcon.setText(Constants.FRIEND_DIRECTION_INDICATOR_EMOIJI);
-                    setRadius((int) circleRadius + getHeight()/2);
+                    setRadius((int) circleRadius);
                 }
                 break;
             case FIVE_HUNDRED_PLUS:
@@ -311,7 +311,7 @@ public class FriendViewItem extends LinearLayout {
                     float radius = ((float) (pixelsPerMile * distance)) + (2*oneCircleRadius3plus);
                     // we
                     // add onecircleradius so we draw outside of 1 miles ring
-                    setRadius((int) radius - getHeight()/2); //TODO: FIX THIS
+                    setRadius((int) radius); //TODO: FIX THIS
                 }
                 else{
                     setRadius((int) circleRadius + 20);
