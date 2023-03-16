@@ -59,7 +59,7 @@ public class ServerAPI {
                 {
                     var friend = getFriendFromRemote(public_uid);
                     remoteFriend.postValue(friend);
-                    System.out.println("Got friend: " + friend.label);
+                    //System.out.println("Got friend: " + friend.label);
                 }
 
                 , 0, 3, TimeUnit.SECONDS);
