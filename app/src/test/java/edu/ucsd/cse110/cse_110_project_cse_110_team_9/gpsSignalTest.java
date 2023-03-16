@@ -24,6 +24,7 @@ import org.mockito.Mockito;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
@@ -32,6 +33,7 @@ import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassData
 
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowLocationManager;
+import org.robolectric.shadows.ShadowSystemClock;
 
 @RunWith(AndroidJUnit4.class)
 public class gpsSignalTest {
@@ -39,8 +41,11 @@ public class gpsSignalTest {
     private SocialCompassDao dao;
     private SocialCompassDatabase db;
 
+    private SocialCompassRepository repo;
+
     private LifecycleOwner lifeCycleOwner;
     private LifecycleRegistry lifecycle;
+
 
     @Before
     public void createDb()
@@ -51,6 +56,7 @@ public class gpsSignalTest {
                 .allowMainThreadQueries().build();
         dao = db.getDao();
 
+        repo = new SocialCompassRepository(dao);
         lifeCycleOwner = Mockito.mock(LifecycleOwner.class);
         lifecycle = new LifecycleRegistry(Mockito.mock(LifecycleOwner.class));
         lifecycle.setCurrentState(Lifecycle.State.RESUMED);
@@ -87,7 +93,7 @@ public class gpsSignalTest {
     }
 
     @Test
-    public void testTimerAndDot(){
+    public void testTimerAndDot() throws InterruptedException {
         // Create a new instance of MainActivity
         MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
 
@@ -98,18 +104,30 @@ public class gpsSignalTest {
         String public_uid1 = UUID.randomUUID().toString();
         String private_code1 = UUID.randomUUID().toString();
         User insertedUser = new User("Kalam", private_code1, public_uid1,
-                69.0d, 69.0d, Instant.now().getEpochSecond() - 5);
+                69.0d, 69.0d, Instant.now().getEpochSecond());
 
         dao.upsertUser(insertedUser);
 
+        LocationManager locationManager = (LocationManager)
+                ApplicationProvider.getApplicationContext()
+                        .getSystemService(Context.LOCATION_SERVICE);
+        ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
+        shadowLocationManager.setProviderEnabled(LocationManager.GPS_PROVIDER, false);
+        System.out.println(insertedUser.getUpdated_at());
         // Call the onTimeChanged method to update the UI
-        activity.onTimeChanged(Instant.now().getEpochSecond());
+        activity.onTimeChanged(Instant.now().plusSeconds(10).getEpochSecond());
+        insertedUser.setUpdated_at(Instant.now().minusSeconds(10).getEpochSecond());
+
+
+        System.out.println(insertedUser.getUpdated_at());
+
 
         // Check that the timer TextView shows the correct time
         assertEquals("0.0 minutes", timerTextView.getText().toString());
 
         // Check that the GPS status ImageView shows a red dot
         assertEquals(R.drawable.reddot, shadowOf(gpsStatusImageView.getDrawable()).getCreatedFromResId());
+
     }
 }
 

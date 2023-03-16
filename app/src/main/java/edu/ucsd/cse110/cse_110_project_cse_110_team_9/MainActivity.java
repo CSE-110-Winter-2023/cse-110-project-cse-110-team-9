@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This method run's every 5 seconds
+     * This method run's every 3 seconds
      *
      * @param time
      */
