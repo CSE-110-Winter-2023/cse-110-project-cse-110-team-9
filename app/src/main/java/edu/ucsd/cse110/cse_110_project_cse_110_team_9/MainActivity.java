@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -246,6 +247,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void onLocationChanged(Triple<Double, Double, Long> locationUpdate) {
 
+
+//        friendItems.forEach(friendViewItem -> {
+//            friendViewItem.flip
+//            TextSide();
+//        });
+        runOnUiThread(()->{
+            repositionLabels();
+        });
+
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(locationUpdate.getFirst(),
                 locationUpdate.getSecond()));
@@ -350,6 +360,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
+    //TODO : optimzie
+    private void repositionLabels()
+    {
+
+        var arr = new Boolean[friendItems.size()];
+        Arrays.fill(arr, Boolean.FALSE);
+
+        for (int i = 0; i < friendItems.size(); i++)
+        {
+            for (int j = i+1; j < friendItems.size(); j++)
+            {
+                if (arr[j] == false && isViewOverlapping(friendItems.get(i), friendItems.get(j))){
+                    arr[j] = true;
+                    friendItems.get(j).flipTextSide();
+                }
+            }
+        }
+
+    }
+
     public void onLaunchDataEntry(View view) {
 
         Intent intent = new Intent(this, DataEntryActivity.class);
@@ -364,6 +397,21 @@ public class MainActivity extends AppCompatActivity {
     public void onLaunchName(View view) {
         Intent intent = new Intent(this, NameActivity.class);
         activityResultLauncher.launch(intent);
+    }
+
+    private boolean isViewOverlapping(View firstView, View secondView) {
+        int[] firstPosition = new int[2];
+        int[] secondPosition = new int[2];
+
+        firstView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        firstView.getLocationOnScreen(firstPosition);
+        secondView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        secondView.getLocationOnScreen(secondPosition);
+
+        return firstPosition[0] < secondPosition[0] + secondView.getMeasuredWidth()
+                && firstPosition[0] + firstView.getMeasuredWidth() > secondPosition[0]
+                && firstPosition[1] < secondPosition[1] + secondView.getMeasuredHeight()
+                && firstPosition[1] + firstView.getMeasuredHeight() > secondPosition[1];
     }
 
 
