@@ -227,11 +227,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void OnOrientationChanged(Float azimuth) {
         CompassView compass = findViewById(R.id.compass);
-        SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
+   //     SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
         // float degree = preferences.getFloat("degree", 0);
-        float lat_n = preferences.getFloat("lat", 0);
-        float long_n = preferences.getFloat("long", 0);
+//        float lat_n = preferences.getFloat("lat", 0);
+//        float long_n = preferences.getFloat("long", 0);
 
         compass.setDegrees(azimuth, true);
 
@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
         compassImageView.setLayoutParams(layoutParams);
 
         compassImageView.setRotation(rotation);
+       // truncateLabels();
     }
 
     private void onLocationChanged(Triple<Double, Double, Long> locationUpdate) {
@@ -256,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
         runOnUiThread(()->{
             repositionLabels();
+            truncateLabels();
         });
 
         TextView locationText = findViewById(R.id.locationText);
@@ -380,13 +382,46 @@ public class MainActivity extends AppCompatActivity {
             Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
 
 
-            if (isViewOverlapping(friendItems.get(i), friendItems.get(i+1))){
+            if (isViewOverlapping(friendItems.get(i).getCurrentTextView(),
+                    friendItems.get(i+1).getCurrentTextView())){
                 friendItems.get(i).setTextSide(true);
                 friendItems.get(i+1).setTextSide(false);
             }
 
         }
 
+
+    }
+
+    private void truncateLabels()
+    {
+
+
+
+        friendItems.forEach(friendViewItem -> {friendViewItem.setTruncate(false);});
+            for (int i = 0; i < friendItems.size(); i++) {
+                for (int j =0; j < friendItems.size(); j++) {
+
+                    if (i!=j) {
+                        var a = friendItems.get(i);
+                        var b = friendItems.get(j);
+                        // a.setTruncate(true);
+                        //Log.d("truncae","truncate");
+                        if (isViewOverlapping(a.getCurrentTextView(), b.getCurrentTextView())) {
+                            if (a.getTruncate()) {
+                                b.setTruncate(true);
+                                //  Log.d("Truncate", b.setNameLabel();/
+                            } else {
+                                a.setTruncate(true);
+                            }
+                        }
+                    }
+                }
+            }
+
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.updateTextView();
+        });
     }
 
     public void onLaunchDataEntry(View view) {
@@ -424,22 +459,7 @@ public class MainActivity extends AppCompatActivity {
                 && firstPosition[1] + firstView.getMeasuredHeight() > secondPosition[1];
     }
 
-    private int numCollision(FriendViewItem view)
-    {
-        int count = 0;
 
-        for (int i = 0; i < friendItems.size(); i++)
-        {
-            var friend = friendItems.get(i);
-            if  (view != friend)
-            {
-                if (isViewOverlapping(view, friend)){
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
 
 
     public void onZoomOut(View view) {

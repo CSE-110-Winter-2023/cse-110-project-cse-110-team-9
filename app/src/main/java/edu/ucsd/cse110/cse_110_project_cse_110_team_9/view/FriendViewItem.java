@@ -37,6 +37,7 @@ public class FriendViewItem extends LinearLayout {
     String friendIconString = "";
     Context mContext;
 
+    private boolean truncate = false;
     private boolean textTop = true;
 
 
@@ -122,8 +123,7 @@ public class FriendViewItem extends LinearLayout {
     public void setNameLabel(String name) {
         this.name = name;
         updateTextView();
-        invalidate();
-        requestLayout();
+
         // nameLabel.setText(name);
     }
 
@@ -159,6 +159,19 @@ public class FriendViewItem extends LinearLayout {
             reCalcualteAngle();
 
         }
+    }
+
+
+    public void setTruncate(boolean truncate)
+    {
+        this.truncate = truncate;
+
+    }
+
+
+    public boolean getTruncate()
+    {
+        return this.truncate;
     }
 
     /**
@@ -372,16 +385,33 @@ public class FriendViewItem extends LinearLayout {
         setTextSide(!textTop);
     }
 
-   private void updateTextView() {
+   public void updateTextView() {
+
+
+
         if (textTop) {
-            nameLabel.setText(name);
+
+
+            if (name!= null && name.length() > 0 && truncate) {
+                nameLabel.setText(name.substring(0, name.length()/2));
+            }
+            else
+            {
+                nameLabel.setText(name);
+            }
             nameLabelBottom.setText("");
 
 
         } else {
 
             nameLabel.setText("");
-            nameLabelBottom.setText(name);
+            if (name!=null && name.length() > 0 && truncate) {
+                nameLabelBottom.setText(name.substring(0, name.length()/2));
+            }
+            else
+            {
+                nameLabelBottom.setText(name);
+            }
         }
         invalidate();
         requestLayout();
@@ -406,6 +436,17 @@ public class FriendViewItem extends LinearLayout {
 
     public int getRadius(){
         return currentRadius;
+    }
+
+    public TextView getCurrentTextView()
+    {
+        if (textTop)
+        {
+            return nameLabel;
+        }
+        else {
+            return nameLabelBottom;
+        }
     }
 
     public int getAngle(){
