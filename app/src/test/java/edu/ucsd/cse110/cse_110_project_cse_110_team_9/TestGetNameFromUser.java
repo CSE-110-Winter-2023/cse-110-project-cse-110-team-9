@@ -37,61 +37,61 @@ public class TestGetNameFromUser
     {
 
     }
-//    @Test
-//    public void testGetName() {
-//        var scenario = ActivityScenario.launch(NameActivity.class);
-//        scenario.moveToState(Lifecycle.State.CREATED);
-//        scenario.moveToState(Lifecycle.State.STARTED);
-//        scenario.moveToState(Lifecycle.State.RESUMED);
-//
-//        scenario.onActivity(activity -> {
-//
-//            EditText enterName = activity.findViewById(R.id.enter_name);
-//            String name = "Jerry";
-//            enterName.setText(name);
-//            Button saveName = activity.findViewById(R.id.setNameButton);
-//
-//            saveName.performClick();
-//            String nameFromExtra = activity.getIntent().getExtras().getString("name");
-//
-//            assertEquals("name in text field and name in extra not equal", name, nameFromExtra);
-//        });
-//
-//        scenario.close();
-//
-//    }
+    @Test
+    public void testGetName() {
+        var scenario = ActivityScenario.launch(NameActivity.class);
+        scenario.moveToState(Lifecycle.State.CREATED);
+        scenario.moveToState(Lifecycle.State.STARTED);
+        scenario.moveToState(Lifecycle.State.RESUMED);
+
+        scenario.onActivity(activity -> {
+
+            EditText enterName = activity.findViewById(R.id.enter_name);
+            String name = "Jerry";
+            enterName.setText(name);
+            Button saveName = activity.findViewById(R.id.setNameButton);
+
+            saveName.performClick();
+            String nameFromExtra = activity.getIntent().getExtras().getString("name");
+
+            assertEquals("name in text field and name in extra not equal", name, nameFromExtra);
+        });
+
+        scenario.close();
+
+    }
 
 
     /**
      * Tests that if btn clicked on main activty,
      * that the setName activity will be started.
      */
-//    @Test
-//    public void testGetNameIntegrationWithMainActivity()
-//        {
-//
-//            var scenario = ActivityScenario.launch(MainActivity.class);
-//            scenario.moveToState(Lifecycle.State.CREATED);
-//            scenario.moveToState(Lifecycle.State.STARTED);
-//
-//            scenario.onActivity(activity -> {
-//
-//                Button openSetName = activity.findViewById(R.id.ToSetNamePageBtn);
-//
-//                openSetName.performClick();
-//
-//                Intent intent = shadowOf(activity).peekNextStartedActivityForResult().intent;
-//                ShadowIntent shadowIntent = shadowOf(intent);
-//               // assertEquals(NameActivity.class, shadowIntent.getIntentClass());
-//
-//                assertThat(intent.getComponent(),
-//                        equalTo(new ComponentName(activity,NameActivity.class)));
-//
-//            });
-//
-//
-//            scenario.close();;
-//        }
+    @Test
+    public void testGetNameIntegrationWithMainActivity()
+        {
+
+            var scenario = ActivityScenario.launch(MainActivity.class);
+            scenario.moveToState(Lifecycle.State.CREATED);
+            scenario.moveToState(Lifecycle.State.STARTED);
+
+            scenario.onActivity(activity -> {
+
+                Button openSetName = activity.findViewById(R.id.ToSetNamePageBtn);
+
+                openSetName.performClick();
+
+                Intent intent = shadowOf(activity).peekNextStartedActivityForResult().intent;
+                ShadowIntent shadowIntent = shadowOf(intent);
+               // assertEquals(NameActivity.class, shadowIntent.getIntentClass());
+
+                assertThat(intent.getComponent(),
+                        equalTo(new ComponentName(activity,NameActivity.class)));
+
+            });
+
+
+            scenario.close();;
+        }
 
 
     }
