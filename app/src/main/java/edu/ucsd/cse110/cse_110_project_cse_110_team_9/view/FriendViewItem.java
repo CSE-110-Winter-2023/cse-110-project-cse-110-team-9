@@ -210,7 +210,7 @@ public class FriendViewItem extends LinearLayout {
         layoutParams.circleRadius = radius;
         this.setLayoutParams(layoutParams);
 
-        Log.d(Double.toString(distance), Integer.toString(radius));
+       // Log.d(Double.toString(distance), Integer.toString(radius));
     }
 
     /**
@@ -238,7 +238,7 @@ public class FriendViewItem extends LinearLayout {
 
         View parent = (View) getParent();
         int width = parent.getWidth();
-        Log.d("FriendView", Integer.toString(width));
+        //Log.d("FriendView", Integer.toString(width));
 
 
         // float radius = (float)width/2 - Constants.OUTER_RING_PADDING;
