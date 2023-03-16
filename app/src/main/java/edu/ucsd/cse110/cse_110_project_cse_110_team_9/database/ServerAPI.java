@@ -85,7 +85,7 @@ public class ServerAPI {
     @WorkerThread
     public Friend getFriendFromRemote(String public_uid) {
         var request = new Request.Builder()
-                .url("https://socialcompass.goto.ucsd.edu/location/" + public_uid)
+                .url(Constants.serverEndpoint + "/location/" + public_uid)
                 .method("GET", null)
                 .build();
 
@@ -94,8 +94,7 @@ public class ServerAPI {
             assert response.body() != null;
             var body = response.body().string();
 
-            if (body.equals(Constants.LocationNotFoundJsonResponse))
-            {
+            if (body.equals(Constants.LocationNotFoundJsonResponse)) {
                 return null;
             }
             return Friend.fromJSON(body);
@@ -104,12 +103,10 @@ public class ServerAPI {
             e.printStackTrace();
             return null;
         }
-
     }
 
     @AnyThread
     public Future<Friend> getFriendAsync(String public_uid) {
-
         var executor = Executors.newSingleThreadExecutor();
         var future = executor.submit(() -> getFriendFromRemote(public_uid));
         return future;
@@ -118,12 +115,10 @@ public class ServerAPI {
     @AnyThread
     public boolean deleteUserLocationOnRemote(User user)
     {
-
         JSONObject deleteJson = new JSONObject();
 
         try {
             deleteJson.put("private_code", user.getPrivate_code());
-
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -131,7 +126,7 @@ public class ServerAPI {
         RequestBody body = RequestBody.create(deleteJson.toString(), MediaType.parse("application/json; charset=utf-8"));
 
         var request = new Request.Builder()
-                .url("https://socialcompass.goto.ucsd.edu/location/" + user.get_public_code())
+                .url(Constants.serverEndpoint + "/location/" + user.get_public_code())
                 .delete(body)
                 .build();
 
@@ -140,7 +135,7 @@ public class ServerAPI {
 
             assert response.body() != null;
             var responseBody = response.body().string();
-            Log.d("Delete user location from server:", responseBody);
+           // Log.d("Delete user location from server:", responseBody);
 
             return (responseBody.equals(Constants.LocationDeletedSuccesfullyResponse));
 
@@ -169,11 +164,11 @@ public class ServerAPI {
     public boolean updateUserLocation(User user) {
         var userJson = user.toJSON();
 
-    Log.d("Trying to send to server user:", userJson);
+        //Log.d("Trying to send to server user:", userJson);
         RequestBody body = RequestBody.create(userJson, MediaType.parse("application/json; charset=utf-8"));
 
         var request = new Request.Builder()
-                .url("https://socialcompass.goto.ucsd.edu/location/" + user.public_code)
+                .url(Constants.serverEndpoint + "/location/" + user.public_code)
                 .put(body)
                 .build();
 
@@ -185,7 +180,7 @@ public class ServerAPI {
             String res = response.body().string();
             JSONObject jsonRes = new JSONObject(res);
 
-            return(jsonRes.get("label").equals(user.label) &&
+            return (jsonRes.get("label").equals(user.label) &&
                     jsonRes.get("public_code").equals(user.get_public_code())
                     && jsonRes.get("latitude").equals(user.getLatitude())
                     && jsonRes.get("longitude").equals(user.getLongitude())
@@ -197,7 +192,5 @@ public class ServerAPI {
 
         }
     }
-
-
 }
 
