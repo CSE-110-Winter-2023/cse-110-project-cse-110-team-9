@@ -32,7 +32,6 @@ public class TestGetNameFromUser
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
 
-
     @Test
     public void testGetName() {
         var scenario = ActivityScenario.launch(NameActivity.class);

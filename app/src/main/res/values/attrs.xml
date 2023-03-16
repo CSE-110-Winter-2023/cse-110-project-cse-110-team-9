@@ -15,6 +15,8 @@
     <declare-styleable name="FriendViewItem">
         <attr name="FriendName" format="string" />
         <attr name="FriendIcon" format="string" />
+        <attr name="FriendNameBottom" format="string" />
+
         <attr name="android:ems" />
     </declare-styleable>
 

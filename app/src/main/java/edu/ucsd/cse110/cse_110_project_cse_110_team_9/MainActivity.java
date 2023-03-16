@@ -19,6 +19,9 @@ import android.widget.TextView;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -224,11 +227,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void OnOrientationChanged(Float azimuth) {
         CompassView compass = findViewById(R.id.compass);
-        SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
+   //     SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
         // float degree = preferences.getFloat("degree", 0);
-        float lat_n = preferences.getFloat("lat", 0);
-        float long_n = preferences.getFloat("long", 0);
+//        float lat_n = preferences.getFloat("lat", 0);
+//        float long_n = preferences.getFloat("long", 0);
 
         compass.setDegrees(azimuth, true);
 
@@ -242,9 +245,20 @@ public class MainActivity extends AppCompatActivity {
         compassImageView.setLayoutParams(layoutParams);
 
         compassImageView.setRotation(rotation);
+       // truncateLabels();
     }
 
     private void onLocationChanged(Triple<Double, Double, Long> locationUpdate) {
+
+
+//        friendItems.forEach(friendViewItem -> {
+//            friendViewItem.flip
+//            TextSide();
+//        });
+        runOnUiThread(()->{
+            repositionLabels();
+            truncateLabels();
+        });
 
         TextView locationText = findViewById(R.id.locationText);
         locationText.setText(Utilities.formatLocation(locationUpdate.getFirst(),
@@ -369,6 +383,69 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
+    //TODO : optimzie
+    private void repositionLabels()
+    {
+
+        friendItems.sort(new Comparator<FriendViewItem>() {
+            @Override
+            public int compare(FriendViewItem friendViewItem, FriendViewItem t1) {
+                return Integer.compare(friendViewItem.getRadius(), t1.getRadius());
+            }
+        });
+
+        for (int i =0; i < friendItems.size() -1; i ++){
+            Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
+
+
+            if (isViewOverlapping(friendItems.get(i).getCurrentTextView(),
+                    friendItems.get(i+1).getCurrentTextView())){
+                friendItems.get(i).setTextSide(true);
+                friendItems.get(i+1).setTextSide(false);
+            }
+
+        }
+
+
+    }
+
+    private void truncateLabels()
+    {
+
+
+
+      //  friendItems.forEach(friendViewItem -> {friendViewItem.setTruncate(false);});
+
+
+
+            for (int i = 0; i < friendItems.size(); i++) {
+                for (int j =0; j < friendItems.size(); j++) {
+
+                    if (i!=j) {
+                        var a = friendItems.get(i);
+                        var b = friendItems.get(j);
+                        // a.setTruncate(true);
+                        //Log.d("truncae","truncate");
+                        if (isViewOverlapping(a.getCurrentTextView(), b.getCurrentTextView())) {
+                            if (a.getTruncate()) {
+                                b.setTruncate(true);
+                                //  Log.d("Truncate", b.setNameLabel();/
+                            } else {
+                                a.setTruncate(true);
+                            }
+                        }
+                    }
+                }
+            }
+
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.updateTextView();
+        });
+    }
+
     public void onLaunchDataEntry(View view) {
 
         Intent intent = new Intent(this, DataEntryActivity.class);
@@ -385,9 +462,33 @@ public class MainActivity extends AppCompatActivity {
         activityResultLauncher.launch(intent);
     }
 
+    private boolean isViewOverlapping(View firstView, View secondView) {
+        int[] firstPosition = new int[2];
+        int[] secondPosition = new int[2];
+
+
+        if (firstView.getVisibility() == View.INVISIBLE || secondView.getVisibility() == View.INVISIBLE){
+            return false;
+        }
+        firstView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        firstView.getLocationOnScreen(firstPosition);
+        secondView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        secondView.getLocationOnScreen(secondPosition);
+
+        return firstPosition[0] < secondPosition[0] + secondView.getMeasuredWidth()
+                && firstPosition[0] + firstView.getMeasuredWidth() > secondPosition[0]
+                && firstPosition[1] < secondPosition[1] + secondView.getMeasuredHeight()
+                && firstPosition[1] + firstView.getMeasuredHeight() > secondPosition[1];
+    }
+
+
+
 
     public void onZoomOut(View view) {
 
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.setTruncate(false);
+        });
         Constants.scale currentZoom = zoomLevel.getValue();
         Log.d("current zoom level", currentZoom.toString());
 
@@ -417,11 +518,14 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+        repositionLabels();
     }
 
     public void onZoomIn(View view) {
 
-
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.setTruncate(false);
+        });
         Constants.scale currentZoom = zoomLevel.getValue();
 
         if (currentZoom != null) {
@@ -447,7 +551,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-
+    repositionLabels();
     }
+
 
 }

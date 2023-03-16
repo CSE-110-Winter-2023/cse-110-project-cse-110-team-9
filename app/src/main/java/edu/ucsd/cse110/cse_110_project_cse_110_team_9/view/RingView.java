@@ -32,7 +32,8 @@ public class RingView extends View {
         mPaint.setStrokeWidth(strokeWidth);
 
         //mPaint.setColor(Color.RED);
-        mPaint.setARGB(40, 255, 0 ,0);
+        mPaint.setARGB(40, 0, 0 ,0);
+
         zoomLevel= Constants.scale.TEN;
     }
 
@@ -75,7 +76,7 @@ public class RingView extends View {
         View parent = (View)getParent();
         int width = parent.getWidth();
 
-        Log.d("RingView", Integer.toString(width));
+       // Log.d("RingView", Integer.toString(width));
         float radius = (float)width/2 - Constants.OUTER_RING_PADDING;
 
 
@@ -84,7 +85,7 @@ public class RingView extends View {
 
        // canvas.save();
         canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, radius, mPaint);
-        Log.d("Ring", Float.toString(radius));
+       // Log.d("Ring", Float.toString(radius));
 
         switch (zoomLevel) {
             case ONE:
@@ -93,7 +94,7 @@ public class RingView extends View {
             case TEN:
                 canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/2,
                         mPaint);
-                Log.d("Ring10", Float.toString(radius/2));
+              //  Log.d("Ring10", Float.toString(radius/2));
 
                 break;
             case FIVE_HUNDRED:
@@ -101,14 +102,18 @@ public class RingView extends View {
                         (float)2 * radius/3, mPaint);
                 canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 3,
                         mPaint);
-                Log.d("Ring500", Float.toString(radius/3));
+              //  Log.d("Ring500", Float.toString(radius/3));
 
                 break;
             case FIVE_HUNDRED_PLUS:
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 3,
+                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 4,
                         mPaint);
                 canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
-                        (float)2 * radius/ 3,
+                        (float) radius/ 2,
+                        mPaint);
+
+                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
+                        (float)3 * radius/ 4,
                         mPaint);
                 break;
         }
