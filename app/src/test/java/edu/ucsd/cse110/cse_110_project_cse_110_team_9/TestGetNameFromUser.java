@@ -33,11 +33,6 @@ public class TestGetNameFromUser
 
 
     @Test
-    public void testSomething()
-    {
-
-    }
-    @Test
     public void testGetName() {
         var scenario = ActivityScenario.launch(NameActivity.class);
         scenario.moveToState(Lifecycle.State.CREATED);
