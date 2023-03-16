@@ -319,13 +319,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * This method run's every 5 seconds
+     * This method run's every 3 seconds
      *
      * @param time
      */
-    private void onTimeChanged(Long time) {
+    void onTimeChanged(Long time) {
 
-        //THIS METHOD RUNS EVERY 30 SECONDS TO CHANGE IT CHANGE IT IN CONSTANTS CLASS
+        //THIS METHOD RUNS EVERY 3 SECONDS TO CHANGE IT CHANGE IT IN CONSTANTS CLASS
 
         var user = repo.getUser();
 
@@ -333,7 +333,26 @@ public class MainActivity extends AppCompatActivity {
             long timeNow = Instant.now().getEpochSecond();
             long diff = timeNow - user.getUpdated_at();
             Log.d("Seconds since last update", Long.toString(diff));
-            //UPDATE UI
+            ImageView gpsLive = findViewById(R.id.gpsLive);
+            ImageView gpsnotLive = findViewById(R.id.gpsnotLive);
+            TextView lastLive = (TextView) findViewById(R.id.lastLive);
+
+            if(diff > 4){
+                gpsLive.setVisibility(View.INVISIBLE);
+                gpsnotLive.setVisibility(View.VISIBLE);
+                double timeInMinutes =  Math.floor((double) diff/30) / 2;
+                Log.d("Minutes test", Double.toString(timeInMinutes));
+                lastLive.setVisibility(View.VISIBLE);
+                lastLive.setText(timeInMinutes + " minutes");
+            }
+            else{
+                gpsLive.setVisibility(View.VISIBLE);
+                gpsnotLive.setVisibility(View.INVISIBLE);
+                lastLive.setText("");
+                Log.d("failed", Long.toString(diff));
+                lastLive.setVisibility(View.INVISIBLE);
+            }
+
         }
 
     }

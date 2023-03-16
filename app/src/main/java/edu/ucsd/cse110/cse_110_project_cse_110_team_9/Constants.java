@@ -17,7 +17,7 @@ public class Constants {
 
     public static final int TIME_BETWEEN_USE_LOCATION_UPDATES = 3;
 
-    public static final int TIME_SERVICE_UPDATE_INTERVAL = 30;
+    public static final int TIME_SERVICE_UPDATE_INTERVAL = 3;
 
     public static final String FRIEND_DIRECTION_INDICATOR_EMOIJI =
             new String(Character.toChars(0x1F538));
