@@ -23,6 +23,4 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("edu.ucsd.cse110.cse_110_project_cse_110_team_9", appContext.getPackageName());
     }
-
-
 }

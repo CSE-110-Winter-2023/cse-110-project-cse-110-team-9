@@ -39,7 +39,6 @@ public class Friend {
     @NonNull
     public String updated_at;
 
-
     public Friend(@NonNull String public_code, @NonNull String label,
                   @NonNull double latitude, @NonNull double longitude,
                   String created_at, String updated_at) {

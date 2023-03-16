@@ -41,7 +41,7 @@ public class User {
     public String label; //THIS IS THE USERS NAME
 
 
-   @NonNull
+    @NonNull
     long updated_at;
 
 
@@ -65,9 +65,6 @@ public class User {
     public String get_public_code() {
         return public_code;
     }
-
-
-
 
     public void setPrivate_code(@NonNull String private_code) {
         this.private_code = private_code;
@@ -118,8 +115,5 @@ public class User {
                 .create();
 
         return gson.toJson(this);
-
     }
-
-
 }

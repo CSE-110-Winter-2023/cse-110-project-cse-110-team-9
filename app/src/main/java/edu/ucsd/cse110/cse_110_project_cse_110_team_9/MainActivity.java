@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         for (int i =0; i < friendItems.size() -1; i ++){
-            Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
+           // Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
 
 
             if (isViewOverlapping(friendItems.get(i).getCurrentTextView(),

@@ -13,7 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 
+import com.google.android.material.color.MaterialColors;
+
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.Constants;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.R;
 
 
 public class RingView extends View {
@@ -30,11 +33,7 @@ public class RingView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         int strokeWidth = 4;
         mPaint.setStrokeWidth(strokeWidth);
-
-        //mPaint.setColor(Color.RED);
-        mPaint.setARGB(40, 0, 0 ,0);
-
-        zoomLevel= Constants.scale.TEN;
+        mPaint.setARGB(100, 106,108,110);
     }
 
     public RingView(Context context) {

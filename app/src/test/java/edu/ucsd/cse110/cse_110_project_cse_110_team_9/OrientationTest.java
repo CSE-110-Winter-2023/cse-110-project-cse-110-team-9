@@ -57,7 +57,6 @@ public class OrientationTest {
                 fail("Test interrupted.");
             }
 
-
             //TextView textView = activity.findViewById(R.id.orientationText);
 
             //var expected = Utilities.formatOrientation(testValue);
