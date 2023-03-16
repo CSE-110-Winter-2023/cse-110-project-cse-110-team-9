@@ -398,7 +398,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        friendItems.forEach(friendViewItem -> {friendViewItem.setTruncate(false);});
+      //  friendItems.forEach(friendViewItem -> {friendViewItem.setTruncate(false);});
+
+
+
             for (int i = 0; i < friendItems.size(); i++) {
                 for (int j =0; j < friendItems.size(); j++) {
 
@@ -464,6 +467,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onZoomOut(View view) {
 
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.setTruncate(false);
+        });
         Constants.scale currentZoom = zoomLevel.getValue();
         Log.d("current zoom level", currentZoom.toString());
 
@@ -498,6 +504,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onZoomIn(View view) {
 
+        friendItems.forEach(friendViewItem -> {
+            friendViewItem.setTruncate(false);
+        });
         Constants.scale currentZoom = zoomLevel.getValue();
 
         if (currentZoom != null) {
