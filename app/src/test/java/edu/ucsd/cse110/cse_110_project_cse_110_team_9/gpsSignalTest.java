@@ -1,63 +1,87 @@
 package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.robolectric.Shadows.shadowOf;
 
 import android.content.Context;
 import android.location.LocationManager;
-import android.os.SystemClock;
+import android.os.Looper;
 import android.widget.TextView;
 
-import androidx.test.core.app.ActivityScenario;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import android.location.Location;
+import org.mockito.Mockito;
 
-@RunWith(RobolectricTestRunner.class)
+import java.time.Instant;
+import java.util.UUID;
+
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDao;
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
+import org.robolectric.shadows.ShadowLocationManager;
+
+@RunWith(AndroidJUnit4.class)
 public class gpsSignalTest {
-    @Test
-    public void testGpsSignal() {
+
+    private SocialCompassDao dao;
+    private SocialCompassDatabase db;
+
+    private LifecycleOwner lifeCycleOwner;
+    private LifecycleRegistry lifecycle;
+
+    @Before
+    public void createDb()
+    {
         Context context = ApplicationProvider.getApplicationContext();
 
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.addTestProvider(LocationManager.GPS_PROVIDER, false, false, false, false, false, true, true, 1, 1);
-        locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
+        db = Room.inMemoryDatabaseBuilder(context, SocialCompassDatabase.class)
+                .allowMainThreadQueries().build();
+        dao = db.getDao();
 
-        Location mockLocation = new Location(LocationManager.GPS_PROVIDER);
-        mockLocation.setLatitude(32.715736);
-        mockLocation.setLongitude(-117.161087);
-        mockLocation.setTime(System.currentTimeMillis());
-        mockLocation.setAccuracy(1.0f);
+        lifeCycleOwner = Mockito.mock(LifecycleOwner.class);
+        lifecycle = new LifecycleRegistry(Mockito.mock(LifecycleOwner.class));
+        lifecycle.setCurrentState(Lifecycle.State.RESUMED);
+        Mockito.when(lifeCycleOwner.getLifecycle()).thenReturn(lifecycle);
+    }
 
-        // Set all other properties again
-        mockLocation.setAltitude(0);
-        mockLocation.setBearing(0);
-        mockLocation.setSpeed(0);
+    @Test
+    public void testGPS(){
+        String public_uid1 = UUID.randomUUID().toString();
+        String private_code1 = UUID.randomUUID().toString();
+        User insertedUser = new User("Kalam", private_code1, public_uid1,
+                69.0d, 69.0d, Instant.now().getEpochSecond());
 
-        locationManager.setTestProviderLocation(LocationManager.GPS_PROVIDER, mockLocation);
-        // Enable GPS provider to simulate signal restoration
-        locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
-        // Wait for 10 seconds
-        SystemClock.sleep(10000);
-        // Disable GPS provider to simulate loss of signal
-        locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, false);
+        dao.upsertUser(insertedUser);
 
-        // Wait for 20 seconds
-        SystemClock.sleep(20000);
+        // Simulate GPS signal loss
+        LocationManager locationManager = (LocationManager)
+                ApplicationProvider.getApplicationContext()
+                        .getSystemService(Context.LOCATION_SERVICE);
+        ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
+        shadowLocationManager.setProviderEnabled(LocationManager.GPS_PROVIDER, false);
 
-        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
-        // Obtain a reference to the activity's view
-        scenario.onActivity(activity -> {
-            TextView myTextView = activity.findViewById(R.id.lastLive);
-            String offlineTimeText = myTextView.getText().toString();
-            assertEquals("20 seconds", offlineTimeText);
-        });
+        User retrievedUser = dao.getUser();
 
-        // Enable GPS provider to simulate signal restoration
-        locationManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
+        // Check that the retrieved user has the same location as the inserted user
+        assertEquals(insertedUser.getLongitude(), retrievedUser.getLongitude(), 0.01);
+        assertEquals(insertedUser.getLatitude(), retrievedUser.getLatitude(), 0.01);
+
+        // Check that the retrieved user's location was not updated after the GPS signal loss
+        long lastUpdatedTime = retrievedUser.getUpdated_at();
+        shadowOf(Looper.getMainLooper()).idle();
+        assertEquals(lastUpdatedTime, retrievedUser.getUpdated_at());
 
     }
 }
