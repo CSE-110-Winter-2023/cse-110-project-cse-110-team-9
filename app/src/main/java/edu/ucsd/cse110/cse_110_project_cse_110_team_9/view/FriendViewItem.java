@@ -40,10 +40,13 @@ public class FriendViewItem extends LinearLayout {
     private boolean textTop = true;
 
 
+    private int currentRadius=  0;
     private OrientationService orientationService;
     private LiveData<Triple<Double, Double, Long>> locationData;
 
     private Constants.scale zoomLevel;
+
+    private int currentAngle = 0;
 
 
     //used to store the location of the user when we get an update from the the locationService.
@@ -178,6 +181,7 @@ public class FriendViewItem extends LinearLayout {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) this.getLayoutParams();
         layoutParams.circleAngle = angle;
         this.setLayoutParams(layoutParams);
+        this.currentAngle = angle;
 
     }
 
@@ -188,6 +192,7 @@ public class FriendViewItem extends LinearLayout {
      */
     private void setRadius(int radius) {
 
+        this.currentRadius = radius;
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) this.getLayoutParams();
         layoutParams.circleRadius = radius;
         this.setLayoutParams(layoutParams);
@@ -398,4 +403,13 @@ public class FriendViewItem extends LinearLayout {
         super.onDraw(canvas);
 
     }
+
+    public int getRadius(){
+        return currentRadius;
+    }
+
+    public int getAngle(){
+        return currentAngle;
+    }
+
 }

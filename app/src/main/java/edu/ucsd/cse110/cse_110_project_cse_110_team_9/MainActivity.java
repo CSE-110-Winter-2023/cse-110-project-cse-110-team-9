@@ -20,6 +20,8 @@ import android.widget.TextView;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -367,18 +369,22 @@ public class MainActivity extends AppCompatActivity {
     private void repositionLabels()
     {
 
-        var arr = new Boolean[friendItems.size()];
-        Arrays.fill(arr, Boolean.FALSE);
-
-        for (int i = 0; i < friendItems.size(); i++)
-        {
-            for (int j = i+1; j < friendItems.size(); j++)
-            {
-                if (arr[j] == false && isViewOverlapping(friendItems.get(i), friendItems.get(j))){
-                    arr[j] = true;
-                    friendItems.get(j).flipTextSide();
-                }
+        friendItems.sort(new Comparator<FriendViewItem>() {
+            @Override
+            public int compare(FriendViewItem friendViewItem, FriendViewItem t1) {
+                return Integer.compare(friendViewItem.getRadius(), t1.getRadius());
             }
+        });
+
+        for (int i =0; i < friendItems.size() -1; i ++){
+            Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
+
+
+            if (isViewOverlapping(friendItems.get(i), friendItems.get(i+1))){
+                friendItems.get(i).setTextSide(true);
+                friendItems.get(i+1).setTextSide(false);
+            }
+
         }
 
     }
@@ -403,6 +409,10 @@ public class MainActivity extends AppCompatActivity {
         int[] firstPosition = new int[2];
         int[] secondPosition = new int[2];
 
+
+        if (firstView.getVisibility() == View.INVISIBLE || secondView.getVisibility() == View.INVISIBLE){
+            return false;
+        }
         firstView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         firstView.getLocationOnScreen(firstPosition);
         secondView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -412,6 +422,23 @@ public class MainActivity extends AppCompatActivity {
                 && firstPosition[0] + firstView.getMeasuredWidth() > secondPosition[0]
                 && firstPosition[1] < secondPosition[1] + secondView.getMeasuredHeight()
                 && firstPosition[1] + firstView.getMeasuredHeight() > secondPosition[1];
+    }
+
+    private int numCollision(FriendViewItem view)
+    {
+        int count = 0;
+
+        for (int i = 0; i < friendItems.size(); i++)
+        {
+            var friend = friendItems.get(i);
+            if  (view != friend)
+            {
+                if (isViewOverlapping(view, friend)){
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
 
