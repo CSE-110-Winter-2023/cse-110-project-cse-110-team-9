@@ -473,6 +473,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+        repositionLabels();
     }
 
     public void onZoomIn(View view) {
@@ -502,7 +503,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-
+    repositionLabels();
     }
+
 
 }
