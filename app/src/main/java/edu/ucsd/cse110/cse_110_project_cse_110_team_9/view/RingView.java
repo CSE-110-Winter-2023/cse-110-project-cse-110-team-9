@@ -32,7 +32,8 @@ public class RingView extends View {
         mPaint.setStrokeWidth(strokeWidth);
 
         //mPaint.setColor(Color.RED);
-        mPaint.setARGB(40, 255, 0 ,0);
+        mPaint.setARGB(40, 0, 0 ,0);
+
         zoomLevel= Constants.scale.TEN;
     }
 
@@ -105,10 +106,14 @@ public class RingView extends View {
 
                 break;
             case FIVE_HUNDRED_PLUS:
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 3,
+                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 4,
                         mPaint);
                 canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
-                        (float)2 * radius/ 3,
+                        (float) radius/ 2,
+                        mPaint);
+
+                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
+                        (float)3 * radius/ 4,
                         mPaint);
                 break;
         }

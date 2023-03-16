@@ -1,12 +1,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     app:layout_constraintCircle="@+id/imageView"
     app:layout_constraintCircleAngle="210"
     app:layout_constraintCircleRadius="170dp">
+
 
     <TextView
         android:id="@+id/friendName"
@@ -15,7 +16,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:maxLines="1"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,12 +24,25 @@
     <TextView
         android:id="@+id/friendIcon"
         android:layout_width="wrap_content"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:layout_weight="1"
         android:gravity="center"
         android:maxLines="1"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/friendName"/>
+        app:layout_constraintTop_toBottomOf="@id/friendName" />
+
+    <TextView
+        android:id="@+id/friendNameBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/friendIcon" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
