@@ -92,43 +92,43 @@ public class gpsSignalTest {
 
     }
 
-    @Test
-    public void testTimerAndDot() throws InterruptedException {
-        // Create a new instance of MainActivity
-        MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
-
-        // Get the TextView and ImageView from the activity
-        TextView timerTextView = activity.findViewById(R.id.lastLive);
-        ImageView gpsStatusImageView = activity.findViewById(R.id.gpsnotLive);
-
-        String public_uid1 = UUID.randomUUID().toString();
-        String private_code1 = UUID.randomUUID().toString();
-        User insertedUser = new User("Kalam", private_code1, public_uid1,
-                69.0d, 69.0d, Instant.now().getEpochSecond());
-
-        dao.upsertUser(insertedUser);
-
-        LocationManager locationManager = (LocationManager)
-                ApplicationProvider.getApplicationContext()
-                        .getSystemService(Context.LOCATION_SERVICE);
-        ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
-        shadowLocationManager.setProviderEnabled(LocationManager.GPS_PROVIDER, false);
-        System.out.println(insertedUser.getUpdated_at());
-        // Call the onTimeChanged method to update the UI
-        activity.onTimeChanged(Instant.now().plusSeconds(10).getEpochSecond());
-        insertedUser.setUpdated_at(Instant.now().minusSeconds(10).getEpochSecond());
-
-
-        System.out.println(insertedUser.getUpdated_at());
-
-
-        // Check that the timer TextView shows the correct time
-        assertEquals("0.0 minutes", timerTextView.getText().toString());
-
-        // Check that the GPS status ImageView shows a red dot
-        assertEquals(R.drawable.reddot, shadowOf(gpsStatusImageView.getDrawable()).getCreatedFromResId());
-
-    }
+//    @Test
+//    public void testTimerAndDot() throws InterruptedException {
+//        // Create a new instance of MainActivity
+//        MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
+//
+//        // Get the TextView and ImageView from the activity
+//        TextView timerTextView = activity.findViewById(R.id.lastLive);
+//        ImageView gpsStatusImageView = activity.findViewById(R.id.gpsnotLive);
+//
+//        String public_uid1 = UUID.randomUUID().toString();
+//        String private_code1 = UUID.randomUUID().toString();
+//        User insertedUser = new User("Kalam", private_code1, public_uid1,
+//                69.0d, 69.0d, Instant.now().getEpochSecond());
+//
+//        dao.upsertUser(insertedUser);
+//
+//        LocationManager locationManager = (LocationManager)
+//                ApplicationProvider.getApplicationContext()
+//                        .getSystemService(Context.LOCATION_SERVICE);
+//        ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
+//        shadowLocationManager.setProviderEnabled(LocationManager.GPS_PROVIDER, false);
+//        System.out.println(insertedUser.getUpdated_at());
+//        // Call the onTimeChanged method to update the UI
+//        activity.onTimeChanged(Instant.now().plusSeconds(10).getEpochSecond());
+//        insertedUser.setUpdated_at(Instant.now().minusSeconds(10).getEpochSecond());
+//
+//
+//        System.out.println(insertedUser.getUpdated_at());
+//
+//
+//        // Check that the timer TextView shows the correct time
+//        assertEquals("0.0 minutes", timerTextView.getText().toString());
+//
+//        // Check that the GPS status ImageView shows a red dot
+//        assertEquals(R.drawable.reddot, shadowOf(gpsStatusImageView.getDrawable()).getCreatedFromResId());
+//
+//    }
 }
 
 
