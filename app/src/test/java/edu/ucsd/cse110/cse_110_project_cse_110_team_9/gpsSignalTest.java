@@ -2,14 +2,12 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 import static org.robolectric.Shadows.shadowOf;
 
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Looper;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
@@ -27,9 +25,12 @@ import org.mockito.Mockito;
 import java.time.Instant;
 import java.util.UUID;
 
+import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassRepository;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.User;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDao;
 import edu.ucsd.cse110.cse_110_project_cse_110_team_9.database.SocialCompassDatabase;
+
+import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowLocationManager;
 
 @RunWith(AndroidJUnit4.class)
@@ -83,6 +84,32 @@ public class gpsSignalTest {
         shadowOf(Looper.getMainLooper()).idle();
         assertEquals(lastUpdatedTime, retrievedUser.getUpdated_at());
 
+    }
+
+    @Test
+    public void testTimerAndDot(){
+        // Create a new instance of MainActivity
+        MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
+
+        // Get the TextView and ImageView from the activity
+        TextView timerTextView = activity.findViewById(R.id.lastLive);
+        ImageView gpsStatusImageView = activity.findViewById(R.id.gpsnotLive);
+
+        String public_uid1 = UUID.randomUUID().toString();
+        String private_code1 = UUID.randomUUID().toString();
+        User insertedUser = new User("Kalam", private_code1, public_uid1,
+                69.0d, 69.0d, Instant.now().getEpochSecond() - 5);
+
+        dao.upsertUser(insertedUser);
+
+        // Call the onTimeChanged method to update the UI
+        activity.onTimeChanged(Instant.now().getEpochSecond());
+
+        // Check that the timer TextView shows the correct time
+        assertEquals("0.0 minutes", timerTextView.getText().toString());
+
+        // Check that the GPS status ImageView shows a red dot
+        assertEquals(R.drawable.reddot, shadowOf(gpsStatusImageView.getDrawable()).getCreatedFromResId());
     }
 }
 

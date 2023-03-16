@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param time
      */
-    private void onTimeChanged(Long time) {
+    void onTimeChanged(Long time) {
 
         //THIS METHOD RUNS EVERY 3 SECONDS TO CHANGE IT CHANGE IT IN CONSTANTS CLASS
 
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView gpsnotLive = findViewById(R.id.gpsnotLive);
             TextView lastLive = (TextView) findViewById(R.id.lastLive);
 
-            if(diff > 3){
+            if(diff > 4){
                 gpsLive.setVisibility(View.INVISIBLE);
                 gpsnotLive.setVisibility(View.VISIBLE);
                 double timeInMinutes =  Math.floor((double) diff/30) / 2;
@@ -335,6 +335,7 @@ public class MainActivity extends AppCompatActivity {
                 gpsLive.setVisibility(View.VISIBLE);
                 gpsnotLive.setVisibility(View.INVISIBLE);
                 lastLive.setText("");
+                Log.d("failed", Long.toString(diff));
                 lastLive.setVisibility(View.INVISIBLE);
             }
 
