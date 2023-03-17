@@ -25,6 +25,7 @@ public class ringZoomTest {
         scenario.moveToState(Lifecycle.State.STARTED);
         scenario.onActivity(activity -> {
             RingView ringView = activity.findViewById(R.id.ringView);
+
             // Test zoom out button
             Constants.scale initialZoomLevel = ringView.getZoomLevel();
             ImageView zoomOutButton = activity.findViewById(R.id.zoom_out);
