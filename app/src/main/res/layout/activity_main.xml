@@ -167,6 +167,53 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.666" />
 
+        <Switch
+            android:id="@+id/devSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="84dp"
+            android:textSize="10sp"
+            android:textColor="@color/teal_200"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Dev options"
+            app:layout_constraintBottom_toTopOf="@id/zoom_in"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <EditText
+            android:id="@+id/serverUrlEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:ems="10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/devSwitch"
+            android:hint="Server URL"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="577dp" />
+
+        <Button
+            android:id="@+id/saveServerUrlBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GO"
+            android:textSize="10sp"
+            android:visibility="invisible"
+            android:onClick="onChangeServerUrlClicked"
+            app:layout_constraintBottom_toTopOf="@id/serverUrlEntry"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/addAllPublicFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add all public locations"
+            app:layout_constraintStart_toStartOf="@id/saveServerUrlBtn"
+            app:layout_constraintBottom_toTopOf="@id/saveServerUrlBtn"
+            android:visibility="gone"
+            android:onClick="onAddAllPublicLocations"
+            tools:layout_editor_absoluteX="144dp"
+            tools:layout_editor_absoluteY="667dp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

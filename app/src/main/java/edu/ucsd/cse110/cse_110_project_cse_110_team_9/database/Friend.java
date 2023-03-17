@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 
 @Entity(tableName = "friends")
 public class Friend {
@@ -51,9 +53,13 @@ public class Friend {
         this.label = label;
     }
 
+
+
     public static Friend fromJSON(String json) {
         return new Gson().fromJson(json, Friend.class);
     }
+
+
 
     public String toJSON() {
 

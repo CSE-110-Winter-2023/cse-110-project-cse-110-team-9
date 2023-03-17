@@ -235,9 +235,11 @@ public class FriendViewItem extends LinearLayout {
         distance = Utilities.findDistanceinMilesBetweenTwoPoints(userLocation, friendLocation);
 
         //IDK THIS IS JANK BUT IT WORKS
-
+        int width = 10;
         View parent = (View) getParent();
-        int width = parent.getWidth();
+        if (parent != null){
+         width = parent.getWidth();
+        }
         //Log.d("FriendView", Integer.toString(width));
 
 
@@ -367,12 +369,18 @@ public class FriendViewItem extends LinearLayout {
      */
     public void onFriendDataChange(Friend friend) {
 
-        setNameLabel(friend.label);
-        this.friend = friend;
-        friendLocation.setLatitude(friend.latitude);
-        friendLocation.setLongitude(friend.longitude);
-        reCalcualteAngle();
-        reCalculateRadius();
+
+        if (friend != null) {
+            setNameLabel(friend.label);
+            this.friend = friend;
+            friendLocation.setLatitude(friend.latitude);
+            friendLocation.setLongitude(friend.longitude);
+            reCalcualteAngle();
+            reCalculateRadius();
+        }
+        else{
+            Log.e("Friend null", "NULL");
+        }
     }
 
     public void setTextSide(boolean textTop) {

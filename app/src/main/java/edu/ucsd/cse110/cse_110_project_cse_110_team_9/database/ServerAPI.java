@@ -5,9 +5,13 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
@@ -26,7 +30,12 @@ public class ServerAPI {
     private HashMap<String, ScheduledFuture<?>> friendsScheduledFutureHashMap;
 
     public ServerAPI() {
-        this.client = new OkHttpClient();
+       this.client = new OkHttpClient();
+//        this.client = new OkHttpClient.Builder()
+//                .connectTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(10, TimeUnit.SECONDS)
+//                .readTimeout(30, TimeUnit.SECONDS)
+//                .build();
 
         friendsScheduledFutureHashMap = new HashMap<>();
         this.threadPool = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(4);
@@ -104,6 +113,40 @@ public class ServerAPI {
             return null;
         }
     }
+
+    @WorkerThread
+    public Friend[] getallPubliclyListedLocations() {
+        var request = new Request.Builder()
+                .url(Constants.serverEndpoint + "/locations")
+                .method("GET", null)
+                .build();
+
+        System.out.println(request.toString());
+
+        try (var response = client.newCall(request).execute()) {
+
+            assert response.body() != null;
+            var body = response.body().string();
+
+            if (body.equals(Constants.LocationNotFoundJsonResponse)) {
+                return null;
+            }
+
+            //System.out.println(body);
+           return new Gson().fromJson(body, Friend[].class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @AnyThread
+    public Future<Friend[]> getallPublicListedLocationsAsync( ) {
+        var executor = Executors.newSingleThreadExecutor();
+        var future = executor.submit(() -> getallPubliclyListedLocations());
+        return future;
+    }
+
 
     @AnyThread
     public Future<Friend> getFriendAsync(String public_uid) {

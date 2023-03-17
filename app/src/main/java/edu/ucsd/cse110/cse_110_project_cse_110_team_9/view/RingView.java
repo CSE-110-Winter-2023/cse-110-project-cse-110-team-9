@@ -33,7 +33,7 @@ public class RingView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         int strokeWidth = 4;
         mPaint.setStrokeWidth(strokeWidth);
-        mPaint.setARGB(100, 106,108,110);
+        mPaint.setARGB(100, 106, 108, 110);
     }
 
     public RingView(Context context) {
@@ -51,14 +51,12 @@ public class RingView extends View {
         init(context);
     }
 
-    public void setZoomObserver(LiveData<Constants.scale> zoomLevel, LifecycleOwner owner)
-    {
+    public void setZoomObserver(LiveData<Constants.scale> zoomLevel, LifecycleOwner owner) {
         zoomLevel.observe(owner, this::onScaleChanged);
     }
 
 
-    private void onScaleChanged(Constants.scale zoomLevel)
-    {
+    private void onScaleChanged(Constants.scale zoomLevel) {
         this.zoomLevel = zoomLevel;
         invalidate();
         requestLayout();
@@ -68,55 +66,58 @@ public class RingView extends View {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
+
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
 
-        View parent = (View)getParent();
+        View parent = (View) getParent();
         int width = parent.getWidth();
 
-       // Log.d("RingView", Integer.toString(width));
-        float radius = (float)width/2 - Constants.OUTER_RING_PADDING;
-
+        // Log.d("RingView", Integer.toString(width));
+        float radius = (float) width / 2 - Constants.OUTER_RING_PADDING;
 
 
         //canvas.drawCircle((float)(0.5 * width),(float)(0.5*width),radius, mPaint);
 
-       // canvas.save();
-        canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, radius, mPaint);
-       // Log.d("Ring", Float.toString(radius));
+        // canvas.save();
+        canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, radius, mPaint);
+        // Log.d("Ring", Float.toString(radius));
 
-        switch (zoomLevel) {
-            case ONE:
-                //
-                break;
-            case TEN:
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/2,
-                        mPaint);
-              //  Log.d("Ring10", Float.toString(radius/2));
+        if (!isInEditMode()) {
+            switch (zoomLevel) {
+                case ONE:
+                    //
+                    break;
+                case TEN:
+                    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, (float) radius / 2,
+                            mPaint);
+                    //  Log.d("Ring10", Float.toString(radius/2));
 
-                break;
-            case FIVE_HUNDRED:
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
-                        (float)2 * radius/3, mPaint);
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 3,
-                        mPaint);
-              //  Log.d("Ring500", Float.toString(radius/3));
+                    break;
+                case FIVE_HUNDRED:
+                    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2,
+                            (float) 2 * radius / 3, mPaint);
+                    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, (float) radius / 3,
+                            mPaint);
+                    //  Log.d("Ring500", Float.toString(radius/3));
 
-                break;
-            case FIVE_HUNDRED_PLUS:
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2, (float)radius/ 4,
-                        mPaint);
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
-                        (float) radius/ 2,
-                        mPaint);
+                    break;
+                case FIVE_HUNDRED_PLUS:
+                    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2, (float) radius / 4,
+                            mPaint);
+                    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2,
+                            (float) radius / 2,
+                            mPaint);
 
-                canvas.drawCircle((float)getWidth() / 2, (float)getHeight() / 2,
-                        (float)3 * radius/ 4,
-                        mPaint);
-                break;
+                    canvas.drawCircle((float) getWidth() / 2, (float) getHeight() / 2,
+                            (float) 3 * radius / 4,
+                            mPaint);
+                    break;
+            }
         }
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         mWidth = View.MeasureSpec.getSize(widthMeasureSpec);

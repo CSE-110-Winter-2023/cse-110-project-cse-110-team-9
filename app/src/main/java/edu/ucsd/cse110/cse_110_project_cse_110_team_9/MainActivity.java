@@ -9,19 +9,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -207,6 +208,40 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        Switch devSwitch = (Switch) findViewById(R.id.devSwitch);
+        devSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                EditText urlView = (EditText) findViewById(R.id.serverUrlEntry);
+                Button urlEnterbtn = (Button) findViewById(R.id.saveServerUrlBtn);
+                Button addallFriends = (Button) findViewById(R.id.addAllPublicFriends);
+
+
+                urlView.setText(Constants.serverEndpoint);
+
+                if (isChecked) {
+                    urlView.setVisibility(View.VISIBLE);
+                    urlEnterbtn.setVisibility(View.VISIBLE);
+                    addallFriends.setVisibility(View.VISIBLE);
+                }
+                else {
+                    urlView.setVisibility(View.INVISIBLE);
+                    urlEnterbtn.setVisibility(View.INVISIBLE);
+                    addallFriends.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
+
+
+        //setup dev go button
+
+
+
+
+
+
     }
 
 
@@ -246,6 +281,10 @@ public class MainActivity extends AppCompatActivity {
 
         compassImageView.setRotation(rotation);
        // truncateLabels();
+
+
+
+
     }
 
     private void onLocationChanged(Triple<Double, Double, Long> locationUpdate) {
@@ -481,9 +520,6 @@ public class MainActivity extends AppCompatActivity {
                 && firstPosition[1] + firstView.getMeasuredHeight() > secondPosition[1];
     }
 
-
-
-
     public void onZoomOut(View view) {
 
         friendItems.forEach(friendViewItem -> {
@@ -555,4 +591,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void onChangeServerUrlClicked(View view) {
+        EditText urlView = (EditText) findViewById(R.id.serverUrlEntry);
+        String url = urlView.getText().toString();
+        Utilities.showAlert(this, "DELETING ALL FRIENDS AND CHANGING SERVER URL to: " + url);
+
+        repo.nukeFriends();
+
+        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraintLayout);
+        friendItems.forEach(friendViewItem -> {
+            layout.removeView(friendViewItem);
+        });
+        repo.shutdownPool();
+        Constants.serverEndpoint = url;
+        repo.restartThreadPool();
+
+
+        //CLEAR FRIENDS
+        // DATABASE
+
+
+    }
+    public void onAddAllPublicLocations(View view) {
+        var friends = repo.getAllPubliclyListedFriends();
+
+        if (friends != null) {
+            for (int i = 0; i < friends.length; i++) {
+                addFriend(friends[i].public_code);
+                repo.upsertLocalFriend(friends[i].public_code);
+            }
+        }
+    }
 }
