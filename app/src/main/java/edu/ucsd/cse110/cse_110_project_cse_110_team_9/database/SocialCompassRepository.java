@@ -51,10 +51,33 @@ public class SocialCompassRepository {
         ServerAPI.provide().shutDownPool();
     }
 
+    public void restartThreadPool()
+    {
+        ServerAPI.provide().restartThreadPool();
+    }
+
     public boolean friendExistsLocal(String public_uid) {
         return dao.friendExists(public_uid);
     }
 
+
+    public Friend[] getAllPubliclyListedFriends()
+    {
+
+        var fur = ServerAPI.provide().getallPublicListedLocationsAsync();
+
+        try {
+            var friends = fur.get(1, TimeUnit.SECONDS);
+            return  friends;
+        } catch (ExecutionException e) {
+            //
+        } catch (InterruptedException e) {
+            //throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            //throw new RuntimeException(e);
+        }
+        return null;
+    }
 
 //    public Friend getFriendFromRemote(String public_uid)
 //    {
@@ -109,6 +132,17 @@ public class SocialCompassRepository {
 
     public void upsertLocalUser(User user) {
         dao.upsertUser(user);
+    }
+
+
+    public void nukeFriends()
+    {
+        dao.nukeFriends();
+    }
+
+    public void nukeUser()
+    {
+        dao.nukeUser();
     }
 
 

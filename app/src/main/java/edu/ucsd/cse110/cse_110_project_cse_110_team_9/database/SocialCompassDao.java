@@ -31,6 +31,9 @@ public abstract class SocialCompassDao {
     @Delete
     public abstract int deleteUser(User user);
 
+    @Query("DELETE FROM user")
+    public abstract void nukeUser();
+
 
     //[---------------METHODS FOR FRIEND TABLE IN DATABASE ------------]
 
@@ -53,6 +56,11 @@ public abstract class SocialCompassDao {
      */
     @Query("SELECT EXISTS(SELECT 1 FROM friends WHERE public_code = :public_code)")
     public abstract boolean friendExists(String public_code);
+
+
+    @Query("DELETE FROM friends")
+    public abstract void nukeFriends();
+
 
 
     //get a single friend, might not be needed, but useful for testing

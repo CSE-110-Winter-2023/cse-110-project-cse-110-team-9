@@ -62,7 +62,7 @@ public class TestUtils {
         var result = Utilities.findDistanceinKMBetweenTwoPoints(
                 new Location(latA, longA), new Location(latB,longB));
 
-        System.out.println("Disntace: " + result);
+        System.out.println("Distance: " + result);
         assertEquals(expected, result, 0.2);
 
 

@@ -25,6 +25,9 @@ public class Constants {
         ONE, TEN, FIVE_HUNDRED, FIVE_HUNDRED_PLUS
     }
 
+
+    public static String serverEndpoint = "https://socialcompass.goto.ucsd.edu";
+
     public static String LocationNotFoundJsonResponse;
 
     static {
