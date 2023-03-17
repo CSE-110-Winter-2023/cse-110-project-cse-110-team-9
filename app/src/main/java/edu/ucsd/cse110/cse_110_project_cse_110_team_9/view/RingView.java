@@ -55,6 +55,9 @@ public class RingView extends View {
         zoomLevel.observe(owner, this::onScaleChanged);
     }
 
+    public Constants.scale getZoomLevel() {
+        return zoomLevel;
+    }
 
     private void onScaleChanged(Constants.scale zoomLevel) {
         this.zoomLevel = zoomLevel;
