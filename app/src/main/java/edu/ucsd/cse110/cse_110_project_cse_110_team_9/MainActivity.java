@@ -2,12 +2,14 @@ package edu.ucsd.cse110.cse_110_project_cse_110_team_9;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -136,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                             String public_code = data.getStringExtra("public_code");
 
 
-                           // Log.d("got public uid from activity", public_code);
+                            // Log.d("got public uid from activity", public_code);
                             //check if friend exisits on remote
 
                             if (public_code != null) {
@@ -196,16 +199,12 @@ public class MainActivity extends AppCompatActivity {
 
         //SET LOCATION TO LAST KNOW LOCATION
 
-        if (userCache !=null)
-        {
-            locationService.forceUpdate(new Triple<>(userCache.getLatitude() ,
+        if (userCache != null) {
+            locationService.forceUpdate(new Triple<>(userCache.getLatitude(),
                     userCache.getLongitude(), userCache.getUpdated_at()));
-        }else
-        {
+        } else {
             Log.e("Main OnCreate", "User cache is null!!!");
         }
-
-
 
 
         Switch devSwitch = (Switch) findViewById(R.id.devSwitch);
@@ -224,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
                     urlView.setVisibility(View.VISIBLE);
                     urlEnterbtn.setVisibility(View.VISIBLE);
                     addallFriends.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     urlView.setVisibility(View.INVISIBLE);
                     urlEnterbtn.setVisibility(View.INVISIBLE);
                     addallFriends.setVisibility(View.INVISIBLE);
@@ -236,10 +234,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         //setup dev go button
-
-
-
-
 
 
     }
@@ -262,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void OnOrientationChanged(Float azimuth) {
         CompassView compass = findViewById(R.id.compass);
-   //     SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
+        //     SharedPreferences preferences = getSharedPreferences("my_prefs", MODE_PRIVATE);
 
         // float degree = preferences.getFloat("degree", 0);
 //        float lat_n = preferences.getFloat("lat", 0);
@@ -280,9 +274,7 @@ public class MainActivity extends AppCompatActivity {
         compassImageView.setLayoutParams(layoutParams);
 
         compassImageView.setRotation(rotation);
-       // truncateLabels();
-
-
+        // truncateLabels();
 
 
     }
@@ -294,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
 //            friendViewItem.flip
 //            TextSide();
 //        });
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             repositionLabels();
             truncateLabels();
         });
@@ -376,15 +368,14 @@ public class MainActivity extends AppCompatActivity {
             ImageView gpsnotLive = findViewById(R.id.gpsnotLive);
             TextView lastLive = (TextView) findViewById(R.id.lastLive);
 
-            if(diff > 4){
+            if (diff > 4) {
                 gpsLive.setVisibility(View.INVISIBLE);
                 gpsnotLive.setVisibility(View.VISIBLE);
-                double timeInMinutes =  Math.floor((double) diff/30) / 2;
+                double timeInMinutes = Math.floor((double) diff / 30) / 2;
                 Log.d("Minutes test", Double.toString(timeInMinutes));
                 lastLive.setVisibility(View.VISIBLE);
                 lastLive.setText(timeInMinutes + " minutes");
-            }
-            else{
+            } else {
                 gpsLive.setVisibility(View.VISIBLE);
                 gpsnotLive.setVisibility(View.INVISIBLE);
                 lastLive.setText("");
@@ -423,11 +414,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     //TODO : optimzie
-    private void repositionLabels()
-    {
+    private void repositionLabels() {
 
         friendItems.sort(new Comparator<FriendViewItem>() {
             @Override
@@ -436,14 +424,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        for (int i =0; i < friendItems.size() -1; i ++){
-           // Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
+        for (int i = 0; i < friendItems.size() - 1; i++) {
+            // Log.d("radi", Integer.toString(friendItems.get(i).getRadius()));
 
 
             if (isViewOverlapping(friendItems.get(i).getCurrentTextView(),
-                    friendItems.get(i+1).getCurrentTextView())){
+                    friendItems.get(i + 1).getCurrentTextView())) {
                 friendItems.get(i).setTextSide(true);
-                friendItems.get(i+1).setTextSide(false);
+                friendItems.get(i + 1).setTextSide(false);
             }
 
         }
@@ -451,34 +439,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void truncateLabels()
-    {
+    private void truncateLabels() {
 
 
-
-      //  friendItems.forEach(friendViewItem -> {friendViewItem.setTruncate(false);});
-
+        //  friendItems.forEach(friendViewItem -> {friendViewItem.setTruncate(false);});
 
 
-            for (int i = 0; i < friendItems.size(); i++) {
-                for (int j =0; j < friendItems.size(); j++) {
+        for (int i = 0; i < friendItems.size(); i++) {
+            for (int j = 0; j < friendItems.size(); j++) {
 
-                    if (i!=j) {
-                        var a = friendItems.get(i);
-                        var b = friendItems.get(j);
-                        // a.setTruncate(true);
-                        //Log.d("truncae","truncate");
-                        if (isViewOverlapping(a.getCurrentTextView(), b.getCurrentTextView())) {
-                            if (a.getTruncate()) {
-                                b.setTruncate(true);
-                                //  Log.d("Truncate", b.setNameLabel();/
-                            } else {
-                                a.setTruncate(true);
-                            }
+                if (i != j) {
+                    var a = friendItems.get(i);
+                    var b = friendItems.get(j);
+                    // a.setTruncate(true);
+                    //Log.d("truncae","truncate");
+                    if (isViewOverlapping(a.getCurrentTextView(), b.getCurrentTextView())) {
+                        if (a.getTruncate()) {
+                            b.setTruncate(true);
+                            //  Log.d("Truncate", b.setNameLabel();/
+                        } else {
+                            a.setTruncate(true);
                         }
                     }
                 }
             }
+        }
 
         friendItems.forEach(friendViewItem -> {
             friendViewItem.updateTextView();
@@ -506,7 +491,7 @@ public class MainActivity extends AppCompatActivity {
         int[] secondPosition = new int[2];
 
 
-        if (firstView.getVisibility() == View.INVISIBLE || secondView.getVisibility() == View.INVISIBLE){
+        if (firstView.getVisibility() == View.INVISIBLE || secondView.getVisibility() == View.INVISIBLE) {
             return false;
         }
         firstView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -587,7 +572,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
-    repositionLabels();
+        repositionLabels();
     }
 
 
@@ -612,14 +597,46 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void onAddAllPublicLocations(View view) {
-        var friends = repo.getAllPubliclyListedFriends();
 
-        if (friends != null) {
-            for (int i = 0; i < friends.length; i++) {
-                addFriend(friends[i].public_code);
-                repo.upsertLocalFriend(friends[i].public_code);
-            }
-        }
+    public void onAddAllPublicLocations(View view) {
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+
+        //Setting message manually and performing action on button click
+        builder.setMessage("Extreme Lag May Occur")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        var friends = repo.getAllPubliclyListedFriends();
+
+                        if (friends != null) {
+                            for (int i = 0; i < friends.length; i++) {
+                                addFriend(friends[i].public_code);
+                                repo.upsertLocalFriend(friends[i].public_code);
+                            }
+                        }
+
+                        Toast.makeText(getApplicationContext(), "Please wait",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  Action for 'NO' Button
+                        dialog.cancel();
+                        Toast.makeText(getApplicationContext(), "Operation canceled",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Add All publicly listed locations?");
+        alert.show();
+
     }
 }
